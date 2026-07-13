@@ -4,9 +4,15 @@ First run a Kubernetes cluster. For example with k3d you can run `k3d cluster cr
 
 Deploy with `kubectl apply -f manifests/deployment.yaml`.
 
-The application produces a log message `Server started in port 3000` when it starts.
+The application produces a log message `Server started in port *application port (default 3000)*` when it starts.
+
+You can change the application port from manifests/deployment.yaml by changing the env PORT value before deploying.
 
 Follow output logs with `kubectl logs -f *insert pod name here*`. You can use `kubectl get pods` to find out the pod name.
+
+You can view the HTML page served by redirecting to localhost port with `kubectl port-forward *insert pod name here* *local host port*:*application port (default 3000)*` and then accessing `http://localhost:*local host port*`.
+
+You can remove the deployment with `kubectl delete -f manifests/deployment.yaml`.
 
 The cluster can be stopped with `k3d cluster stop` and started with `k3d cluster start`. The cluster can be deleted with `k3d cluster delete`.
 

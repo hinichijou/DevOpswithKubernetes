@@ -14,4 +14,7 @@ spec:
     spec:
       containers:
         - name: todoapp
-          image: hinichijou/todo_app
+          image: hinichijou/todo_app:pyomzbgh
+          env:
+          - name: PORT
+            value: "3000"

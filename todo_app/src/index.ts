@@ -1,13 +1,12 @@
 import { serve } from '@hono/node-server'
+import { serveStatic } from '@hono/node-server/serve-static'
 import { Hono } from 'hono'
 
 const PORT = process.env.PORT || 3000
 
 const app = new Hono()
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+app.get('/', serveStatic({ path: './public/index.html'}))
 
 const server = serve({
   fetch: app.fetch,
