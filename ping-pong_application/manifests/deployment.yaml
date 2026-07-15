@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pingpongapp-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pingpongapp
+  template:
+    metadata:
+      labels:
+        app: pingpongapp
+    spec:
+      containers:
+        - name: pingpong
+          image: hinichijou/pingpong_application:lyr9i1gt
+          env:
+          - name: PORT
+            value: "3000"
