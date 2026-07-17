@@ -12,9 +12,18 @@ spec:
       labels:
         app: todoapp
     spec:
+      volumes: # Define volume
+        - name: todoapp
+          persistentVolumeClaim:
+            claimName: todoapp-claim
       containers:
         - name: todoapp
-          image: hinichijou/todo_app:pyomzbgh
+          image: hinichijou/todo_app:lt9hgxdc
+          volumeMounts: # Mount volume
+          - name: todoapp
+            mountPath: /usr/src/app/public/images
           env:
           - name: PORT
             value: "3000"
+      securityContext:
+        fsGroup: 1001
