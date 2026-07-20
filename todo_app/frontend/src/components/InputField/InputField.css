@@ -1,0 +1,14 @@
+input.field {
+  flex: 3;
+}
+
+input.field.normal {
+  border-color: rgb(78 176 83);
+}
+
+input.field.overlimit:focus {
+  background-color: rgb(223, 190, 190);
+  outline-color: firebrick;
+  border-color: firebrick;
+  outline: none;
+}

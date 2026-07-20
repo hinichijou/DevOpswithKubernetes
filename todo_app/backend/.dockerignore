@@ -1,0 +1,9 @@
+.dockerignore
+Dockerfile
+.gitignore
+.prettier*
+eslint*
+README.md
+.env
+node_modules
+public/images/*

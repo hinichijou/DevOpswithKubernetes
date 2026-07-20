@@ -1,0 +1,7 @@
+p.input {
+  display: flex;
+  flex-direction: row;
+  width: 600px;
+  height: 50px;
+  gap: 10px;
+}

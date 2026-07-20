@@ -17,13 +17,44 @@ spec:
           persistentVolumeClaim:
             claimName: todoapp-claim
       containers:
-        - name: todoapp
-          image: hinichijou/todo_app:lt9hgxdc
+        - name: todoapp-frontend
+          image: hinichijou/todo_app_frontend:z0ybsdwa
+          volumeMounts: # Mount volume
+          - name: todoapp
+            mountPath: /usr/share/nginx/html/images
+        - name: todoapp-backend
+          image: hinichijou/todo_app_backend:twexpszj
           volumeMounts: # Mount volume
           - name: todoapp
             mountPath: /usr/src/app/public/images
-          env:
-          - name: PORT
-            value: "3000"
       securityContext:
         fsGroup: 1001
+
+# ---
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: todoapp-backend-dep
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: todoapp-backend
+#   template:
+#     metadata:
+#       labels:
+#         app: todoapp-backend
+#     spec:
+#       volumes: # Define volume
+#         - name: todoapp
+#           persistentVolumeClaim:
+#             claimName: todoapp-claim
+#       containers:
+#         - name: todoapp-backend
+#           image: hinichijou/todo_app_backend:k2f7cy0w
+#           volumeMounts: # Mount volume
+#           - name: todoapp
+#             mountPath: /usr/src/app/public/images
+#       securityContext:
+#         fsGroup: 1001
