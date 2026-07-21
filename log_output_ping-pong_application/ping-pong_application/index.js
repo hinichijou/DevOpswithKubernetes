@@ -1,24 +1,18 @@
 import express from 'express';
-import { writeFileSync } from 'fs'
-import { join } from 'path'
 
 const app = express();
 
 const PORT = 3000
 
-const directory = join('/', 'usr', 'src', 'app', 'files')//'./'
-const filePath = join(directory, 'pingpongs.txt')
-
 let pingpongs = 0
-
-const writePingPongs = () => writeFileSync(filePath, pingpongs.toString(), 'utf8')
-
-writePingPongs()
 
 app.get('/pingpong', (_req, res) => {
   res.send(pingpongs.toString());
   pingpongs++
-  writePingPongs()
+});
+
+app.get('/pings', (_req, res) => {
+  res.send(pingpongs.toString());
 });
 
 const server = app.listen(PORT, () => {

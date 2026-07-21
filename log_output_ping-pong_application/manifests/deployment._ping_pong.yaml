@@ -12,16 +12,9 @@ spec:
       labels:
         app: pingpongapp
     spec:
-      volumes: # Define volume
-        - name: shared-log-output-ping-pong
-          persistentVolumeClaim:
-            claimName: log-output-ping-pong-claim
       containers:
         - name: pingpong
-          image: hinichijou/pingpong_application:wstujrkv
-          volumeMounts: # Mount volume
-          - name: shared-log-output-ping-pong
-            mountPath: /usr/src/app/files
+          image: hinichijou/pingpong_application:wsc2xtuy
           env:
           - name: PORT
             value: "3000"

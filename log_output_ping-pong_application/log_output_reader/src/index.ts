@@ -9,7 +9,13 @@ const app = new Hono()
 
 const directory = join('/', 'usr', 'src', 'app', 'files')//'./'
 const logFilePath = join(directory, 'log.txt')
-const pingpongFilePath = join(directory, 'pingpongs.txt')
+
+const request = async (url: string, options: RequestInit = {}) => {
+  const req = new Request(url, options)
+  const res = await fetch(req)
+
+  return res
+}
 
 const getFile = async (filePath: string) => new Promise<string>(res => {
   readFile(filePath, (err, data) => {
@@ -23,9 +29,11 @@ const getLastLine = (content: string) => {
   return lines[lines.length - 1]
 }
 
-app.get('/status', async (c) => {
+app.get('/', async (c) => {
   const log = getLastLine(await getFile(logFilePath))
-  const pingpongs = await getFile(pingpongFilePath)
+  const res = await request('http://pingpongapp-svc:2345/pings')
+  const pingpongs = res.ok ? await res.text() : 'Unable to get response'
+
   return c.text(`${log}.\nPing / Pongs: ${pingpongs}`)
 })
 

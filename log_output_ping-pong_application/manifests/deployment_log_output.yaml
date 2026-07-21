@@ -13,19 +13,19 @@ spec:
         app: logoutput
     spec:
       volumes: # Define volume
-        - name: shared-log-output-ping-pong
+        - name: log-output
           persistentVolumeClaim:
-            claimName: log-output-ping-pong-claim
+            claimName: log-output-claim
       containers:
         - name: logoutput-writer
           image: hinichijou/log_output-writer:7xzfeyk3
           volumeMounts: # Mount volume
-          - name: shared-log-output-ping-pong
+          - name: log-output
             mountPath: /usr/src/app/files
         - name: logoutput-reader
-          image: hinichijou/log_output-reader:vigfs58e
+          image: hinichijou/log_output-reader:itpcyjb0
           volumeMounts: # Mount volume
-          - name: shared-log-output-ping-pong
+          - name: log-output
             mountPath: /usr/src/app/files
       securityContext:
         fsGroup: 1001
