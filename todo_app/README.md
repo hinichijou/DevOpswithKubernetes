@@ -8,7 +8,7 @@ For the PersistentVolume to work you first need to create the local path in the 
 
 Create persistent volume by applying `kubectl apply -f persistent_volume_manifests`. As PersistentVolumes are often maintained by cluster administrators rather than developers and those are not application specific the definitions are separated from the application manifests. Applying creates a local persistent volume to path `/tmp/kube`.
 
-Deploy with `kubectl apply -f manifests`. This creates deployment, ingress and service resources defined by the yamls in the manifests folder. The frontend and backend services connec the used application port to a cluster internal network port and the ingress routes all traffic to the service ports based on the request path. The frontend requests  `/api/path/todo` path of the backend service. The todo list get is requested by the frontend directly using the kubernetes cluster internal routing and the post request for a new todo is done from the browser to the backend.
+Deploy with `kubectl apply -f manifests`. This creates deployment, ingress and service resources defined by the yamls in the manifests folder. The used application port of the frontend and backend services are connected to a cluster internal network port and the ingress routes all traffic to the correct service ports based on the request path. The frontend requests  `/api/path/todo` path of the backend service. The todo list get is requested by the frontend directly using the kubernetes cluster internal routing and the post request for a new todo is done from the browser to the backend.
 
 The backend application produces a log message `Server started in port *application port (default 3001)*` when it starts.
 
