@@ -1,0 +1,42 @@
+div.todoitem {
+  background-color: rgb(249 249 249);
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  height: 100%;
+  box-shadow:
+    inset 2px 2px 3px rgb(255 255 255 / 0.6),
+    inset -2px -2px 3px rgba(138, 138, 138, 0.6);
+}
+
+div.todoitemtext {
+  font-size: large;
+  justify-content: center;
+  text-align: left;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: scroll;
+  word-break: break-all;
+}
+
+span.todoitem {
+  background-color: rgb(78 176 83);
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 5px;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+div.todoitemcontainer {
+  display: flex;
+  flex-direction: row;
+  width: 600px;
+  height: 50px;
+  gap: 0;
+}

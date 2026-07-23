@@ -9,7 +9,7 @@ spec:
   ports:
     - port: 2345
       protocol: TCP
-      targetPort: 8080
+      targetPort: 3000
 
 ---
 
@@ -22,7 +22,6 @@ spec:
   selector:
     app: todoapp
   ports:
-    - port: 3000
+    - port: 3001
       protocol: TCP
-      targetPort: 3000
-  internalTrafficPolicy: Local
+      targetPort: 3001

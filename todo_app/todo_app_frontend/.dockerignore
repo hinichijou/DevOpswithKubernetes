@@ -1,0 +1,10 @@
+.dockerignore
+Dockerfile
+.gitignore
+.prettier*
+eslint*
+README.md
+.env.development.local
+node_modules
+.next
+public/images/*
