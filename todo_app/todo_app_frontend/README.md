@@ -12,3 +12,8 @@ The frontend project can be tested locally by running:
 `npm run dev`
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+Uses the following environment values:
+IMAGEPATH: the path where the image is saved
+NEXT_PUBLIC_BACKEND_SERVICE_URL: cluster internal url of the backend service. If cluster not used this is same as NEXT_PUBLIC_API_URL
+NEXT_PUBLIC_API_URL= external url of the backend service. If cluster not used this is same as NEXT_PUBLIC_BACKEND_SERVICE_URL

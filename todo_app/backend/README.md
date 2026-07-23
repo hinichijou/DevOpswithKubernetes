@@ -3,8 +3,8 @@
 Todo app Node.js/Hono backend project.
 
 Serves the following routes:
-* `/api/image`: returns if the image has been saved successfully
-* `/api/todos`: return currently hardcoded todo data
+* `GET /api/todos`: returns currently hardcoded todo data
+* `POST /api/todos`: add a new todo to the list of todos
 
 The server project can be tested locally by running:
 
