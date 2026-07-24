@@ -21,4 +21,3 @@
 ### Chapter 3
 - [2.1.](https://github.com/hinichijou/DevOpswithKubernetes/tree/2.1/log_output_ping-pong_application)
 - [2.2.](https://github.com/hinichijou/DevOpswithKubernetes/tree/2.2/todo_app)
-- [2.3.](https://github.com/hinichijou/DevOpswithKubernetes/tree/2.3/log_output_ping-pong_application)
