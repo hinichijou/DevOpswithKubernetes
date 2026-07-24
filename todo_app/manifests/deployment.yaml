@@ -21,7 +21,7 @@ spec:
           image: hinichijou/todo_app_frontend:w26rn9ex
           volumeMounts: # Mount volume
             - name: todoapp
-              mountPath: /usr/src/app/public/images
+              mountPath: /app/public/images
         - name: todoapp-backend
           image: hinichijou/todo_app_backend:wdgbn2fi
       securityContext:
