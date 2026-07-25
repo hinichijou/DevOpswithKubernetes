@@ -20,7 +20,6 @@ const server = app.listen(PORT, () => {
 });
 
 const onExit = (exitvalue) => {
-    writeStream.end()
     process.exit(exitvalue)
 }
 

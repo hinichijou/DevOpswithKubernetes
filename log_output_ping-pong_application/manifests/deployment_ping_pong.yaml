@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: pingpong
-          image: hinichijou/pingpong_application:wsc2xtuy
+          image: hinichijou/pingpong_application:w7e1xdng
           env:
           - name: PORT
             value: "3000"

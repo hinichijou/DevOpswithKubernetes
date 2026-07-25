@@ -7,12 +7,21 @@ const PORT = process.env.PORT || 3000
 
 const app = new Hono()
 
-const directory = join('/', 'usr', 'src', 'app', 'files')//'./'
-const logFilePath = join(directory, 'log.txt')
+const rootDirectory = join('/', 'usr', 'src', 'app')//'./'
+const filesDirectory = join(rootDirectory, 'files')
+const logFilePath = join(filesDirectory, 'log.txt')
+const informationFilePath = join(rootDirectory, 'information.txt')
 
 const request = async (url: string, options: RequestInit = {}) => {
   const req = new Request(url, options)
-  const res = await fetch(req)
+  let res = undefined
+  try{
+    res = await fetch(req)
+  }
+  catch (e){
+    console.error(e)
+    res = new Response(null, { status: 503, statusText: e !== null && e !== undefined ? e.toString() : "error" })
+  }
 
   return res
 }
@@ -20,7 +29,7 @@ const request = async (url: string, options: RequestInit = {}) => {
 const getFile = async (filePath: string) => new Promise<string>(res => {
   readFile(filePath, (err, data) => {
     if (err) res(`FAILED TO READ FILE ----------------  ${err}`)
-    res(data.toString())
+    else res(data.toString())
   })
 })
 
@@ -30,11 +39,14 @@ const getLastLine = (content: string) => {
 }
 
 app.get('/', async (c) => {
+  const info = await getFile(informationFilePath)
   const log = getLastLine(await getFile(logFilePath))
   const res = await request('http://pingpongapp-svc:2345/pings')
   const pingpongs = res.ok ? await res.text() : 'Unable to get response'
 
-  return c.text(`${log}.\nPing / Pongs: ${pingpongs}`)
+  const resp = `file content: ${info}\nenv variable: MESSAGE=${process.env.MESSAGE}\n${log}.\nPing / Pongs: ${pingpongs}`
+
+  return c.text(resp)
 })
 
 const server = serve({

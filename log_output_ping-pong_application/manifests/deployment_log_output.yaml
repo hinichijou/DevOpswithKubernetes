@@ -17,6 +17,13 @@ spec:
         - name: log-output
           persistentVolumeClaim:
             claimName: log-output-claim
+        - name: information-vol
+          configMap:
+            name: information-txt-config
+            # If you omit the items array entirely, every key in the ConfigMap becomes a file with the same name as the key.
+            #items:
+            #- key:
+            #  path:
       containers:
         - name: logoutput-writer
           image: hinichijou/log_output-writer:7xzfeyk3
@@ -24,9 +31,18 @@ spec:
           - name: log-output
             mountPath: /usr/src/app/files
         - name: logoutput-reader
-          image: hinichijou/log_output-reader:itpcyjb0
+          image: hinichijou/log_output-reader:gomjldt6
+          env:
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: logoutput-config
+                  key: message
           volumeMounts: # Mount volume
           - name: log-output
             mountPath: /usr/src/app/files
+          - name: information-vol
+            mountPath: "/usr/src/app"
+            readOnly: true
       securityContext:
         fsGroup: 1001
