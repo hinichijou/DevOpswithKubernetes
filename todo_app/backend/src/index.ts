@@ -62,9 +62,9 @@ app.post('/todos',
     const todo = c.req.valid('json')
     const todos = await getTodosList()
     const id = todos.length.toString()
-    todos.push({"id": id, "title": todo.title})
+    receivedTodos.push({"id": id, "title": todo.title})
 
-    console.log(todos)
+    console.log(receivedTodos)
 
     return c.text(id, 201)
   }

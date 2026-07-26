@@ -36,7 +36,7 @@ spec:
             - configMapRef:
                 name: todoappapiroutes-config
         - name: todoapp-backend
-          image: hinichijou/todo_app_backend:kwtopfac
+          image: hinichijou/todo_app_backend:1b9cy2t3
           envFrom:
             - configMapRef:
                 name: todoappbackend-config
