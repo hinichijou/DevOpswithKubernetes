@@ -1,5 +1,5 @@
 import MainImage from '@/components/MainImage/MainImage'
-import InputRow from '@/components/InputRow/InputRow'
+import ServerInputRow from '@/components/InputRow/ServerInputRow'
 import TodoList from '@/components/TodoList/TodoList'
 
 const App = () => {
@@ -8,7 +8,7 @@ const App = () => {
       <h1>Todo app</h1>
       <div>
         <MainImage/>
-        <InputRow/>
+        <ServerInputRow/>
       </div>
       <h2>Todos</h2>
       <div>

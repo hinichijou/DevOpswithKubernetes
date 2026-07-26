@@ -14,6 +14,11 @@ The frontend project can be tested locally by running:
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 Uses the following environment values:
-* IMAGEPATH: the path where the image is saved
-* NEXT_PUBLIC_BACKEND_SERVICE_URL: cluster internal url of the backend service. If cluster not used this is same as NEXT_PUBLIC_API_URL
-* NEXT_PUBLIC_API_URL: external url of the backend service. If cluster not used this is same as NEXT_PUBLIC_BACKEND_SERVICE_URL
+* IMAGEPATH: the path where the image is saved.
+* BACKEND_SERVICE_URL: cluster internal url of the backend service. If cluster not used this is same as NEXT_PUBLIC_API_URL.
+* NEXT_PUBLIC_API_URL: external url of the backend service. If cluster not used this is same as BACKEND_SERVICE_URL.
+* PUBLIC_DIR_PATH: defines the location of public dir where public assets are saved. Default value is `./public`.
+* IMAGE_FETCH_URL: the URL from where the displayed image is fetched. Default value `https://picsum.photos/1200`.
+* IMAGE_DIR_NAME: the directory in public folder where the image is saved. Default value is `images`.
+* IMAGE_NAME: the name of the file where the image is saved. Default value `image.jpg`.
+* IMAGE_FETCH_TIMEOUT: the timeout after which a new image is fetched. Default value `600000`.

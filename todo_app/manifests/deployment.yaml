@@ -17,42 +17,34 @@ spec:
         - name: todoapp
           persistentVolumeClaim:
             claimName: todoapp-claim
+        - name: todos-vol
+          configMap:
+            name: todos-data
+            # If you omit the items array entirely, every key in the ConfigMap becomes a file with the same name as the key.
+            #items:
+            #- key:
+            #  path:
       containers:
         - name: todoapp-frontend
-          image: hinichijou/todo_app_frontend:w26rn9ex
+          image: hinichijou/todo_app_frontend:5rabycj0
           volumeMounts: # Mount volume
             - name: todoapp
               mountPath: /app/public/images
+          envFrom:
+            - configMapRef:
+                name: todoappfrontend-config
+            - configMapRef:
+                name: todoappapiroutes-config
         - name: todoapp-backend
-          image: hinichijou/todo_app_backend:wdgbn2fi
+          image: hinichijou/todo_app_backend:kwtopfac
+          envFrom:
+            - configMapRef:
+                name: todoappbackend-config
+            - configMapRef:
+                name: todoappapiroutes-config
+          volumeMounts: # Mount volume
+          - name: todos-vol
+            mountPath: /app/dist/config
+            readOnly: true
       securityContext:
         fsGroup: 1001
-
-# ---
-
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: todoapp-backend-dep
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: todoapp-backend
-#   template:
-#     metadata:
-#       labels:
-#         app: todoapp-backend
-#     spec:
-#       volumes: # Define volume
-#         - name: todoapp
-#           persistentVolumeClaim:
-#             claimName: todoapp-claim
-#       containers:
-#         - name: todoapp-backend
-#           image: hinichijou/todo_app_backend:k2f7cy0w
-#           volumeMounts: # Mount volume
-#           - name: todoapp
-#             mountPath: /usr/src/app/public/images
-#       securityContext:
-#         fsGroup: 1001

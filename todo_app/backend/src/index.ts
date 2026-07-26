@@ -2,41 +2,65 @@ import { Hono } from 'hono'
 import { serve } from '@hono/node-server'
 import { HTTPException} from 'hono/http-exception'
 import { sValidator } from '@hono/standard-validator'
+import { readFile } from 'fs'
 //import { cors } from 'hono/cors'
 
-import {todoSchema }  from './model.js'
+import { todoSchema, type Todo }  from './model.js'
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT !== undefined ? Number(process.env.PORT) : 3001
+const API_PATH  = process.env.API_PATH || '/api'
 
-const app = new Hono().basePath('/api')
+const app = new Hono().basePath(API_PATH)
 //This is not required if using the frontend as a proxy or routing through ingress
 //app.use('/*', cors())
 
-const todos = [
-  {
-      "id": "0",
-      "title": "Learn Kubernetes basics"
-  },
-  {
-      "id": "1",
-      "title": "Deploy application to cluster"
-  },
-  {
-      "id": "2",
-      "title": "Configure persistent volumes"
-  }
-]
+const TODOS_DEFAULTS_PATH = process.env.TODOS_DEFAULTS_PATH || "./config/todos.json"
+const defaultTodos = async () => {
+  return await new Promise<Array<Todo>>(res => { 
+    readFile(TODOS_DEFAULTS_PATH, (err, data) => {
+      if (err){
+        res(
+          [
+            {
+                "id": "0",
+                "title": "Learn Kubernetes basics"
+            },
+            {
+                "id": "1",
+                "title": "Deploy application to cluster"
+            },
+            {
+                "id": "2",
+                "title": "Configure persistent volumes"
+            }
+          ]
+        )
+      }
+      else {
+        res(JSON.parse(data.toString()) as Array<Todo>)
+      }
+    })
+  })
+}
 
-app.get('/todos', (c) => {
+const receivedTodos = new Array<Todo>()
+
+const getTodosList = async () => {
+  const todos = await defaultTodos()
+  return todos.concat(receivedTodos)
+}
+
+app.get('/todos', async (c) => {
   return c.json({
-    "todos": JSON.stringify(todos)
+    "todos": JSON.stringify(await getTodosList())
   })
 })
 
 app.post('/todos',
   sValidator('json', todoSchema),
-  (c) => {
+  async (c) => {
     const todo = c.req.valid('json')
+    const todos = await getTodosList()
     const id = todos.length.toString()
     todos.push({"id": id, "title": todo.title})
 

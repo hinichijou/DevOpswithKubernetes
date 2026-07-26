@@ -3,13 +3,14 @@ import { stat } from 'fs/promises'
 
 import ns from './networkService'
 import { writeImage } from '@/src/utils/web_only_utils'
-import { imagePath, imageDirectory, imageFetchTimeout } from '../constants'
+import { imageFetchUrl, imageDirectoryRootRelative, imagePathRootRelative, imageFetchTimeout } from '../constants'
 
-const stats = await stat(imagePath).catch(() => null)
+console.log(`Searching image from path ${imagePathRootRelative()}`)
+const stats = await stat(imagePathRootRelative()).catch(() => null)
 let lastSaveTime = stats !== null ? stats.mtime.getTime() : 0
 let imageLoaded = lastSaveTime !== 0
 if(lastSaveTime === 0){
-  await new Promise<void>(res => mkdir(imageDirectory, (err) => res()))
+  await new Promise<void>(res => mkdir(imageDirectoryRootRelative(), {'recursive': true}, (err) => res()))
 }
 const timeSinceLastImageSave = () => Date.now() - lastSaveTime
 
@@ -20,7 +21,9 @@ const getAndWriteImage = async () => {
     },
   };
 
-  const saved = await ns.makeRequest('https://picsum.photos/1200', writeImage, options)
+  console.log(`Fetching image from url ${imageFetchUrl()}`)
+
+  const saved = await ns.makeRequest(imageFetchUrl(), writeImage, options)
 
   if(saved){
     lastSaveTime = Date.now()
@@ -33,7 +36,7 @@ const getAndWriteImage = async () => {
 }
 
 const imageFetch = () => {
-  setTimeout(getAndWriteImage, imageFetchTimeout - timeSinceLastImageSave())
+  setTimeout(getAndWriteImage, imageFetchTimeout() - timeSinceLastImageSave())
 }
 
 imageFetch()

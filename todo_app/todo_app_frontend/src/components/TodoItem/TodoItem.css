@@ -18,7 +18,7 @@ div.todoitemtext {
   text-align: left;
   box-sizing: border-box;
   height: 100%;
-  overflow: scroll;
+  overflow: auto;
   word-break: break-all;
 }
 

@@ -15,7 +15,7 @@ const proxyRequest = async (preRequest: Request, { params }: { params: Promise<{
   const { path } = await params
   const apiTarget = path.join('/')
 
-  const res = ns.makeRequest(`${localApiUrl}${apiTarget}`, readJSONResponse, getOptions(preRequest.method, await preRequest.text()))
+  const res = ns.makeRequest(`${localApiUrl()}${apiTarget}`, readJSONResponse, getOptions(preRequest.method, await preRequest.text()))
 
   return NextResponse.json(res)
 }

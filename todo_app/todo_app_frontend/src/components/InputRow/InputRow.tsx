@@ -9,7 +9,7 @@ import InputButton from '@/components/InputButton/InputButton'
 import { setStateWithTimeout, clearStateWithTimeout } from '@/src/utils/client_safe_utils'
 import { createTodo } from '@/services/todos'
 
-const InputRow = () => {
+const InputRow = ({apiUrl}: {apiUrl: string}) => {
   const router = useRouter()
 
   //useActionState could be useful here as well
@@ -30,7 +30,7 @@ const InputRow = () => {
     const timeout = setStateWithTimeout(setAddTodoInProgress, true, false, 5000)
 
     if (todoValue !== null){
-      const newTodo = await createTodo({title: todoValue.toString()})
+      const newTodo = await createTodo(apiUrl, {title: todoValue.toString()})
       if (newTodo !== null) {
         inputState[1]("")
         styleState[1]("input field normal")

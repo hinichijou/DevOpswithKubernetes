@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todoappfrontend-config
+  namespace: project
+data:
+  NEXT_PUBLIC_API_URL: "http://localhost:8081"
+  BACKEND_SERVICE_URL: "http://todoapp-backend-svc:3001"
+  PUBLIC_DIR_PATH: "./public"
+  IMAGE_FETCH_URL: "https://picsum.photos/1200"
+  IMAGE_DIR_NAME: "images"
+  IMAGE_NAME: "image.jpg"
+  IMAGE_FETCH_TIMEOUT: "600000"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todoappbackend-config
+  namespace: project
+data:
+  #Port needs to be exposed during Docker build so basically needs to be pre-configured before the Kubernetes manifest configuration
+  PORT: "3001"
+  TODOS_DEFAULTS_PATH: "./dist/config/todos.json"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todoappapiroutes-config
+  namespace: project
+data:
+  API_PATH: "/api"

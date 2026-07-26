@@ -72,7 +72,6 @@
 
   # Copy production assets
   COPY --from=builder --chown=next:nodejs /app/public ./public
-  COPY --from=builder --chown=next:nodejs /app/.env.production ./.env.production
 
   # Set the correct permission for prerender cache
   RUN mkdir .next
