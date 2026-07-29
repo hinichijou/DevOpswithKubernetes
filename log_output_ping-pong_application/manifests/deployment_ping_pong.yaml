@@ -15,9 +15,15 @@ spec:
     spec:
       containers:
         - name: pingpong
-          image: hinichijou/pingpong_application:w7e1xdng
+          image: hinichijou/pingpong_application:cg0s3l6e
           env:
-          - name: PORT
-            value: "3000"
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret-postgres-config
+                  key: POSTGRES_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: postgres-config
       securityContext:
         fsGroup: 1001

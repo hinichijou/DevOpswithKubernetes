@@ -1,18 +1,28 @@
 import express from 'express';
+import { Client } from 'pg'
 
 const app = express();
+// Uses environment variables set for configuring the connection
+const client = await new Client().connect()
 
 const PORT = 3000
 
-let pingpongs = 0
+const getPings = async () => {
+  const q_res = await client.query('SELECT counter FROM pingpongs')
+  return q_res.rows[0]['counter']
+}
 
-app.get('/pingpong', (_req, res) => {
-  res.send(pingpongs.toString());
-  pingpongs++
+const incrementPings = async () => {
+  return await client.query('UPDATE pingpongs SET counter = counter + 1;')
+}
+
+app.get('/pingpong', async (_req, res) => {
+  res.send(await getPings());
+  await incrementPings();
 });
 
-app.get('/pings', (_req, res) => {
-  res.send(pingpongs.toString());
+app.get('/pings', async (_req, res) => {
+   res.send(await getPings());
 });
 
 const server = app.listen(PORT, () => {

@@ -18,7 +18,7 @@ The backend application produces a log message `Server started in port *applicat
 
 Follow output logs with `kubectl logs -f *insert pod name here*`. You can use `kubectl get pods` to find out the pod name.
 
-You can view the HTML page served from http://localhost:8081. The frontend fetches a new image from https://picsum.photos/1200 every 10 minutes. The frontend writes the image to persistent storage so it persists between application restarts. Frontend reads said image from the persistent storage and displays it. The backend has a get and post path for todos at '/api/todos'. The frontend has the functionality for displaying the todos and adding a new todo.
+You can view the HTML page served from http://localhost:8081. The frontend fetches a new image from https://picsum.photos/1200 every 10 minutes. The frontend writes the image to persistent storage so it persists between application restarts. Frontend reads said image from the persistent storage and displays it. The backend has a get and post path for todos at `/api/todos`. The frontend has the functionality for displaying the todos and adding a new todo.
 
 You can remove the resources with `kubectl delete -f manifests` and `kubectl delete -f persistent_volume_manifests`.
 

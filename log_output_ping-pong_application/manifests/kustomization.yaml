@@ -12,3 +12,7 @@ resources:
   - service_log_output_reader.yaml
   - deployment_ping_pong.yaml
   - service_ping_pong.yaml
+  - service_postgres.yaml
+  - statefulset_postgres.yaml
+  - secret_postgres.yaml
+  - configmap_postgres.yaml
