@@ -42,7 +42,7 @@ spec:
           - name: log-output
             mountPath: /usr/src/app/files
           - name: information-vol
-            mountPath: "/usr/src/app"
+            mountPath: /usr/src/app
             readOnly: true
       securityContext:
         fsGroup: 1001

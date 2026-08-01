@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-stset
+  namespace: exercises
+spec:
+  serviceName: postgres-svc
+  replicas: 2
+  selector:
+    matchLabels:
+      app: postgresapp
+  template:
+    metadata:
+      labels:
+        app: postgresapp
+    spec:
+      volumes:
+        - name: db-init-vol
+          configMap:
+            name: db-init
+      containers:
+        - name: postgres
+          image: postgres:18-alpine3.24
+          ports:
+            - name: web
+              containerPort: 5432
+          volumeMounts:
+            - name: postgres-data-storage
+              mountPath: /var/lib/postgresql
+            - name: db-init-vol
+              mountPath: /usr/src/app
+              readOnly: true
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: PGUSER
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: PGDATABASE
+          envFrom:
+            - secretRef:
+                name: secret-postgres-config
+          lifecycle:
+            postStart:
+              exec:
+                #Simple database initialization
+                command:
+                  - /bin/sh
+                  - -c
+                  - >- 
+                    sleep 5 &&
+                    PGPASSWORD=$POSTGRES_PASSWORD
+                    psql -w
+                    -U $POSTGRES_USER
+                    -d $POSTGRES_DB 
+                    -f
+                    init_todo_db.sql
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 100Mi

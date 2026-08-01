@@ -5,6 +5,9 @@ configMapGenerator:
 - name: todos-data
   files:
   - ./todos.json
+- name: db-init
+  files:
+  - ./init_todo_db.sql
 resources:
   - configmap_todoapp.yaml
   - deployment.yaml
