@@ -17,13 +17,6 @@ spec:
         - name: todoapp
           persistentVolumeClaim:
             claimName: todoapp-claim
-        - name: todos-vol
-          configMap:
-            name: todos-data
-            # If you omit the items array entirely, every key in the ConfigMap becomes a file with the same name as the key.
-            #items:
-            #- key:
-            #  path:
       containers:
         - name: todoapp-frontend
           image: hinichijou/todo_app_frontend:5rabycj0
@@ -36,15 +29,19 @@ spec:
             - configMapRef:
                 name: todoappapiroutes-config
         - name: todoapp-backend
-          image: hinichijou/todo_app_backend:1b9cy2t3
+          image: hinichijou/todo_app_backend:swdtihaj
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret-postgres-config
+                  key: POSTGRES_PASSWORD
           envFrom:
             - configMapRef:
                 name: todoappbackend-config
             - configMapRef:
                 name: todoappapiroutes-config
-          volumeMounts: # Mount volume
-          - name: todos-vol
-            mountPath: /app/dist/config
-            readOnly: true
+            - configMapRef:
+                name: postgres-config
       securityContext:
         fsGroup: 1001

@@ -26,3 +26,4 @@
 - [2.5.](https://github.com/hinichijou/DevOpswithKubernetes/tree/2.5/log_output_ping-pong_application)
 - [2.6.](https://github.com/hinichijou/DevOpswithKubernetes/tree/2.6/todo_app)
 - [2.7.](https://github.com/hinichijou/DevOpswithKubernetes/tree/2.7/log_output_ping-pong_application)
+- [2.8.](https://github.com/hinichijou/DevOpswithKubernetes/tree/2.8/todo_app)

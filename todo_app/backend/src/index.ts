@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { serve } from '@hono/node-server'
 import { HTTPException} from 'hono/http-exception'
 import { sValidator } from '@hono/standard-validator'
-import { readFile } from 'fs'
+import { Client } from 'pg'
 //import { cors } from 'hono/cors'
 
 import { todoSchema, type Todo }  from './model.js'
@@ -14,59 +14,29 @@ const app = new Hono().basePath(API_PATH)
 //This is not required if using the frontend as a proxy or routing through ingress
 //app.use('/*', cors())
 
-const TODOS_DEFAULTS_PATH = process.env.TODOS_DEFAULTS_PATH || "./config/todos.json"
-const defaultTodos = async () => {
-  return await new Promise<Array<Todo>>(res => { 
-    readFile(TODOS_DEFAULTS_PATH, (err, data) => {
-      if (err){
-        res(
-          [
-            {
-                "id": "0",
-                "title": "Learn Kubernetes basics"
-            },
-            {
-                "id": "1",
-                "title": "Deploy application to cluster"
-            },
-            {
-                "id": "2",
-                "title": "Configure persistent volumes"
-            }
-          ]
-        )
-      }
-      else {
-        res(JSON.parse(data.toString()) as Array<Todo>)
-      }
-    })
-  })
-}
+// Uses Postgres environment variables set for configuring the connection
+const client = await new Client().connect()
 
-const receivedTodos = new Array<Todo>()
-
-const getTodosList = async () => {
-  const todos = await defaultTodos()
-  return todos.concat(receivedTodos)
+const getTodosFromDB = async () => {
+  const q_res = await client.query('SELECT id, title FROM todos')
+  return q_res.rows
 }
 
 app.get('/todos', async (c) => {
   return c.json({
-    "todos": JSON.stringify(await getTodosList())
+    "todos": JSON.stringify(await getTodosFromDB())
   })
 })
+
+const todoInsert = 'INSERT INTO todos (title) VALUES($1) RETURNING id'
 
 app.post('/todos',
   sValidator('json', todoSchema),
   async (c) => {
     const todo = c.req.valid('json')
-    const todos = await getTodosList()
-    const id = todos.length.toString()
-    receivedTodos.push({"id": id, "title": todo.title})
+    const res_id = await client.query(todoInsert, [todo.title])
 
-    console.log(receivedTodos)
-
-    return c.text(id, 201)
+    return c.text(res_id.rows[0]['id'], 201)
   }
 )
 

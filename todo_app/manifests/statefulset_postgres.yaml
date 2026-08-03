@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres-stset
-  namespace: exercises
+  namespace: project
 spec:
   serviceName: postgres-svc
   replicas: 2
@@ -47,18 +47,18 @@ spec:
           lifecycle:
             postStart:
               exec:
-                #Simple database initialization
+                #Database initialization from a file
                 command:
                   - /bin/sh
                   - -c
-                  - >- 
+                  - >-
                     sleep 5 &&
                     PGPASSWORD=$POSTGRES_PASSWORD
                     psql -w
                     -U $POSTGRES_USER
-                    -d $POSTGRES_DB 
+                    -d $POSTGRES_DB
                     -f
-                    init_todo_db.sql
+                    /usr/src/app/init_todo_db.sql
   volumeClaimTemplates:
     - metadata:
         name: postgres-data-storage

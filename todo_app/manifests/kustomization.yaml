@@ -2,14 +2,15 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: project
 configMapGenerator:
-- name: todos-data
-  files:
-  - ./todos.json
 - name: db-init
   files:
   - ./init_todo_db.sql
 resources:
   - configmap_todoapp.yaml
-  - deployment.yaml
+  - deployment_todoapp.yaml
   - ingress.yaml
-  - service.yaml
+  - service_todoapp.yaml
+  - service_postgres.yaml
+  - statefulset_postgres.yaml
+  - secret_postgres.yaml
+  - configmap_postgres.yaml
