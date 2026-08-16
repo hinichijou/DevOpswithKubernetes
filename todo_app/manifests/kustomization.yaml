@@ -14,3 +14,4 @@ resources:
   - statefulset_postgres.yaml
   - secret_postgres.yaml
   - configmap_postgres.yaml
+  - wikipedia_todo_job.yml
