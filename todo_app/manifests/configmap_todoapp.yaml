@@ -22,6 +22,8 @@ metadata:
 data:
   #Port needs to be exposed during Docker build so basically needs to be pre-configured before the Kubernetes manifest configuration
   PORT: "3001"
+  TODO_MIN_LENGTH: "1"
+  TODO_MAX_LENGTH: "140"
 
 ---
 

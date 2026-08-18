@@ -1,7 +1,8 @@
-import { Hono } from 'hono'
+import { Context, Hono, type Next } from 'hono'
 import { serve } from '@hono/node-server'
 import { HTTPException} from 'hono/http-exception'
 import { sValidator } from '@hono/standard-validator'
+import { logger } from 'hono/logger'
 import { Client } from 'pg'
 //import { cors } from 'hono/cors'
 
@@ -11,8 +12,22 @@ const PORT = process.env.PORT !== undefined ? Number(process.env.PORT) : 3001
 const API_PATH  = process.env.API_PATH || '/api'
 
 const app = new Hono().basePath(API_PATH)
+app.use(logger())
 //This is not required if using the frontend as a proxy or routing through ingress
 //app.use('/*', cors())
+
+export const postLogger = async (c: Context, next: Next) => {
+  try {
+    // Clone because the stream gets consumed if read
+    console.log(`Request body: ${ await c.req.raw.clone().text()}`)
+  } catch (e){
+    console.error(`Error reading request body: ${ e }`)
+  }
+
+  await next()
+}
+
+app.post(postLogger)
 
 // Uses Postgres environment variables set for configuring the connection
 const client = await new Client().connect()
@@ -31,7 +46,14 @@ app.get('/todos', async (c) => {
 const todoInsert = 'INSERT INTO todos (title) VALUES($1) RETURNING id'
 
 app.post('/todos',
-  sValidator('json', todoSchema),
+  sValidator('json', todoSchema, (result, c) => {
+    if (!result.success) {
+      const failedString = `Todo validation failed! ${result.error.flatMap(e => e.message).join(", ")}`
+      console.log(failedString)
+      return c.text(failedString, 400)
+    }
+    else console.log(`Todo validation successful.`)
+  }),
   async (c) => {
     const todo = c.req.valid('json')
     const res_id = await client.query(todoInsert, [todo.title])
