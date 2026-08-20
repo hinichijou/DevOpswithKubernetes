@@ -5,7 +5,8 @@ metadata:
   namespace: exercises
   name: log-output-claim # name of the volume claim, this will be used in the deployment
 spec:
-  storageClassName: sc-log-output-pv # this is the name of the persistent volume we are claiming
+  # 3.1: Google Kubernetes Engine will automatically provision a persistent disk for your PersistentVolumeClaim - just don't set the storage class.
+  # storageClassName: sc-log-output-pv # this is the name of the persistent volume we are claiming
   accessModes:
     - ReadWriteOnce
   resources:

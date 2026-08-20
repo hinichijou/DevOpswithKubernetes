@@ -44,12 +44,12 @@ spec:
                 command:
                   - /bin/sh
                   - -c
-                  - >- 
+                  - >-
                     sleep 5 &&
                     PGPASSWORD=$POSTGRES_PASSWORD
                     psql -w
                     -U $POSTGRES_USER
-                    -d $POSTGRES_DB 
+                    -d $POSTGRES_DB
                     -c
                     'CREATE TABLE IF NOT EXISTS pingpongs (counter INTEGER);INSERT INTO pingpongs (counter) SELECT 0 WHERE NOT EXISTS (SELECT 1 FROM pingpongs);'
   volumeClaimTemplates:
@@ -57,7 +57,8 @@ spec:
         name: postgres-data-storage
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: local-path
+        # 3.1: Google Kubernetes Engine will automatically provision a persistent disk for your PersistentVolumeClaim - just don't set the storage class.
+        #storageClassName: local-path
         resources:
           requests:
             storage: 100Mi

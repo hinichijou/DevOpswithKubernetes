@@ -8,7 +8,6 @@ configMapGenerator:
 resources:
   - configmap_log_output.yaml
   - deployment_log_output.yaml
-  - ingress.yaml
   - service_log_output_reader.yaml
   - deployment_ping_pong.yaml
   - service_ping_pong.yaml
