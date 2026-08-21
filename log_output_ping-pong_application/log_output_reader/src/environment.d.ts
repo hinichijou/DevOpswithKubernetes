@@ -4,6 +4,7 @@ declare global {
       //Port needs to be exposed during Docker build so basically needs to be pre-configured before the Kubernetes manifest configuration
       PORT?: number;
       MESSAGE: string;
+      PINGS_URL: string;
     }
   }
 }

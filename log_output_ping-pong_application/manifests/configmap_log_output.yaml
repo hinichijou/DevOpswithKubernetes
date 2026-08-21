@@ -4,4 +4,5 @@ metadata:
   name: logoutput-config
   namespace: exercises
 data:
-  message: "hello world"
+  MESSAGE: "hello world"
+  PINGS_URL: "http://pingpongapp-svc:2345/pings"

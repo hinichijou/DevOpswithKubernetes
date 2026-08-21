@@ -41,7 +41,7 @@ const getLastLine = (content: string) => {
 app.get('/', async (c) => {
   const info = await getFile(informationFilePath)
   const log = getLastLine(await getFile(logFilePath))
-  const res = await request('http://pingpongapp-svc:2345/pings')
+  const res = await request(process.env.PINGS_URL)
   const pingpongs = res.ok ? await res.text() : 'Unable to get response'
 
   const resp = `file content: ${info}\nenv variable: MESSAGE=${process.env.MESSAGE}\n${log}.\nPing / Pongs: ${pingpongs}`

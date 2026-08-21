@@ -1,25 +1,23 @@
-# 3.1: Instead of an Ingress we'll use LoadBalancer service.
-
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   namespace: exercises
-#   name: dwk-material-ingress
-# spec:
-#   rules:
-#   - http:
-#       paths:
-#       - path: /
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: logoutput-svc
-#             port:
-#               number: 2345
-#       - path: /pingpong
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: pingpongapp-svc
-#             port:
-#               number: 2345
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: exercises
+  name: dwk-material-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: logoutput-svc
+            port:
+              number: 2345
+      - path: /pingpong
+        pathType: Prefix
+        backend:
+          service:
+            name: pingpongapp-svc
+            port:
+              number: 2345

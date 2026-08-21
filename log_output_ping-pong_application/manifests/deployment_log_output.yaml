@@ -31,13 +31,10 @@ spec:
           - name: log-output
             mountPath: /usr/src/app/files
         - name: logoutput-reader
-          image: hinichijou/log_output-reader:gomjldt6
-          env:
-            - name: MESSAGE
-              valueFrom:
-                configMapKeyRef:
-                  name: logoutput-config
-                  key: message
+          image: hinichijou/log_output-reader:jqznch4x
+          envFrom:
+            - configMapRef:
+                name: logoutput-config
           volumeMounts: # Mount volume
           - name: log-output
             mountPath: /usr/src/app/files
