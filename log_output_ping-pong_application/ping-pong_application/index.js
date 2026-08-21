@@ -16,12 +16,8 @@ const incrementPings = async () => {
   return await client.query('UPDATE pingpongs SET counter = counter + 1;');
 }
 
-// 3.2: Note that Ingress expects a service to give a successful response in the path / even if the service is mapped to some other path!
-app.get('/', (_req, res) => {
-  res.send('Ping pong application alive. Use path /pingpong to increment counter');
-})
-
-app.get('/pingpong', async (_req, res) => {
+// 3.4: root is also the default health check path. I'm assuming the overlap is on purpose for now but would make to configure a dedicated path for the health check
+app.get('/', async (_req, res) => {
   res.send(await getPings());
   await incrementPings();
 });

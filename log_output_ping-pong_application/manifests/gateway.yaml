@@ -4,6 +4,9 @@ metadata:
   namespace: exercises
   name: log-output-pingpong-gateway
 spec:
+  # For local use with k3d cluster and envoy gateway
+  #gatewayClassName: eg
+  # For GKE use
   gatewayClassName: gke-l7-global-external-managed
   listeners:
   - name: http
