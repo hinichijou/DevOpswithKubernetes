@@ -15,7 +15,7 @@ The server project can be tested locally by running:
 
 Default port is 3001 and application can be accessed from [http://localhost:3001](http://localhost:3001).
 
-Has environment variables PORT, TODO_MIN_LENGTH and TODO_MAX_LENGTH. PORT can be used to change the default port. TODO_MIN_LENGTH and TODO_MAX_LENGTH can be used to set text length limits to the todo schema.
+Has environment variables `PORT`, `TODO_MIN_LENGTH` and `TODO_MAX_LENGTH`. `PORT` can be used to change the default port. `TODO_MIN_LENGTH` and `TODO_MAX_LENGTH` can be used to set text length limits to the todo schema.
 
 Saves the todos to and fetches them from a Postgres database which means a local Postgres instance is required. Expects the environment variable `PGPASSWORD` to be set to the environment and match the database password. You should also consider setting `PGUSER`, `PGHOST` and `PGDATABASE` to suitable values. Fetches the values `id` and `title` from table `todos` see [`manifests/init_todo_db.sql`](https://github.com/hinichijou/DevOpswithKubernetes/tree/2.8/todo_app/manifests/init_todo_db.sql) for how the todos table is defined.
 
