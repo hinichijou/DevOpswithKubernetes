@@ -11,9 +11,10 @@ async function MainImage () {
 
   const available = imageService.checkImage()
 
-  console.log(`Looking image from path ${imagePathInternal()}`)
+  const imagePath = imagePathInternal()
+  console.log(`Looking image from path ${imagePath}`)
   //Next Image component provides caching functionality if necessary
-  return available ? <img src={ imagePathInternal() } alt='Random picture' /> : <></>
+  return available ? <img src={`${imagePath}`} alt='Random picture' /> : <></>
 }
 
 export default MainImage

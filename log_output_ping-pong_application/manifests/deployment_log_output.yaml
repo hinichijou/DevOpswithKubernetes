@@ -26,12 +26,12 @@ spec:
             #  path:
       containers:
         - name: logoutput-writer
-          image: hinichijou/log_output-writer:7xzfeyk3
+          image: PROJECT/LOGOUTPUTWRITERIMAGE
           volumeMounts: # Mount volume
           - name: log-output
             mountPath: /usr/src/app/files
         - name: logoutput-reader
-          image: hinichijou/log_output-reader:jqznch4x
+          image: PROJECT/LOGOUTPUTREADERIMAGE
           envFrom:
             - configMapRef:
                 name: logoutput-config

@@ -19,17 +19,17 @@ spec:
             claimName: todoapp-claim
       containers:
         - name: todoapp-frontend
-          image: hinichijou/todo_app_frontend:5rabycj0
+          image: PROJECT/FRONTENDIMAGE
           volumeMounts: # Mount volume
             - name: todoapp
-              mountPath: /app/public/images
+              mountPath: /app/dynamic/images
           envFrom:
             - configMapRef:
                 name: todoappfrontend-config
             - configMapRef:
                 name: todoappapiroutes-config
         - name: todoapp-backend
-          image: hinichijou/todo_app_backend:kmn9tzv0
+          image: PROJECT/BACKENDIMAGE
           env:
             - name: PGPASSWORD
               valueFrom:
@@ -39,8 +39,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: todoappbackend-config
-            - configMapRef:
-                name: todoappapiroutes-config
             - configMapRef:
                 name: postgres-config
       securityContext:

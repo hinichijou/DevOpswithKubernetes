@@ -5,6 +5,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 Fetches a new image from https://picsum.photos/1200 every 10 minutes. The picture is saved to persistent storage and persists between application restarts.
 Displays the image and a list of todos fetched from backend.
 
+Serves following routes:
+* `GET /images/image.jpg`: serves the image asset to the browser.
+* `GET /health`: health check path.
+
 The frontend project can be tested locally by running:
 
 `npm install`
@@ -15,7 +19,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 Uses the following environment values:
 * `BACKEND_SERVICE_URL`: cluster internal url of the backend service. If cluster not used this is same as `NEXT_PUBLIC_API_URL`.
-* `NEXT_PUBLIC_API_URL`: external url of the backend service. If cluster not used this is same as `BACKEND_SERVICE_URL`.
+* `NEXT_PUBLIC_API_URL`: external url of the backend service. If cluster not used default os the same as `BACKEND_SERVICE_URL`. If cluster is used this can be left empty, the requests target the Next.js backend and the cluster routing directs the request to the backend service based on path if necessary.
+* `API_PATH`: The base path of the backend API. Since the api path is now rewritten by cluster route path rewrite rule instead of the backend app having a base path this is only required for cluster external requests. Default value ``.
 * `PUBLIC_DIR_PATH`: defines the location of public dir where public assets are saved. Default value is `./public`.
 * `IMAGE_FETCH_URL`: the URL from where the displayed image is fetched. Default value https://picsum.photos/1200.
 * `IMAGE_DIR_NAME`: the directory in public folder where the image is saved. Default value is `images`.

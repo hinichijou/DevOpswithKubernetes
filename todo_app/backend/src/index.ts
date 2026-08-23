@@ -9,9 +9,8 @@ import { Client } from 'pg'
 import { todoSchema, type Todo }  from './model.js'
 
 const PORT = process.env.PORT !== undefined ? Number(process.env.PORT) : 3001
-const API_PATH  = process.env.API_PATH || '/api'
 
-const app = new Hono().basePath(API_PATH)
+const app = new Hono()
 app.use(logger())
 //This is not required if using the frontend as a proxy or routing through ingress
 //app.use('/*', cors())
@@ -36,6 +35,11 @@ const getTodosFromDB = async () => {
   const q_res = await client.query('SELECT id, title FROM todos')
   return q_res.rows
 }
+
+// Cluster service health check path
+app.get('/health', (c) => {
+  return c.text('Todo backend healthy.')
+})
 
 app.get('/todos', async (c) => {
   return c.json({

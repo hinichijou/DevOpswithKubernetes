@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: pingpong
-          image: hinichijou/pingpong_application:q8msboac
+          image: PROJECT/PINGPOGAPPIMAGE
           env:
             - name: PGPASSWORD
               valueFrom:

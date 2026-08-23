@@ -4,7 +4,8 @@ metadata:
   namespace: project
   name: todoapp-claim # name of the volume claim, this will be used in the deployment
 spec:
-  storageClassName: sc-todoapp-pv # this is the name of the persistent volume we are claiming
+  # 3.5: Google Kubernetes Engine will automatically provision a persistent disk for your PersistentVolumeClaim - just don't set the storage class.
+  # storageClassName: sc-todoapp-pv # this is the name of the persistent volume we are claiming
   accessModes:
     - ReadWriteOnce
   resources:

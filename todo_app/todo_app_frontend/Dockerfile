@@ -71,7 +71,10 @@
   RUN adduser --system --uid 1001 next
 
   # Copy production assets
-  COPY --from=builder --chown=next:nodejs /app/public ./public
+  # COPY --from=builder --chown=next:nodejs /app/public ./public
+
+  # Copy dynamic asset folder structure
+  COPY --from=builder --chown=next:nodejs /app/dynamic ./dynamic
 
   # Set the correct permission for prerender cache
   RUN mkdir .next
