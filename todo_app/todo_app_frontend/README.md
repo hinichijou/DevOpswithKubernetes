@@ -26,4 +26,4 @@ Uses the following environment values:
 * `IMAGE_NAME`: the name of the file where the image is saved. Default value `image.jpg`.
 * `IMAGE_FETCH_TIMEOUT`: the timeout after which a new image is fetched. Default value `600000`.
 
-This is a test for triggering a workflow deployment in task 3.6.
+3.6: workflow deployment triggering test
