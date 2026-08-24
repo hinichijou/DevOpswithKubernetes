@@ -12,6 +12,4 @@ USER jobuser
 
 ENTRYPOINT ["sh"]
 
-# 3.6: Test triggering a workflow build
-
 CMD [ "wikipedia_random_link_todo.sh" ]
