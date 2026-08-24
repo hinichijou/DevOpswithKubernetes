@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       deploy_all:
-        description: Build and Deploy the whole application without branch changes checking.
+        description: Build and Deploy the whole application.
         required: true
         type: boolean
         default: false
