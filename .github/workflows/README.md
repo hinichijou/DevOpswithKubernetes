@@ -60,7 +60,7 @@ The workflow dispatch input `deploy_all` provides a possibility to skip the chan
 Uses the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` that are explained above and `SOPS_AGE_KEY` that is used to decrypt [the encrypted postgres database secret](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.6/todo_app/manifests/enc_secret_postgres.yaml).
 
 ### Task 3.6
-The deployment workflow assumes that there is a GKE cluster running and that the peristent volume manifests have been applied to the cluster since they are not necessarily managed by the developers and are considered non application spesific. This means that the [todo app readme](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.6/todo_app/README.md) should be followed until the `kubectl apply -f persistent_volume_manifests` step.
+The deployment workflow assumes that there is a GKE cluster running and that the peristent volume manifests have been applied to the cluster since they are not necessarily managed by the developers and are considered non application specific. This means that the [todo app readme](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.6/todo_app/README.md) should be followed until the `kubectl apply -f persistent_volume_manifests` step.
 
 Example of a successful workflow dispatch triggered full application deployment: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32779000648
 
