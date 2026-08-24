@@ -20,5 +20,3 @@ Has environment variables `PORT`, `TODO_MIN_LENGTH` and `TODO_MAX_LENGTH`. `PORT
 Saves the todos to and fetches them from a Postgres database which means a local Postgres instance is required. Expects the environment variable `PGPASSWORD` to be set to the environment and match the database password. You should also consider setting `PGUSER`, `PGHOST` and `PGDATABASE` to suitable values. Fetches the values `id` and `title` from table `todos` see [`manifests/init_todo_db.sql`](https://github.com/hinichijou/DevOpswithKubernetes/tree/2.8/todo_app/manifests/init_todo_db.sql) for how the todos table is defined.
 
 Every request made to the backend and the body of every post request received is logged to console.
-
-3.6: Test triggering a workflow build
