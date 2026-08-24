@@ -43,3 +43,5 @@ spec:
                 name: postgres-config
       securityContext:
         fsGroup: 1001
+  strategy:
+    type: Recreate
