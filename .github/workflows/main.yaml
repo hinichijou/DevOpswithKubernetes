@@ -43,17 +43,16 @@ jobs:
       - uses: dorny/paths-filter@v4
         id: changes
         with:
-          working-directory: 'todo_app'
           filters: |
             manifests:
-              - 'manifests/**'
-              - 'kustomization.yaml'
+              - 'todo_app/manifests/**'
+              - 'todo_app/kustomization.yaml'
             frontend:
-              - 'todo_app_frontend/**'
+              - 'todo_app/todo_app_frontend/**'
             backend:
-              - 'backend/**'
+              - 'todo_app/backend/**'
             wikipedia_todo_job:
-              - 'wikipedia_todo_job/**'
+              - 'todo_app/wikipedia_todo_job/**'
 
       - name: 'Have deploy relevant files changed'
         id: 'file_changes'
