@@ -64,4 +64,4 @@ The deployment workflow assumes that there is a GKE cluster running and that the
 
 Example of a successful workflow dispatch triggered full application deployment: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32779000648
 
-Examples of a successful automatic deployment triggered by git push: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32781621702 and https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32782539470
+Examples of a successful automatic deployments triggered by git push: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32781621702 and https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32782539470
