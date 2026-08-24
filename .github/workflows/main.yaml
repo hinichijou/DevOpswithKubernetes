@@ -24,6 +24,7 @@ env:
   BACKEND_IMAGE: backend
   WIKIPEDIA_JOB_IMAGE: wikipedia_job
   TODOAPP_DEPLOYMENT: todoapp-dep
+  NAMESPACE: project
   BRANCH: "${{ github.ref_name }}"
 
 jobs:
@@ -131,5 +132,5 @@ jobs:
         run: |-
           sops --decrypt manifests/enc_secret_postgres.yaml | kubectl apply -f -
           kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment $TODOAPP_DEPLOYMENT -n project
-          kubectl get services -o wide
+          kubectl rollout status deployment $TODOAPP_DEPLOYMENT -n $NAMESPACE
+          kubectl get services -o wide -n $NAMESPACE
