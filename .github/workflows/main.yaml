@@ -62,7 +62,7 @@ jobs:
               steps.changes.outputs.wikipedia_todo_job == 'true' ||
               steps.changes.outputs.manifests == 'true' ||
               inputs.deploy_all
-            }}" >> $GITHUB_ENV
+            }}" >> $GITHUB_OUTPUT
 
       - if: steps.file_changes.outputs.deploy == 'true'
         uses: google-github-actions/auth@v3
