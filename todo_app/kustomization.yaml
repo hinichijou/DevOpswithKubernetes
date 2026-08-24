@@ -21,7 +21,8 @@ resources:
   - manifests/service_todoapp.yaml
   - manifests/service_postgres.yaml
   - manifests/statefulset_postgres.yaml
-  - manifests/secret_postgres.yaml
+  # The deployment is done by decrypting enc_secret_postgres.yaml and applying it directly in the GitHub workflow
+  # - manifests/secret_postgres.yaml
   - manifests/configmap_postgres.yaml
   - manifests/wikipedia_todo_job.yml
   - manifests/healthcheckpolicies.yaml
