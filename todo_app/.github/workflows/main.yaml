@@ -1,0 +1,132 @@
+name: Release application
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      deploy_all:
+        description: Build and Deploy the whole application without branch changes checking.
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  PROJECT_ID: "${{ secrets.GKE_PROJECT }}"
+  GKE_CLUSTER: dwk-cluster
+  GKE_ZONE: europe-north1-b
+  REGISTRY: europe-north1-docker.pkg.dev
+  REPOSITORY: my-repository
+  FRONTEND_IMAGE: frontend
+  BACKEND_IMAGE: backend
+  WIKIPEDIA_JOB_IMAGE: wikipedia_job
+  TODOAPP_DEPLOYMENT: todoapp-dep
+  BRANCH: "${{ github.ref_name }}"
+
+jobs:
+  build-publish-deploy:
+    name: Build, Publish and Deploy
+    runs-on: ubuntu-latest
+    environment: GKE_PROJECT
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - uses: dorny/paths-filter@v4
+        id: changes
+        with:
+          filters: |
+            manifests:
+              - 'manifests/**'
+              - 'kustomization.yaml'
+            frontend:
+              - 'todo_app_frontend/**'
+            backend:
+              - 'backend/**'
+            wikipedia_todo_job:
+              - 'wikipedia_todo_job/**'
+
+      - name: 'Have deploy relevant files changed'
+        id: 'file_changes'
+        run: |
+          echo "deploy=${{
+              steps.changes.outputs.frontend == 'true' ||
+              steps.changes.outputs.backend == 'true' ||
+              steps.changes.outputs.wikipedia_todo_job == 'true' ||
+              steps.changes.outputs.manifests == 'true' ||
+              inputs.deploy_all
+            }}" >> $GITHUB_ENV
+
+      - if: steps.file_changes.outputs.deploy == 'true'
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: "${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}"
+          service_account: "${{ secrets.SERVICE_ACCOUNT }}"
+
+      - name: 'Set up Cloud SDK'
+        if: steps.file_changes.outputs.deploy == 'true'
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: 'Use gcloud CLI'
+        if: steps.file_changes.outputs.deploy == 'true'
+        run: gcloud info
+
+      - if: steps.file_changes.outputs.deploy == 'true'
+        run: gcloud --quiet auth configure-docker $REGISTRY
+
+      - name: 'Get GKE credentials'
+        if: steps.file_changes.outputs.deploy == 'true'
+        uses: 'google-github-actions/get-gke-credentials@v3'
+        with:
+          cluster_name: "${{ env.GKE_CLUSTER }}"
+          project_id: "${{ env.PROJECT_ID }}"
+          location: "${{ env.GKE_ZONE }}"
+
+      - name: Set up Kustomize
+        if: steps.file_changes.outputs.deploy == 'true'
+        uses: imranismail/setup-kustomize@v3
+
+      - name : 'Build & Publish frontend image'
+        if: steps.changes.outputs.frontend == 'true' || inputs.deploy_all == 'true'
+        run: |
+          IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA
+          docker build --tag "$IMAGE_TAG" ./todo_app_frontend
+          docker push "$IMAGE_TAG"
+          kustomize edit set image PROJECT/FRONTENDIMAGE="$IMAGE_TAG"
+
+      - name : 'Build & Publish backend image'
+        if: steps.changes.outputs.backend == 'true' || inputs.deploy_all == 'true'
+        run: |
+          IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA
+          docker build --tag "$IMAGE_TAG" ./backend
+          docker push "$IMAGE_TAG"
+          kustomize edit set image PROJECT/BACKENDIMAGE="$IMAGE_TAG"
+
+      - name : 'Build & Publish wikipedia todo job image'
+        if: steps.changes.outputs.wikipedia_todo_job == 'true' || inputs.deploy_all == 'true'
+        run: |
+          IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$WIKIPEDIA_JOB_IMAGE:$BRANCH-$GITHUB_SHA
+          docker build --tag "$IMAGE_TAG" ./wikipedia_todo_job
+          docker push "$IMAGE_TAG"
+          kustomize edit set image PROJECT/WIKIPEDIATODOJOBIMAGE="$IMAGE_TAG"
+
+      - name: 'Install SOPS'
+        if: steps.file_changes.outputs.deploy == 'true'
+        run: |
+          curl -LO https://github.com/getsops/sops/releases/download/v3.13.3/sops-v3.13.3.linux.amd64
+          sudo mv sops-v3.13.3.linux.amd64 /usr/local/bin/sops
+          sudo chmod +x /usr/local/bin/sops
+
+      - name: Deploy
+        if: steps.file_changes.outputs.deploy == 'true'
+        env:
+          SOPS_AGE_KEY: "${{ secrets.SOPS_AGE_KEY }}"
+        run: |-
+          sops --decrypt manifests/enc_secret_postgres.yaml | kubectl apply -f -
+          kustomize build . | kubectl apply -f -
+          kubectl rollout status deployment $TODOAPP_DEPLOYMENT
+          kubectl get services -o wide
