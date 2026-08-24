@@ -94,7 +94,7 @@ jobs:
         uses: imranismail/setup-kustomize@v3
 
       - name : 'Build & Publish frontend image'
-        if: steps.changes.outputs.frontend == 'true' || inputs.deploy_all == 'true'
+        if: steps.changes.outputs.frontend == 'true' || inputs.deploy_all
         run: |
           IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA
           docker build --tag "$IMAGE_TAG" ./todo_app_frontend
@@ -102,7 +102,7 @@ jobs:
           kustomize edit set image PROJECT/FRONTENDIMAGE="$IMAGE_TAG"
 
       - name : 'Build & Publish backend image'
-        if: steps.changes.outputs.backend == 'true' || inputs.deploy_all == 'true'
+        if: steps.changes.outputs.backend == 'true' || inputs.deploy_all
         run: |
           IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA
           docker build --tag "$IMAGE_TAG" ./backend
@@ -110,7 +110,7 @@ jobs:
           kustomize edit set image PROJECT/BACKENDIMAGE="$IMAGE_TAG"
 
       - name : 'Build & Publish wikipedia todo job image'
-        if: steps.changes.outputs.wikipedia_todo_job == 'true' || inputs.deploy_all == 'true'
+        if: steps.changes.outputs.wikipedia_todo_job == 'true' || inputs.deploy_all
         run: |
           IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$WIKIPEDIA_JOB_IMAGE:$BRANCH-$GITHUB_SHA
           docker build --tag "$IMAGE_TAG" ./wikipedia_todo_job

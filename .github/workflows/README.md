@@ -1,6 +1,6 @@
 ## Deployment pipeline
 
-Configration for a pipeline that deploys from GitHub to Google Cloud.
+Configration for a pipeline that builds docker images and deploys to Google Cloud when related repository folders receive a push.
 
 The [main.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.6/todo_app/.github/workflows/main.yaml) requires that the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` are set.
 
