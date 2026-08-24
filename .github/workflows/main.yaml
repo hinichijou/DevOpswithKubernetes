@@ -102,6 +102,16 @@ jobs:
           docker push "$IMAGE_TAG"
           kustomize edit set image PROJECT/FRONTENDIMAGE="$IMAGE_TAG"
 
+      - name : 'Fetch existing frontend image'
+        if: steps.changes.outputs.frontend == 'false' && !inputs.deploy_all
+        run: |
+          IMAGE_PATH=$REGISTRY/$PROJECT_ID/$REPOSITORY/$FRONTEND_IMAGE
+          IMAGE_SHA=$(gcloud artifacts docker images list "$IMAGE_PATH" \
+          --sort-by="~UPDATE_TIME" \
+          --limit=1 \
+          --format="value(version)")
+          kustomize edit set image PROJECT/FRONTENDIMAGE="$IMAGE_PATH@$IMAGE_SHA"
+
       - name : 'Build & Publish backend image'
         if: steps.changes.outputs.backend == 'true' || inputs.deploy_all
         run: |
@@ -110,6 +120,16 @@ jobs:
           docker push "$IMAGE_TAG"
           kustomize edit set image PROJECT/BACKENDIMAGE="$IMAGE_TAG"
 
+      - name : 'Fetch existing backend image'
+        if: steps.changes.outputs.backend == 'false' && !inputs.deploy_all
+        run: |
+          IMAGE_PATH=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKEND_IMAGE
+          IMAGE_SHA=$(gcloud artifacts docker images list "$IMAGE_PATH" \
+          --sort-by="~UPDATE_TIME" \
+          --limit=1 \
+          --format="value(version)")
+          kustomize edit set image PROJECT/BACKENDIMAGE="$IMAGE_PATH@$IMAGE_SHA"
+
       - name : 'Build & Publish wikipedia todo job image'
         if: steps.changes.outputs.wikipedia_todo_job == 'true' || inputs.deploy_all
         run: |
@@ -117,6 +137,16 @@ jobs:
           docker build --tag "$IMAGE_TAG" ./wikipedia_todo_job
           docker push "$IMAGE_TAG"
           kustomize edit set image PROJECT/WIKIPEDIATODOJOBIMAGE="$IMAGE_TAG"
+
+      - name : 'Fetch existing wikipedia todo job image'
+        if: steps.changes.outputs.wikipedia_todo_job == 'false' && !inputs.deploy_all
+        run: |
+          IMAGE_PATH=$REGISTRY/$PROJECT_ID/$REPOSITORY/$WIKIPEDIA_JOB_IMAGE
+          IMAGE_SHA=$(gcloud artifacts docker images list "$IMAGE_PATH" \
+          --sort-by="~UPDATE_TIME" \
+          --limit=1 \
+          --format="value(version)")
+          kustomize edit set image PROJECT/WIKIPEDIATODOJOBIMAGE="$IMAGE_PATH@$IMAGE_SHA"
 
       - name: 'Install SOPS'
         if: steps.file_changes.outputs.deploy == 'true'
