@@ -36,3 +36,4 @@
 - [3.3.](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.3/log_output_ping-pong_application)
 - [3.4.](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.4/log_output_ping-pong_application)
 - [3.5.](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.5/todo_app)
+- [3.6.](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.6/.github/workflows)
