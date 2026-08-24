@@ -43,7 +43,7 @@ jobs:
       - uses: dorny/paths-filter@v4
         id: changes
         with:
-          working-directory: './todo_app'
+          working-directory: 'todo_app'
           filters: |
             manifests:
               - 'manifests/**'
