@@ -103,7 +103,7 @@ jobs:
           kustomize edit set image PROJECT/FRONTENDIMAGE="$IMAGE_TAG"
 
       - name : 'Fetch existing frontend image'
-        if: steps.changes.outputs.frontend == 'false' && !inputs.deploy_all
+        if: steps.changes.outputs.frontend == 'false' && steps.file_changes.outputs.deploy == 'true'
         run: |
           IMAGE_PATH=$REGISTRY/$PROJECT_ID/$REPOSITORY/$FRONTEND_IMAGE
           IMAGE_SHA=$(gcloud artifacts docker images list "$IMAGE_PATH" \
@@ -121,7 +121,7 @@ jobs:
           kustomize edit set image PROJECT/BACKENDIMAGE="$IMAGE_TAG"
 
       - name : 'Fetch existing backend image'
-        if: steps.changes.outputs.backend == 'false' && !inputs.deploy_all
+        if: steps.changes.outputs.backend == 'false'  && steps.file_changes.outputs.deploy == 'true'
         run: |
           IMAGE_PATH=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKEND_IMAGE
           IMAGE_SHA=$(gcloud artifacts docker images list "$IMAGE_PATH" \
@@ -139,7 +139,7 @@ jobs:
           kustomize edit set image PROJECT/WIKIPEDIATODOJOBIMAGE="$IMAGE_TAG"
 
       - name : 'Fetch existing wikipedia todo job image'
-        if: steps.changes.outputs.wikipedia_todo_job == 'false' && !inputs.deploy_all
+        if: steps.changes.outputs.wikipedia_todo_job == 'false'  && steps.file_changes.outputs.deploy == 'true'
         run: |
           IMAGE_PATH=$REGISTRY/$PROJECT_ID/$REPOSITORY/$WIKIPEDIA_JOB_IMAGE
           IMAGE_SHA=$(gcloud artifacts docker images list "$IMAGE_PATH" \
