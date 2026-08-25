@@ -14,6 +14,7 @@ configMapGenerator:
   - assets/information.txt
 resources:
   - manifests/gateway.yaml
+  - manifests/persistentvolumeclaim_log_output.yaml
   - manifests/configmap_log_output.yaml
   - manifests/deployment_log_output.yaml
   - manifests/service_log_output_reader.yaml
