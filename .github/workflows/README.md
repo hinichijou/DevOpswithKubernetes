@@ -55,7 +55,9 @@ The built images are stored to the Google Cloud project Artifact registry reposi
 
 It makes sense to build and upload only the images if there are changes to the related files. For that reason to workflow checks if there are changes to the related folder before triggering the build step. There is a popular GitHub Action [dorny/paths-filter](https://github.com/dorny/paths-filter) that seems to be built just for this purpose so this can be leveraged in our workflow to get a neat solution for monitoring changes in certain folders.
 
-The workflow dispatch input `deploy_all` provides a possibility to skip the changes checks and build and deploy the whole application.
+If there are no changes fo the image relevant folder the workflow will search for the latest image built from the branch and uses that. The workflow assumes that I image for the branch exists
+
+The workflow dispatch input `deploy_build_all` provides a possibility to skip the changes checks and build and deploy the whole application. The input `deploy_build_necessary` deploys the application while only building images if existing ones are not found, effectively working the same as a manifest change.
 
 Uses the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` that are explained above and `SOPS_AGE_KEY` that is used to decrypt [the encrypted postgres database secret](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.7/todo_app/manifests/enc_secret_postgres.yaml).
 

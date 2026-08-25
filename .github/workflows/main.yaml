@@ -4,8 +4,13 @@ on:
   push:
   workflow_dispatch:
     inputs:
-      deploy_all:
+      deploy_build_all:
         description: Build and Deploy the whole application.
+        required: true
+        type: boolean
+        default: false
+      deploy_build_necessary:
+        description: Deploy application, build images only if necessary.
         required: true
         type: boolean
         default: false
@@ -67,7 +72,8 @@ jobs:
               steps.changes.outputs.backend == 'true' ||
               steps.changes.outputs.wikipedia_todo_job == 'true' ||
               steps.changes.outputs.manifests == 'true' ||
-              inputs.deploy_all
+              inputs.deploy_build_all ||
+              inputs.deploy_build_necessary
             }}" >> $GITHUB_OUTPUT
 
       - if: steps.file_changes.outputs.deploy == 'true'
@@ -100,7 +106,7 @@ jobs:
         uses: imranismail/setup-kustomize@v3
 
       - name : 'Build & Publish frontend image'
-        if: steps.changes.outputs.frontend == 'true' || inputs.deploy_all
+        if: steps.changes.outputs.frontend == 'true' || inputs.deploy_build_all
         uses: ./.github/actions/build_image.yaml
         with:
           image_name: "${{ env.FRONTEND_IMAGE_NAME }}"
@@ -108,7 +114,7 @@ jobs:
           image_alias: ${{ env.FRONTEND_IMAGE_ALIAS }}
 
       - name : 'Fetch existing frontend image (builds the image if existing image for the current branch not found)'
-        if: steps.changes.outputs.frontend == 'false' && steps.file_changes.outputs.deploy == 'true'  && !inputs.deploy_all
+        if: steps.changes.outputs.frontend == 'false' && steps.file_changes.outputs.deploy == 'true'  && !inputs.deploy_build_all
         uses: ./.github/actions/fetch_image.yaml
         with:
           image_name: "${{ env.FRONTEND_IMAGE_NAME }}"
@@ -116,7 +122,7 @@ jobs:
           image_alias: ${{ env.FRONTEND_IMAGE_ALIAS }}
 
       - name : 'Build & Publish backend image'
-        if: steps.changes.outputs.backend == 'true' || inputs.deploy_all
+        if: steps.changes.outputs.backend == 'true' || inputs.deploy_build_all
         uses: ./.github/actions/build_image.yaml
         with:
           image_name: "${{ env.BACKEND_IMAGE_NAME }}"
@@ -124,7 +130,7 @@ jobs:
           image_alias: ${{ env.BACKEND_IMAGE_ALIAS }}
 
       - name : 'Fetch existing backend image (builds the image if existing image for the current branch not found)'
-        if: steps.changes.outputs.backend == 'false'  && steps.file_changes.outputs.deploy == 'true' && !inputs.deploy_all
+        if: steps.changes.outputs.backend == 'false'  && steps.file_changes.outputs.deploy == 'true' && !inputs.deploy_build_all
         uses: ./.github/actions/fetch_image.yaml
         with:
           image_name: "${{ env.BACKEND_IMAGE_NAME }}"
@@ -132,7 +138,7 @@ jobs:
           image_alias: ${{ env.BACKEND_IMAGE_ALIAS }}
 
       - name : 'Build & Publish wikipedia todo job image'
-        if: steps.changes.outputs.wikipedia_todo_job == 'true' || inputs.deploy_all
+        if: steps.changes.outputs.wikipedia_todo_job == 'true' || inputs.deploy_build_all
         uses: ./.github/actions/build_image.yaml
         with:
           image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}"
@@ -140,7 +146,7 @@ jobs:
           image_alias: ${{ env.WIKIPEDIA_JOB_IMAGE_ALIAS }}
 
       - name : 'Fetch existing wikipedia todo job image (builds the image if existing image for the current branch not found)'
-        if: steps.changes.outputs.wikipedia_todo_job == 'false'  && steps.file_changes.outputs.deploy == 'true' && !inputs.deploy_all
+        if: steps.changes.outputs.wikipedia_todo_job == 'false'  && steps.file_changes.outputs.deploy == 'true' && !inputs.deploy_build_all
         uses: ./.github/actions/fetch_image.yaml
         with:
           image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}"
