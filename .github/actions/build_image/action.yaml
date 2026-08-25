@@ -14,7 +14,7 @@ runs:
     - name: Run bash commands
       shell: bash
       run: |
-        IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/"${{ inputs.image_name }}":"${{ github.ref_name }}"-"${{ github.sha }}"
+        IMAGE_TAG="$REGISTRY/$PROJECT_ID/$REPOSITORY/${{ inputs.image_name }}:${{ github.ref_name }}-${{ github.sha }}"
         docker build --tag $IMAGE_TAG "${{ inputs.build_folder }}"
         docker push $IMAGE_TAG
         kustomize edit set image "${{ inputs.image_alias }}"=$IMAGE_TAG

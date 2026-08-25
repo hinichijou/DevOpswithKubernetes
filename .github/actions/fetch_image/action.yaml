@@ -15,7 +15,7 @@ runs:
       id: 'sha'
       shell: bash
       run: |
-        IMAGE_PATH=$REGISTRY/$PROJECT_ID/$REPOSITORY/"${{ inputs.image_name }}"
+        IMAGE_PATH="$REGISTRY/$PROJECT_ID/$REPOSITORY/${{ inputs.image_name }}"
         echo "image_sha=$(gcloud artifacts docker images list $IMAGE_PATH \
         --filter="tag~${{ github.ref_name }}*"
         --sort-by="~UPDATE_TIME" \
@@ -34,5 +34,5 @@ runs:
       if: steps.sha.outputs.image_sha != ''
       shell: bash
       run: |
-        IMAGE_PATH=$REGISTRY/$PROJECT_ID/$REPOSITORY/"${{ inputs.image_name }}"
+        IMAGE_PATH="$REGISTRY/$PROJECT_ID/$REPOSITORY/${{ inputs.image_name }}"
         kustomize edit set image "${{ inputs.image_alias }}"="$IMAGE_PATH@${{ steps.sha.outputs.image_sha }}"

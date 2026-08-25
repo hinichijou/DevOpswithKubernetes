@@ -27,13 +27,13 @@ env:
   REPOSITORY: my-repository
   FRONTEND_IMAGE_NAME: frontend
   FRONTEND_IMAGE_ALIAS: PROJECT/FRONTENDIMAGE
-  FRONTEND_FOLDER: ./todo_app_frontend
+  FRONTEND_FOLDER: ./todo_app/todo_app_frontend
   BACKEND_IMAGE_NAME: backend
   BACKEND_IMAGE_ALIAS: PROJECT/BACKENDIMAGE
-  BACKEND_FOLDER: ./backend
+  BACKEND_FOLDER: ./todo_app/backend
   WIKIPEDIA_JOB_IMAGE_NAME: wikipedia_job
   WIKIPEDIA_JOB_IMAGE_ALIAS: PROJECT/WIKIPEDIATODOJOBIMAGE
-  WIKIPEDIA_JOB_FOLDER: ./wikipedia_todo_job
+  WIKIPEDIA_JOB_FOLDER: ./todo_app/wikipedia_todo_job
   TODOAPP_DEPLOYMENT: todoapp-dep
   MAIN_NAMESPACE: project
 
@@ -111,7 +111,7 @@ jobs:
         with:
           image_name: "${{ env.FRONTEND_IMAGE_NAME }}"
           build_folder: "${{ env.FRONTEND_FOLDER }}"
-          image_alias: ${{ env.FRONTEND_IMAGE_ALIAS }}
+          image_alias: "${{ env.FRONTEND_IMAGE_ALIAS }}"
 
       - name : 'Fetch existing frontend image (builds the image if existing image for the current branch not found)'
         if: steps.changes.outputs.frontend == 'false' && steps.file_changes.outputs.deploy == 'true'  && !inputs.deploy_build_all
@@ -119,7 +119,7 @@ jobs:
         with:
           image_name: "${{ env.FRONTEND_IMAGE_NAME }}"
           build_folder: "${{ env.FRONTEND_FOLDER }}"
-          image_alias: ${{ env.FRONTEND_IMAGE_ALIAS }}
+          image_alias: "${{ env.FRONTEND_IMAGE_ALIAS }}"
 
       - name : 'Build & Publish backend image'
         if: steps.changes.outputs.backend == 'true' || inputs.deploy_build_all
@@ -127,7 +127,7 @@ jobs:
         with:
           image_name: "${{ env.BACKEND_IMAGE_NAME }}"
           build_folder: "${{ env.BACKEND_FOLDER }}"
-          image_alias: ${{ env.BACKEND_IMAGE_ALIAS }}
+          image_alias: "${{ env.BACKEND_IMAGE_ALIAS }}"
 
       - name : 'Fetch existing backend image (builds the image if existing image for the current branch not found)'
         if: steps.changes.outputs.backend == 'false'  && steps.file_changes.outputs.deploy == 'true' && !inputs.deploy_build_all
@@ -135,7 +135,7 @@ jobs:
         with:
           image_name: "${{ env.BACKEND_IMAGE_NAME }}"
           build_folder: "${{ env.BACKEND_FOLDER }}"
-          image_alias: ${{ env.BACKEND_IMAGE_ALIAS }}
+          image_alias: "${{ env.BACKEND_IMAGE_ALIAS }}"
 
       - name : 'Build & Publish wikipedia todo job image'
         if: steps.changes.outputs.wikipedia_todo_job == 'true' || inputs.deploy_build_all
@@ -143,7 +143,7 @@ jobs:
         with:
           image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}"
           build_folder: "${{ env.WIKIPEDIA_JOB_FOLDER }}"
-          image_alias: ${{ env.WIKIPEDIA_JOB_IMAGE_ALIAS }}
+          image_alias: "${{ env.WIKIPEDIA_JOB_IMAGE_ALIAS }}"
 
       - name : 'Fetch existing wikipedia todo job image (builds the image if existing image for the current branch not found)'
         if: steps.changes.outputs.wikipedia_todo_job == 'false'  && steps.file_changes.outputs.deploy == 'true' && !inputs.deploy_build_all
@@ -151,7 +151,7 @@ jobs:
         with:
           image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}"
           build_folder: "${{ env.WIKIPEDIA_JOB_FOLDER }}"
-          image_alias: ${{ env.WIKIPEDIA_JOB_IMAGE_ALIAS }}
+          image_alias: "${{ env.WIKIPEDIA_JOB_IMAGE_ALIAS }}"
 
       - name: 'Install SOPS'
         if: steps.file_changes.outputs.deploy == 'true'
