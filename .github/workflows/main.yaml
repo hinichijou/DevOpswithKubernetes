@@ -107,7 +107,7 @@ jobs:
 
       - name : 'Build & Publish frontend image'
         if: steps.changes.outputs.frontend == 'true' || inputs.deploy_build_all
-        uses: ./.github/actions/build_image.yaml
+        uses: ./.github/actions/build_image
         with:
           image_name: "${{ env.FRONTEND_IMAGE_NAME }}"
           build_folder: "${{ env.FRONTEND_FOLDER }}"
@@ -115,7 +115,7 @@ jobs:
 
       - name : 'Fetch existing frontend image (builds the image if existing image for the current branch not found)'
         if: steps.changes.outputs.frontend == 'false' && steps.file_changes.outputs.deploy == 'true'  && !inputs.deploy_build_all
-        uses: ./.github/actions/fetch_image.yaml
+        uses: ./.github/actions/fetch_image
         with:
           image_name: "${{ env.FRONTEND_IMAGE_NAME }}"
           build_folder: "${{ env.FRONTEND_FOLDER }}"
@@ -123,7 +123,7 @@ jobs:
 
       - name : 'Build & Publish backend image'
         if: steps.changes.outputs.backend == 'true' || inputs.deploy_build_all
-        uses: ./.github/actions/build_image.yaml
+        uses: ./.github/actions/build_image
         with:
           image_name: "${{ env.BACKEND_IMAGE_NAME }}"
           build_folder: "${{ env.BACKEND_FOLDER }}"
@@ -131,7 +131,7 @@ jobs:
 
       - name : 'Fetch existing backend image (builds the image if existing image for the current branch not found)'
         if: steps.changes.outputs.backend == 'false'  && steps.file_changes.outputs.deploy == 'true' && !inputs.deploy_build_all
-        uses: ./.github/actions/fetch_image.yaml
+        uses: ./.github/actions/fetch_image
         with:
           image_name: "${{ env.BACKEND_IMAGE_NAME }}"
           build_folder: "${{ env.BACKEND_FOLDER }}"
@@ -139,7 +139,7 @@ jobs:
 
       - name : 'Build & Publish wikipedia todo job image'
         if: steps.changes.outputs.wikipedia_todo_job == 'true' || inputs.deploy_build_all
-        uses: ./.github/actions/build_image.yaml
+        uses: ./.github/actions/build_image
         with:
           image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}"
           build_folder: "${{ env.WIKIPEDIA_JOB_FOLDER }}"
@@ -147,7 +147,7 @@ jobs:
 
       - name : 'Fetch existing wikipedia todo job image (builds the image if existing image for the current branch not found)'
         if: steps.changes.outputs.wikipedia_todo_job == 'false'  && steps.file_changes.outputs.deploy == 'true' && !inputs.deploy_build_all
-        uses: ./.github/actions/fetch_image.yaml
+        uses: ./.github/actions/fetch_image
         with:
           image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}"
           build_folder: "${{ env.WIKIPEDIA_JOB_FOLDER }}"

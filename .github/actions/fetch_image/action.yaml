@@ -24,7 +24,7 @@ runs:
 
     - name: Build image if not found
       if: steps.sha.outputs.image_sha == ''
-      uses: ./.github/actions/build_image.yaml
+      uses: ./.github/actions/build_image
       with:
         image_name: "${{ inputs.image_name }}"
         build_folder: "${{ inputs.build_folder }}"
