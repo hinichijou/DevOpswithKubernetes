@@ -155,7 +155,8 @@ jobs:
           sudo mv sops-v3.13.3.linux.amd64 /usr/local/bin/sops
           sudo chmod +x /usr/local/bin/sops
 
-      - name: 'Create namespace'
+      # Reason for the set/create step split: GITHUB_ENV variables only become available in the next step
+      - name: 'Set name for namespace'
         if: steps.file_changes.outputs.deploy == 'true'
         #The kustomize.yaml namespace will override the namespace set to the resource yamls
         run: |-
@@ -164,6 +165,11 @@ jobs:
           else
             echo "NAMESPACE=$GITHUB_REF_NAME" >> $GITHUB_ENV
           fi
+
+      - name: 'Create namespace'
+        if: steps.file_changes.outputs.deploy == 'true'
+        #The kustomize.yaml namespace will override the namespace set to the resource yamls
+        run: |-
           kubectl create namespace "$NAMESPACE" || true
           kubectl config set-context --current --namespace="$NAMESPACE"
           kustomize edit set namespace "$NAMESPACE"
