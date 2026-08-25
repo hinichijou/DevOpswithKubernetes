@@ -24,7 +24,7 @@ env:
   BACKEND_IMAGE: backend
   WIKIPEDIA_JOB_IMAGE: wikipedia_job
   TODOAPP_DEPLOYMENT: todoapp-dep
-  NAMESPACE: project
+  MAIN_NAMESPACE: project
   BRANCH: "${{ github.ref_name }}"
 
 jobs:
@@ -155,6 +155,19 @@ jobs:
           sudo mv sops-v3.13.3.linux.amd64 /usr/local/bin/sops
           sudo chmod +x /usr/local/bin/sops
 
+      - name: 'Create namespace'
+        if: steps.file_changes.outputs.deploy == 'true'
+        #The kustomize.yaml namespace will override the namespace set to the resource yamls
+        run: |-
+          if [ "$GITHUB_REF_NAME" == "main" ]; then
+            NAMESPACE=$MAIN_NAMESPACE
+          else
+            NAMESPACE=$GITHUB_REF_NAME
+          fi
+          kubectl create namespace "$NAMESPACE" || true
+          kubectl config set-context --current --namespace="$NAMESPACE"
+          kustomize edit set namespace "$NAMESPACE"
+
       - name: Deploy
         if: steps.file_changes.outputs.deploy == 'true'
         env:
@@ -162,5 +175,5 @@ jobs:
         run: |-
           sops --decrypt manifests/enc_secret_postgres.yaml | kubectl apply -f -
           kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment $TODOAPP_DEPLOYMENT -n $NAMESPACE
-          kubectl get services -o wide -n $NAMESPACE
+          kubectl rollout status deployment $TODOAPP_DEPLOYMENT
+          kubectl get services -o wide
