@@ -12,6 +12,8 @@ runs:
   using: "composite"
   steps:
     - name: Run bash commands
+      # Assumes that the kustomize file is in the working directory root
+      working-directory: "${{ env.WORKING_DIRECTORY }}"
       shell: bash
       run: |
         IMAGE_TAG="$REGISTRY/$PROJECT_ID/$REPOSITORY/${{ inputs.image_name }}:${{ github.ref_name }}-${{ github.sha }}"

@@ -33,6 +33,8 @@ runs:
     - name: Set found image
       if: steps.sha.outputs.image_sha != ''
       shell: bash
+      # Assumes that the kustomize file is in the working directory root
+      working-directory: "${{ env.WORKING_DIRECTORY }}"
       run: |
         IMAGE_PATH="$REGISTRY/$PROJECT_ID/$REPOSITORY/${{ inputs.image_name }}"
         kustomize edit set image "${{ inputs.image_alias }}"="$IMAGE_PATH@${{ steps.sha.outputs.image_sha }}"

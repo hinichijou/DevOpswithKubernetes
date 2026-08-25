@@ -27,15 +27,16 @@ env:
   REPOSITORY: my-repository
   FRONTEND_IMAGE_NAME: frontend
   FRONTEND_IMAGE_ALIAS: PROJECT/FRONTENDIMAGE
-  FRONTEND_FOLDER: ./todo_app/todo_app_frontend
+  FRONTEND_FOLDER: ./todo_app_frontend
   BACKEND_IMAGE_NAME: backend
   BACKEND_IMAGE_ALIAS: PROJECT/BACKENDIMAGE
-  BACKEND_FOLDER: ./todo_app/backend
+  BACKEND_FOLDER: ./backend
   WIKIPEDIA_JOB_IMAGE_NAME: wikipedia_job
   WIKIPEDIA_JOB_IMAGE_ALIAS: PROJECT/WIKIPEDIATODOJOBIMAGE
-  WIKIPEDIA_JOB_FOLDER: ./todo_app/wikipedia_todo_job
+  WIKIPEDIA_JOB_FOLDER: ./wikipedia_todo_job
   TODOAPP_DEPLOYMENT: todoapp-dep
   MAIN_NAMESPACE: project
+  WORKING_DIRECTORY: ./todo_app
 
 jobs:
   build-publish-deploy:
@@ -44,7 +45,7 @@ jobs:
     environment: GKE_PROJECT
     defaults:
       run:
-        working-directory: ./todo_app
+        working-directory: "${{ env.WORKING_DIRECTORY }}"
 
     steps:
       - name: Checkout
