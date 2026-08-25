@@ -1,0 +1,19 @@
+name: 'Build Image'
+inputs:
+  image_name:
+    required: true
+  build_folder:
+    required: true
+  image_alias:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run bash commands
+      shell: bash
+      run: |
+        IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/"${{ image_name }}":"${{ github.ref_name }}"-"${{ github.sha }}"
+        docker build --tag $IMAGE_TAG "${{ build_folder }}"
+        docker push $IMAGE_TAG
+        kustomize edit set image "${{ image_alias }}"=$IMAGE_TAG

@@ -20,12 +20,17 @@ env:
   GKE_ZONE: europe-north1-b
   REGISTRY: europe-north1-docker.pkg.dev
   REPOSITORY: my-repository
-  FRONTEND_IMAGE: frontend
-  BACKEND_IMAGE: backend
-  WIKIPEDIA_JOB_IMAGE: wikipedia_job
+  FRONTEND_IMAGE_NAME: frontend
+  FRONTEND_IMAGE_ALIAS: PROJECT/FRONTENDIMAGE
+  FRONTEND_FOLDER: ./todo_app_frontend
+  BACKEND_IMAGE_NAME: backend
+  BACKEND_IMAGE_ALIAS: PROJECT/BACKENDIMAGE
+  BACKEND_FOLDER: ./backend
+  WIKIPEDIA_JOB_IMAGE_NAME: wikipedia_job
+  WIKIPEDIA_JOB_IMAGE_ALIAS: PROJECT/WIKIPEDIATODOJOBIMAGE
+  WIKIPEDIA_JOB_FOLDER: ./wikipedia_todo_job
   TODOAPP_DEPLOYMENT: todoapp-dep
   MAIN_NAMESPACE: project
-  BRANCH: "${{ github.ref_name }}"
 
 jobs:
   build-publish-deploy:
@@ -96,57 +101,51 @@ jobs:
 
       - name : 'Build & Publish frontend image'
         if: steps.changes.outputs.frontend == 'true' || inputs.deploy_all
-        run: |
-          IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA
-          docker build --tag "$IMAGE_TAG" ./todo_app_frontend
-          docker push "$IMAGE_TAG"
-          kustomize edit set image PROJECT/FRONTENDIMAGE="$IMAGE_TAG"
+        uses: ./.github/actions/build_image.yaml
+        with:
+          image_name: "${{ env.FRONTEND_IMAGE_NAME }}"
+          build_folder: "${{ env.FRONTEND_FOLDER }}"
+          image_alias: ${{ env.FRONTEND_IMAGE_ALIAS }}
 
-      - name : 'Fetch existing frontend image'
+      - name : 'Fetch existing frontend image (builds the image if existing image for the current branch not found)'
         if: steps.changes.outputs.frontend == 'false' && steps.file_changes.outputs.deploy == 'true'  && !inputs.deploy_all
-        run: |
-          IMAGE_PATH=$REGISTRY/$PROJECT_ID/$REPOSITORY/$FRONTEND_IMAGE
-          IMAGE_SHA=$(gcloud artifacts docker images list "$IMAGE_PATH" \
-          --sort-by="~UPDATE_TIME" \
-          --limit=1 \
-          --format="value(version)")
-          kustomize edit set image PROJECT/FRONTENDIMAGE="$IMAGE_PATH@$IMAGE_SHA"
+        uses: ./.github/actions/fetch_image.yaml
+        with:
+          image_name: "${{ env.FRONTEND_IMAGE_NAME }}"
+          build_folder: "${{ env.FRONTEND_FOLDER }}"
+          image_alias: ${{ env.FRONTEND_IMAGE_ALIAS }}
 
       - name : 'Build & Publish backend image'
         if: steps.changes.outputs.backend == 'true' || inputs.deploy_all
-        run: |
-          IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA
-          docker build --tag "$IMAGE_TAG" ./backend
-          docker push "$IMAGE_TAG"
-          kustomize edit set image PROJECT/BACKENDIMAGE="$IMAGE_TAG"
+        uses: ./.github/actions/build_image.yaml
+        with:
+          image_name: "${{ env.BACKEND_IMAGE_NAME }}"
+          build_folder: "${{ env.BACKEND_FOLDER }}"
+          image_alias: ${{ env.BACKEND_IMAGE_ALIAS }}
 
-      - name : 'Fetch existing backend image'
+      - name : 'Fetch existing backend image (builds the image if existing image for the current branch not found)'
         if: steps.changes.outputs.backend == 'false'  && steps.file_changes.outputs.deploy == 'true' && !inputs.deploy_all
-        run: |
-          IMAGE_PATH=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKEND_IMAGE
-          IMAGE_SHA=$(gcloud artifacts docker images list "$IMAGE_PATH" \
-          --sort-by="~UPDATE_TIME" \
-          --limit=1 \
-          --format="value(version)")
-          kustomize edit set image PROJECT/BACKENDIMAGE="$IMAGE_PATH@$IMAGE_SHA"
+        uses: ./.github/actions/fetch_image.yaml
+        with:
+          image_name: "${{ env.BACKEND_IMAGE_NAME }}"
+          build_folder: "${{ env.BACKEND_FOLDER }}"
+          image_alias: ${{ env.BACKEND_IMAGE_ALIAS }}
 
       - name : 'Build & Publish wikipedia todo job image'
         if: steps.changes.outputs.wikipedia_todo_job == 'true' || inputs.deploy_all
-        run: |
-          IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$WIKIPEDIA_JOB_IMAGE:$BRANCH-$GITHUB_SHA
-          docker build --tag "$IMAGE_TAG" ./wikipedia_todo_job
-          docker push "$IMAGE_TAG"
-          kustomize edit set image PROJECT/WIKIPEDIATODOJOBIMAGE="$IMAGE_TAG"
+        uses: ./.github/actions/build_image.yaml
+        with:
+          image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}"
+          build_folder: "${{ env.WIKIPEDIA_JOB_FOLDER }}"
+          image_alias: ${{ env.WIKIPEDIA_JOB_IMAGE_ALIAS }}
 
-      - name : 'Fetch existing wikipedia todo job image'
+      - name : 'Fetch existing wikipedia todo job image (builds the image if existing image for the current branch not found)'
         if: steps.changes.outputs.wikipedia_todo_job == 'false'  && steps.file_changes.outputs.deploy == 'true' && !inputs.deploy_all
-        run: |
-          IMAGE_PATH=$REGISTRY/$PROJECT_ID/$REPOSITORY/$WIKIPEDIA_JOB_IMAGE
-          IMAGE_SHA=$(gcloud artifacts docker images list "$IMAGE_PATH" \
-          --sort-by="~UPDATE_TIME" \
-          --limit=1 \
-          --format="value(version)")
-          kustomize edit set image PROJECT/WIKIPEDIATODOJOBIMAGE="$IMAGE_PATH@$IMAGE_SHA"
+        uses: ./.github/actions/fetch_image.yaml
+        with:
+          image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}"
+          build_folder: "${{ env.WIKIPEDIA_JOB_FOLDER }}"
+          image_alias: ${{ env.WIKIPEDIA_JOB_IMAGE_ALIAS }}
 
       - name: 'Install SOPS'
         if: steps.file_changes.outputs.deploy == 'true'

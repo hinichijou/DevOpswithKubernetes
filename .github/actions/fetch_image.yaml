@@ -1,0 +1,36 @@
+name: 'Fetch Image'
+inputs:
+  image_name:
+    required: true
+  build_folder:
+    required: true
+  image_alias:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Fetch existing image SHA
+      id: 'sha'
+      shell: bash
+      run: |
+        IMAGE_PATH=$REGISTRY/$PROJECT_ID/$REPOSITORY/"${{ image_name }}"
+        echo "image_sha=$(gcloud artifacts docker images list $IMAGE_PATH \
+        --filter="tag~${{ github.ref_name }}*"
+        --sort-by="~UPDATE_TIME" \
+        --limit=1 \
+        --format="value(version)")" >> $GITHUB_OUTPUT
+
+    - name: Build image if not found
+      if: steps.sha.outputs.image_sha == ""
+      uses: ./.github/actions/build_image.yaml
+      with:
+        image_name: "${{ image_name }}"
+        build_folder: "${{ build_folder }}"
+        image_alias: "${{ image_alias }}"
+
+    - name: Set found image
+      if: steps.sha.outputs.image_sha != ""
+      run: |
+        IMAGE_PATH=$REGISTRY/$PROJECT_ID/$REPOSITORY/"${{ image_name }}"
+        kustomize edit set image "${{ image_alias }}"="$IMAGE_PATH@${{ steps.sha.outputs.image_sha }}"
