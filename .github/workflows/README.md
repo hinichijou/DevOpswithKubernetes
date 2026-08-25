@@ -66,8 +66,10 @@ The deployment workflow assumes that there is a running GKE cluster. This means 
 
 The workflow now creates the namespace for each deployment based on the branch that gets pushed. The namespace name will be the branch name. The only exception is the main branch which gets deployed to a branch called `project`.
 
-Example of a successful deployment of the main branch: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32867391373/job/97865903628
+Example of a successful deployment of the main branch: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32904608486/job/97985781978
 
-Example of a successful deployment of non-main branch: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32867835785/job/97867353674
+Example of a successful deployment of a non-main branch: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32905537088/job/97988677065
+
+Example of a successful deployment with the deploy_build_all workflow dispatch input: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32906163088/job/97990651294
 
 Fixes: Reread the Introduction to storage part of the material and realised that it is just the persistent volumes that are not application specific and not the persistent volume claims. Moved the todo-app persistent volume claim to the application manifests folder and added it to the  `kustomization.yaml` deployment. Relevant specifically for this task since the PVC resource has a namespace.
