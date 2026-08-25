@@ -64,7 +64,7 @@ The deployment workflow assumes that there is a running GKE cluster. This means 
 
 The workflow now creates the namespace for each deployment based on the branch that gets pushed. The namespace name will be the branch name. The only exception is the main branch which gets deployed to a branch called `project`.
 
-Example of a successful deployment of the main branch: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32858640585/job/97836795423
+Example of a successful deployment of the main branch: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32867391373/job/97865903628
 
 Example of a successful deployment of non-main branch: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32867835785/job/97867353674
 
