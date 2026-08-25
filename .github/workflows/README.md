@@ -2,7 +2,7 @@
 
 Configration for a pipeline that builds docker images and deploys to Google Cloud when related repository folders receive a push.
 
-The [main.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.6/.github/workflows/main.yaml) requires that the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` are set.
+The [main.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.7/.github/workflows/main.yaml) requires that the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` are set.
 
 `GKE_PROJECT` is the Google Cloud project ID, which you find in the Google Cloud console.
 
@@ -49,7 +49,7 @@ When the pipeline runs GitHub issues a short-lived signed token which Google Clo
 
 ### main.yaml
 
-[The main.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.6/.github/workflows/main.yaml) defines the GitHub workflow for building the required images and deploying them to our GKE Kubernetes cluster.
+[The main.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.7/.github/workflows/main.yaml) defines the GitHub workflow for building the required images and deploying them to our GKE Kubernetes cluster.
 
 The built images are stored to the Google Cloud project Artifact registry repository.
 
@@ -57,10 +57,10 @@ It makes sense to build and upload only the images if there are changes to the r
 
 The workflow dispatch input `deploy_all` provides a possibility to skip the changes checks and build and deploy the whole application.
 
-Uses the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` that are explained above and `SOPS_AGE_KEY` that is used to decrypt [the encrypted postgres database secret](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.6/todo_app/manifests/enc_secret_postgres.yaml).
+Uses the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` that are explained above and `SOPS_AGE_KEY` that is used to decrypt [the encrypted postgres database secret](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.7/todo_app/manifests/enc_secret_postgres.yaml).
 
 ### Task 3.7
-The deployment workflow assumes that there is a running GKE cluster. This means that the [todo app readme](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.6/todo_app/README.md) cluster creation steps should be followed.
+The deployment workflow assumes that there is a running GKE cluster. This means that the [todo app readme](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.7/todo_app/README.md) cluster creation steps should be followed.
 
 The workflow now creates the namespace for each deployment based on the branch that gets pushed. The namespace name will be the branch name. The only exception is the main branch which gets deployed to a branch called `project`.
 

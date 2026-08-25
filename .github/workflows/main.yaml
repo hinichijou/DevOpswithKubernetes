@@ -160,9 +160,9 @@ jobs:
         #The kustomize.yaml namespace will override the namespace set to the resource yamls
         run: |-
           if [ "$GITHUB_REF_NAME" == "main" ]; then
-            NAMESPACE=$MAIN_NAMESPACE
+            echo "NAMESPACE=$MAIN_NAMESPACE" >> $GITHUB_ENV
           else
-            NAMESPACE=$GITHUB_REF_NAME
+            echo "NAMESPACE=$GITHUB_REF_NAME" >> $GITHUB_ENV
           fi
           kubectl create namespace "$NAMESPACE" || true
           kubectl config set-context --current --namespace="$NAMESPACE"
@@ -172,8 +172,9 @@ jobs:
         if: steps.file_changes.outputs.deploy == 'true'
         env:
           SOPS_AGE_KEY: "${{ secrets.SOPS_AGE_KEY }}"
+        # Since the secret is applied separately it needs to be set the namespace separately
         run: |-
-          sops --decrypt manifests/enc_secret_postgres.yaml | kubectl apply -f -
+          sops --decrypt manifests/enc_secret_postgres.yaml | kubectl apply -n $NAMESPACE -f -
           kustomize build . | kubectl apply -f -
           kubectl rollout status deployment $TODOAPP_DEPLOYMENT
           kubectl get services -o wide
