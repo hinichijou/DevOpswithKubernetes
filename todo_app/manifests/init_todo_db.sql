@@ -4,7 +4,6 @@ CREATE TABLE IF NOT EXISTS todos (
 );
 
 -- Can be used to add default entries to database
--- 3.7: Test deployment to main branch
 -- INSERT INTO todos (title) VALUES ('Learn Kubernetes basics');
 -- INSERT INTO todos (title) VALUES ('Deploy application to cluster');
 -- INSERT INTO todos (title) VALUES ('Configure persistent volumes');
