@@ -59,12 +59,9 @@ The workflow dispatch input `deploy_all` provides a possibility to skip the chan
 
 Uses the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` that are explained above and `SOPS_AGE_KEY` that is used to decrypt [the encrypted postgres database secret](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.6/todo_app/manifests/enc_secret_postgres.yaml).
 
-### Task 3.6
-The deployment workflow assumes that there is a GKE cluster running and that the peristent volume manifests have been applied to the cluster since they are not necessarily managed by the developers and are considered non application specific. This means that the [todo app readme](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.6/todo_app/README.md) should be followed until the `kubectl apply -f persistent_volume_manifests` step.
-
-Example of a successful workflow dispatch triggered full application deployment: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32779000648
-
-Examples of a successful automatic deployments triggered by git push: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32781621702 and https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32782539470
-
 ### Task 3.7
+The deployment workflow assumes that there is a running GKE cluster. This means that the [todo app readme](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.6/todo_app/README.md) cluster creation steps should be followed.
+
 The workflow now creates the namespace for each deployment based on the branch that gets pushed. The namespace name will be the branch name. The only exception is the main branch which gets deployed to a branch called `project`.
+
+Fixes: Reread the Introduction to storage part of the material and realised that it is just the persistent volumes that are not application specific and not the persistent volume claims. Moved the todo-app persistent volume claim to the application manifests folder and added it to the  `kustomization.yaml` deployment. Relevant specifically for this task since the PVC resource has a namespace.
