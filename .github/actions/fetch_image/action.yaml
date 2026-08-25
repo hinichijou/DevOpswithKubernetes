@@ -17,7 +17,7 @@ runs:
       run: |
         IMAGE_PATH="$REGISTRY/$PROJECT_ID/$REPOSITORY/${{ inputs.image_name }}"
         echo "image_sha=$(gcloud artifacts docker images list $IMAGE_PATH \
-        --filter="tag~${{ github.ref_name }}*"
+        --filter="tag~${{ github.ref_name }}*" \
         --sort-by="~UPDATE_TIME" \
         --limit=1 \
         --format="value(version)")" >> $GITHUB_OUTPUT
