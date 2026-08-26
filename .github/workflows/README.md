@@ -2,7 +2,7 @@
 
 Configration for a pipeline that builds docker images and deploys to Google Cloud when related repository folders receive a push.
 
-The [main.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.7/.github/workflows/main.yaml) requires that the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` are set.
+The [deploy-on-push.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.8/.github/workflows/deploy-on-push.yaml) requires that the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` are set.
 
 `GKE_PROJECT` is the Google Cloud project ID, which you find in the Google Cloud console.
 
@@ -47,9 +47,9 @@ The final binding allows the specified repository to impersonate the service acc
 
 When the pipeline runs GitHub issues a short-lived signed token which Google Cloud verifies and exchanges to a short lived Google Cloud access token. No secrets need to be stored.
 
-### main.yaml
+### deploy-on-push.yaml
 
-[The main.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.7/.github/workflows/main.yaml) defines the GitHub workflow for building the required images and deploying them to our GKE Kubernetes cluster.
+[The deploy-on-push.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.8/.github/workflows/deploy-on-push.yaml) defines the GitHub workflow for building the required images and deploying them to our GKE Kubernetes cluster.
 
 The built images are stored to the Google Cloud project Artifact registry repository.
 
@@ -57,19 +57,22 @@ It makes sense to build and upload only the images if there are changes to the r
 
 If there are no changes fo the image relevant folder the workflow will search for the latest image built from the branch and uses that. The workflow assumes that I image for the branch exists
 
+The workflow creates a namespace for each deployment based on the branch that gets pushed. The namespace name will be the branch name. The only exception is the main branch which gets deployed to a branch called project.
+
 The workflow dispatch input `deploy_build_all` provides a possibility to skip the changes checks and build and deploy the whole application. The input `deploy_build_necessary` deploys the application while only building images if existing ones are not found, effectively working the same as a manifest change.
 
-Uses the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` that are explained above and `SOPS_AGE_KEY` that is used to decrypt [the encrypted postgres database secret](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.7/todo_app/manifests/enc_secret_postgres.yaml).
+Uses the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` that are explained above and `SOPS_AGE_KEY` that is used to decrypt [the encrypted postgres database secret](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.8/todo_app/manifests/enc_secret_postgres.yaml).
 
-### Task 3.7
-The deployment workflow assumes that there is a running GKE cluster. This means that the [todo app readme](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.7/todo_app/README.md) cluster creation steps should be followed.
+### on-delete-branch.yaml
+[on-delete-branch.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.8/.github/workflows/on-delete-branch.yaml) defines a GitHub workflow for deleting the environment with the same name as the deleted branch from the Kubernetes cluster. The workflow basically just calls `kubectl delete namespace -n $NAMESPACE` after authentication.
 
-The workflow now creates the namespace for each deployment based on the branch that gets pushed. The namespace name will be the branch name. The only exception is the main branch which gets deployed to a branch called `project`.
+The workflow dispatch input `delete_deployment` provides a possibility to trigger the namespace deletion workflow for the current branch without the branch being deleted.
 
-Example of a successful deployment of the main branch: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32904608486/job/97985781978
+The name of the namespace to be deleted will be the name of the deleted branch. The only exception is the main branch which is deployed to a namespace called `project`.
 
-Example of a successful deployment of a non-main branch: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32905537088/job/97988677065
+The images built from the branch in artifacts repository are not deleted in the workflow as the branch deletion doesn't necessarily mean that this is desired.
 
-Example of a successful deployment with the deploy_build_all workflow dispatch input: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/32906163088/job/97990651294
+Uses the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` that are explained above.
 
-Fixes: Reread the Introduction to storage part of the material and realised that it is just the persistent volumes that are not application specific and not the persistent volume claims. Moved the todo-app persistent volume claim to the application manifests folder and added it to the  `kustomization.yaml` deployment. Relevant specifically for this task since the PVC resource has a namespace.
+### Task 3.8
+The deletion workflow assumes that there is a running GKE cluster. This means that the [todo app readme](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.8/todo_app/README.md) cluster creation steps should be followed.
