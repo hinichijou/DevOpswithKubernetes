@@ -53,6 +53,7 @@ jobs:
 
       - uses: dorny/paths-filter@v4
         id: changes
+        if: ${{ !inputs.deploy_build_all && !inputs.deploy_build_necessary }}
         with:
           filters: |
             manifests:
