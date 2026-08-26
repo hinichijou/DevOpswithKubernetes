@@ -43,9 +43,9 @@ jobs:
         # The contents of GITHUB_REF_NAME and github.event.ref are different depending on what the triggering event is
         run: |-
           if [ ${{ inputs.delete_deployment }} ]; then
-            BRANCH = "$GITHUB_REF_NAME"
+            BRANCH="$GITHUB_REF_NAME"
           else
-            BRANCH = "${{ github.event.ref }}"
+            BRANCH="${{ github.event.ref }}"
           fi
 
           if [ "$BRANCH" == "main" ]; then
