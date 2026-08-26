@@ -18,7 +18,6 @@ env:
   GKE_CLUSTER: dwk-cluster
   GKE_ZONE: europe-north1-b
   MAIN_NAMESPACE: project
-  BRANCH: "${{ github.event.ref }}"
 
 jobs:
   delete-env:
