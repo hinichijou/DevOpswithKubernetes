@@ -75,4 +75,7 @@ The images built from the branch in artifacts repository are not deleted in the 
 Uses the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` that are explained above.
 
 ### Task 3.8
-The deletion workflow assumes that there is a running GKE cluster. This means that the [todo app readme](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.8/todo_app/README.md) cluster creation steps should be followed.
+The deletion workflow assumes that there is a running GKE cluster. This means that the [todo app readme](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.8/todo_app/README.md) cluster creation steps should be followed. The deletion workflow does not do anything if there is no existing namespace in the cluster with the same name as the branch being deleted.
+
+Example of a successful deletion workflow on branch deletion: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/33008690838/job/98309023544
+Example of a successful deletion workflow on delete_deployment dispatch input: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/33008233576/job/98307471845
