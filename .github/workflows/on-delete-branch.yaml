@@ -57,5 +57,5 @@ jobs:
       - name: Delete
         run: |-
           kubectl get services -o wide -n $NAMESPACE
-          kubectl delete namespace -n $NAMESPACE
+          kubectl delete namespace $NAMESPACE
           kubectl get services -o wide -n $NAMESPACE
