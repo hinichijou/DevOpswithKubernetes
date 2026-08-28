@@ -16,6 +16,7 @@ then
   else
     echo "Backup file creation failed!"
     # Makes sense to exit here but better to test that the script works in the first place first
+  fi
 
   # To avoid needing to install the complete gcloud api to use gcloud auth we need to request the metadata server for a access token
   # https://docs.cloud.google.com/compute/docs/metadata/querying-metadata#obtain-oauth-tokens
