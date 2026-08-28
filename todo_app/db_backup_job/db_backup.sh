@@ -4,7 +4,7 @@ set -e
 if [ $POSTGRES_URL ] && [ $BUCKET_URL ] && [ $BACKUP_FILE ] && [ $METADATA_URL ] && \
   [ $BACKUP_PATH ] && [ $POSTGRES_USER ] && [ $POSTGRES_PASSWORD ] && [ $POSTGRES_DB ]
 then
-  FILENAME="$BACKUP_FILE-$NAMESPACE-$(date +%s)"
+  FILENAME="$NAMESPACE-$(date +%s)-$BACKUP_FILE"
   FILEPATH="$BACKUP_PATH/$FILENAME"
 
   echo "Dumping database to $FILENAME"
