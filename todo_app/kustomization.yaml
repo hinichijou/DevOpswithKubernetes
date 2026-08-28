@@ -9,7 +9,7 @@ images:
   - name: PROJECT/WIKIPEDIATODOJOBIMAGE
     newName: hinichijou/wikipedia_todo_job:gtioyq7v
   - name: PROJECT/DBBACKUPJOBIMAGE
-    newName: hinichijou/db_backup_job:faqzlc8o
+    newName: hinichijou/db_backup_job:ga9jt27q
 configMapGenerator:
 - name: db-init
   files:

@@ -4,11 +4,14 @@ set -e
 if [ $POSTGRES_URL ] && [ $BUCKET_URL ] && [ $BACKUP_FILE ] && [ $METADATA_URL ] && \
   [ $BACKUP_PATH ] && [ $POSTGRES_USER ] && [ $POSTGRES_PASSWORD ] && [ $POSTGRES_DB ]
 then
-  echo "Dumping database to $BACKUP_PATH/$BACKUP_FILE"
+  FILENAME="$BACKUP_FILE-$NAMESPACE-$(date +%s)"
+  FILEPATH="$BACKUP_PATH/$FILENAME"
 
-  pg_dump -v "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_URL/$POSTGRES_DB" > "$BACKUP_PATH/$BACKUP_FILE"
+  echo "Dumping database to $FILENAME"
 
-  if [ -f "$BACKUP_PATH/$BACKUP_FILE" ]
+  pg_dump -v "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_URL/$POSTGRES_DB" > "$FILEPATH"
+
+  if [ -f "$FILEPATH" ]
     echo "Backup file created successfully."
   else
     echo "Backup file creation failed!"
@@ -20,7 +23,7 @@ then
   RESPONSE=$(wget -q -O - \
     --header="Authorization: Bearer $(wget -q -O - --header="Metadata-Flavor: Google" $METADATA_URL | jq -r '.access_token')" \
     --header="Content-Type: application/octet-stream" \
-    --post-file="$BACKUP_PATH/$BACKUP_FILE" "$BUCKET_URL/o?uploadType=media&name=$BACKUP_FILE")
+    --post-file="$FILEPATH" "$BUCKET_URL/o?uploadType=media&name=$FILENAME")
 
   # $? holds the exit status of most recently executed command. 0 means success.
   if [ $? -eq 0 ]; then

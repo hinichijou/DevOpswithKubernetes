@@ -28,6 +28,10 @@ spec:
                 value: /usr/src/app
               - name: BACKUP_FILE
                 value: backup.sql
+              - name: NAMESPACE
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.namespace
               - name: POSTGRES_USER
                 valueFrom:
                   configMapKeyRef:
