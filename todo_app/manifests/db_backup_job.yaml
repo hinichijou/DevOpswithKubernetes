@@ -44,7 +44,9 @@ spec:
                   configMapKeyRef:
                     name: postgres-config
                     key: PGDATABASE
-            envFrom:
-              - secretRef:
-                  name: secret-postgres-config
+              - name: PGPASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: secret-postgres-config
+                    key: POSTGRES_PASSWORD
           restartPolicy: OnFailure
