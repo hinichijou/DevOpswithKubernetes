@@ -11,7 +11,7 @@ then
 
   pg_dump -v "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_URL/$POSTGRES_DB" > "$FILEPATH"
 
-  if [ -f "$FILEPATH" ]
+  if [ -f "$FILEPATH" ]; then
     echo "Backup file created successfully."
   else
     echo "Backup file creation failed!"
