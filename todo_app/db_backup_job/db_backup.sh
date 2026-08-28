@@ -2,7 +2,7 @@
 set -e
 
 if [ $POSTGRES_SVC ] && [ $POSTGRES_PORT ] && [ $BUCKET_URL ] && [ $BACKUP_FILE ] && [ $METADATA_URL ] && \
-  [ $BACKUP_PATH ] && [ $POSTGRES_USER ] && [ $POSTGRES_PASSWORD ] && [ $POSTGRES_DB ]
+  [ $BACKUP_PATH ] && [ $POSTGRES_USER ] && [ $PGPASSWORD ] && [ $POSTGRES_DB ]
 then
   FILENAME="${NAMESPACE}-$(date +%s)-${BACKUP_FILE}"
   FILEPATH="${BACKUP_PATH}/${FILENAME}"
