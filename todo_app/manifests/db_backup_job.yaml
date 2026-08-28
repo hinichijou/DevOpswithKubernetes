@@ -4,8 +4,8 @@ metadata:
   name: backup
   namespace: project
 spec:
-  #3.10: should be daily
-  schedule: "0 * * * *"
+  #3.10: should be daily. Now once per minute for testing
+  schedule: "* * * * *"
   jobTemplate:
     spec:
       template:
