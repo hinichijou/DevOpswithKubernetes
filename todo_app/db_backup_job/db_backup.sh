@@ -21,8 +21,9 @@ then
   # To avoid needing to install the complete gcloud api to use gcloud auth we need to request the metadata server for a access token
   # https://docs.cloud.google.com/compute/docs/metadata/querying-metadata#obtain-oauth-tokens
   # -q suppresses default wget output. -O - directs output to console.
+  ACCESS_TOKEN="$(wget -q -O - --header="Metadata-Flavor: Google" "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" | jq -r '.access_token')"
   RESPONSE=$(wget -q -O - \
-    --header="Authorization: Bearer $(wget -q -O - --header="Metadata-Flavor: Google" ${METADATA_URL} | jq -r '.access_token')" \
+    --header="Authorization: Bearer ${ACCESS_TOKEN}" \
     --header="Content-Type: application/octet-stream" \
     --post-file="${FILEPATH}" "${BUCKET_URL}/o?uploadType=media&name=${FILENAME}")
 
