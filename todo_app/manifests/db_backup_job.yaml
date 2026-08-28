@@ -21,7 +21,7 @@ spec:
               - name: POSTGRES_SVC
                 value: postgres-svc
               - name: POSTGRES_PORT
-                value: 5432
+                value: "5432"
               - name: BUCKET_URL
                 value: https://storage.googleapis.com/storage/v1/b/project-db-backup-bucket/o
               - name: METADATA_URL
