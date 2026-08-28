@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-if [ $POSTGRES_URL ] && [ $BUCKET_URL ] && [ $BACKUP_FILE ] && [ $METADATA_URL ] && \
+if [ $POSTGRES_SVC ] && [ $POSTGRES_PORT ] && [ $BUCKET_URL ] && [ $BACKUP_FILE ] && [ $METADATA_URL ] && \
   [ $BACKUP_PATH ] && [ $POSTGRES_USER ] && [ $POSTGRES_PASSWORD ] && [ $POSTGRES_DB ]
 then
   FILENAME="${NAMESPACE}-$(date +%s)-${BACKUP_FILE}"
@@ -9,7 +9,7 @@ then
 
   echo "Dumping database to $FILENAME"
 
-  pg_dump -v "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_URL}/${POSTGRES_DB}" > "${FILEPATH}"
+  pg_dump -v -h "${POSTGRES_SVC}" -p "${POSTGRES_PORT}" -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -f "${FILEPATH}"
 
   if [ -f "$FILEPATH" ]; then
     echo "Backup file created successfully."
