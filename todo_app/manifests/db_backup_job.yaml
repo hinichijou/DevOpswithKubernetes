@@ -11,7 +11,7 @@ spec:
       template:
         spec:
           # 3.10: Based on https://docs.cloud.google.com/kubernetes-engine/docs/how-to/workload-identity
-          serviceAccountName: db_backup_sa
+          serviceAccountName: db-backup-sa
           nodeSelector:
             iam.gke.io/gke-metadata-server-enabled: "true"
           containers:
