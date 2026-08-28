@@ -21,9 +21,13 @@ spec:
               - name: POSTGRES_URL
                 value: postgres-svc:5432
               - name: BUCKET_URL
-                value:
+                value: https://storage.googleapis.com/storage/v1/b/project-db-backup-bucket/o
+              - name: METADATA_URL
+                value: http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token
               - name: BACKUP_PATH
-                value: /usr/src/app/backup.sql
+                value: /usr/src/app
+              - name: BACKUP_FILE
+                value: backup.sql
               - name: POSTGRES_USER
                 valueFrom:
                   configMapKeyRef:
