@@ -34,6 +34,9 @@ env:
   WIKIPEDIA_JOB_IMAGE_NAME: wikipedia_job
   WIKIPEDIA_JOB_IMAGE_ALIAS: PROJECT/WIKIPEDIATODOJOBIMAGE
   WIKIPEDIA_JOB_FOLDER: ./wikipedia_todo_job
+  BACKUP_JOB_IMAGE_NAME: db_backup_job
+  BACKUP_JOB_IMAGE_ALIAS: PROJECT/DBBACKUPJOBIMAGE
+  BACKUP_JOB_FOLDER: ./db_backup_job
   TODOAPP_DEPLOYMENT: todoapp-dep
   MAIN_NAMESPACE: project
   WORKING_DIRECTORY: ./todo_app
@@ -65,6 +68,8 @@ jobs:
               - 'todo_app/backend/**'
             wikipedia_todo_job:
               - 'todo_app/wikipedia_todo_job/**'
+            db_backup_job:
+              - 'todo_app/db_backup_job/**'
 
       - name: 'Have deploy relevant files changed'
         id: 'file_changes'
@@ -73,6 +78,7 @@ jobs:
               steps.changes.outputs.frontend == 'true' ||
               steps.changes.outputs.backend == 'true' ||
               steps.changes.outputs.wikipedia_todo_job == 'true' ||
+              steps.changes.outputs.db_backup_job == 'true' ||
               steps.changes.outputs.manifests == 'true' ||
               inputs.deploy_build_all ||
               inputs.deploy_build_necessary
@@ -155,6 +161,22 @@ jobs:
           image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}"
           build_folder: "${{ env.WIKIPEDIA_JOB_FOLDER }}"
           image_alias: "${{ env.WIKIPEDIA_JOB_IMAGE_ALIAS }}"
+
+      - name : 'Build & Publish db backup job image'
+        if: steps.changes.outputs.db_backup_job == 'true' || inputs.deploy_build_all
+        uses: ./.github/actions/build_image
+        with:
+          image_name: "${{ env.BACKUP_JOB_IMAGE_NAME }}"
+          build_folder: "${{ env.BACKUP_JOB_FOLDER }}"
+          image_alias: "${{ env.BACKUP_JOB_IMAGE_ALIAS }}"
+
+      - name : 'Fetch existing db backup job image (builds the image if existing image for the current branch not found)'
+        if: steps.changes.outputs.db_backup_job != 'true'  && steps.file_changes.outputs.deploy == 'true' && !inputs.deploy_build_all
+        uses: ./.github/actions/fetch_image
+        with:
+          image_name: "${{ env.BACKUP_JOB_IMAGE_NAME }}"
+          build_folder: "${{ env.BACKUP_JOB_FOLDER }}"
+          image_alias: "${{ env.BACKUP_JOB_IMAGE_ALIAS }}"
 
       - name: 'Install SOPS'
         if: steps.file_changes.outputs.deploy == 'true'

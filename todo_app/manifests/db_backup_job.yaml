@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup
+  namespace: project
+spec:
+  #3.10: should be daily
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          # 3.10: Based on https://docs.cloud.google.com/kubernetes-engine/docs/how-to/workload-identity
+          serviceAccountName: db_backup_sa
+          nodeSelector:
+            iam.gke.io/gke-metadata-server-enabled: "true"
+          containers:
+          - name: backup
+            image: PROJECT/DBBACKUPJOBIMAGE
+            env:
+              - name: POSTGRES_URL
+                value: postgres-svc:5432
+              - name: BUCKET_URL
+                value:
+              - name: BACKUP_PATH
+                value: /usr/src/app/backup.sql
+              - name: POSTGRES_USER
+                valueFrom:
+                  configMapKeyRef:
+                    name: postgres-config
+                    key: PGUSER
+              - name: POSTGRES_DB
+                valueFrom:
+                  configMapKeyRef:
+                    name: postgres-config
+                    key: PGDATABASE
+            envFrom:
+              - secretRef:
+                  name: secret-postgres-config
+          restartPolicy: OnFailure
