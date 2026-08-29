@@ -30,7 +30,7 @@ then
 
   # $? holds the exit status of most recently executed command. 0 means success.
   if [ $? -eq 0 ]; then
-    echo "Backup upload successful."
+    echo "Backup upload successful. Response: ${RESPONSE}"
   else
     echo "Backup upload failed! Reason: ${RESPONSE}"
   fi
