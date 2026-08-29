@@ -23,7 +23,7 @@ then
   # -q suppresses default wget output. -O - directs output to console.
   ACCESS_TOKEN="$(curl -H "Metadata-Flavor: Google" -s "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" | jq -r '.access_token')"
   # See https://docs.cloud.google.com/storage/docs/uploading-objects#rest-upload-objects for constructing the request
-  RESPONSE=$(curl -X POST --data-binary "@${FILEPATH}"\
+  RESPONSE=$(curl -s -X POST --data-binary "@${FILEPATH}"\
     -H "Authorization: Bearer ${ACCESS_TOKEN}" \
     -H "Content-Type: application/octet-stream" \
     "${BUCKET_URL}/o?uploadType=media&name=${FILENAME}")
