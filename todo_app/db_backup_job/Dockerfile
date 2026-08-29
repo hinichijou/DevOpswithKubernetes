@@ -2,7 +2,7 @@ FROM postgres:18-alpine3.24 AS base
 
 FROM base AS runner
 
-RUN apk add --no-cache jq
+RUN apk add --no-cache curl jq
 
 RUN addgroup -g 1001 -S job
 RUN adduser -u 1001 -S -D -G job jobuser
