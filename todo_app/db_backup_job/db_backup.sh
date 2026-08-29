@@ -15,7 +15,7 @@ then
     echo "Backup file created successfully."
   else
     echo "Backup file creation failed!"
-    # Makes sense to exit here but better to test that the script works in the first place first
+    exit 1
   fi
 
   # To avoid needing to install the complete gcloud api to use gcloud auth we need to request the metadata server for a access token
@@ -33,5 +33,6 @@ then
     echo "Backup upload successful. Response: ${RESPONSE}"
   else
     echo "Backup upload failed! Reason: ${RESPONSE}"
+    exit 1
   fi
 fi
