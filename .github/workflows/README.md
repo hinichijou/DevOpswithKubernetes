@@ -2,7 +2,7 @@
 
 Configration for a pipeline that builds docker images and deploys to Google Cloud when related repository folders receive a push.
 
-The [deploy-on-push.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.8/.github/workflows/deploy-on-push.yaml) requires that the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` are set.
+The [deploy-on-push.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.10/.github/workflows/deploy-on-push.yaml) requires that the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` are set.
 
 `GKE_PROJECT` is the Google Cloud project ID, which you find in the Google Cloud console.
 
@@ -49,7 +49,7 @@ When the pipeline runs GitHub issues a short-lived signed token which Google Clo
 
 ### deploy-on-push.yaml
 
-[The deploy-on-push.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.8/.github/workflows/deploy-on-push.yaml) defines the GitHub workflow for building the required images and deploying them to our GKE Kubernetes cluster.
+[The deploy-on-push.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.10/.github/workflows/deploy-on-push.yaml) defines the GitHub workflow for building the required images and deploying them to our GKE Kubernetes cluster.
 
 The built images are stored to the Google Cloud project Artifact registry repository.
 
@@ -61,10 +61,10 @@ The workflow creates a namespace for each deployment based on the branch that ge
 
 The workflow dispatch input `deploy_build_all` provides a possibility to skip the changes checks and build and deploy the whole application. The input `deploy_build_necessary` deploys the application while only building images if existing ones are not found, effectively working the same as a manifest change.
 
-Uses the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` that are explained above and `SOPS_AGE_KEY` that is used to decrypt [the encrypted postgres database secret](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.8/todo_app/manifests/enc_secret_postgres.yaml).
+Uses the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` that are explained above and `SOPS_AGE_KEY` that is used to decrypt [the encrypted postgres database secret](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.10/todo_app/manifests/enc_secret_postgres.yaml).
 
 ### on-delete-branch.yaml
-[on-delete-branch.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.8/.github/workflows/on-delete-branch.yaml) defines a GitHub workflow for deleting the environment with the same name as the deleted branch from the Kubernetes cluster. The workflow basically just calls `kubectl delete namespace -n $NAMESPACE` after authentication.
+[on-delete-branch.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.10/.github/workflows/on-delete-branch.yaml) defines a GitHub workflow for deleting the environment with the same name as the deleted branch from the Kubernetes cluster. The workflow basically just calls `kubectl delete namespace -n $NAMESPACE` after authentication.
 
 The workflow dispatch input `delete_deployment` provides a possibility to trigger the namespace deletion workflow for the current branch without the branch being deleted.
 
@@ -75,7 +75,7 @@ The images built from the branch in artifacts repository are not deleted in the 
 Uses the environment secrets `GKE_PROJECT`, `SERVICE_ACCOUNT` and `WORKLOAD_IDENTITY_PROVIDER` that are explained above.
 
 ### Task 3.8
-The deletion workflow assumes that there is a running GKE cluster. This means that the [todo app readme](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.8/todo_app/README.md) cluster creation steps should be followed. The deletion workflow does not do anything if there is no existing namespace in the cluster with the same name as the branch being deleted.
+The deletion workflow assumes that there is a running GKE cluster. This means that the [todo app readme](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.10/todo_app/README.md) cluster creation steps should be followed. The deletion workflow does not do anything if there is no existing namespace in the cluster with the same name as the branch being deleted.
 
 Example of a successful deletion workflow on branch deletion: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/33008690838/job/98309023544
 
