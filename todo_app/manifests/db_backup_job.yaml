@@ -55,6 +55,6 @@ spec:
           restartPolicy: OnFailure
           tolerations:
             - key: "job"
-            - operator: "Equal"
-            - value: "db-backup"
-            - effect: "NoSchedule"
+              operator: "Equal"
+              value: "db-backup"
+              effect: "NoSchedule"
