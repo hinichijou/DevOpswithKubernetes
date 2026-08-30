@@ -4,7 +4,7 @@ metadata:
   name: wikipedia-todo
   namespace: project
 spec:
-  schedule: "0 * * * *"
+  schedule: "* * * * *"
   jobTemplate:
     spec:
       template:

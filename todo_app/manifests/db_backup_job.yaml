@@ -4,7 +4,7 @@ metadata:
   name: backup
   namespace: project
 spec:
-  schedule: "0 0 * * *"
+  schedule: "* * * * *"
   jobTemplate:
     spec:
       template:
@@ -19,7 +19,7 @@ spec:
             resources:
               limits:
                 cpu: "800m"
-                memory: "3000Mi"
+                memory: "2000Mi"
             env:
               - name: POSTGRES_SVC
                 value: postgres-svc
