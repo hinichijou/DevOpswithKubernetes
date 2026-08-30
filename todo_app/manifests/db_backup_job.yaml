@@ -23,7 +23,6 @@ spec:
               limits:
                 cpu: "400m"
                 memory: "700Mi"
-          ports:
             env:
               - name: POSTGRES_SVC
                 value: postgres-svc
