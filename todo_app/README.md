@@ -8,7 +8,7 @@ We will save the backups to a Google Cloud Storage bucket using [Workload Identi
 
 Note that after enabling Uniform bucket-level access an IAM role that has access to view and manipulate the files in the storage bucket is required if you want to do anything with the files. I gave myself the storage admin role with `gcloud storage buckets add-iam-policy-binding gs://project-db-backup-bucket --member="user:enteriamaccounthere" --role=roles/storage.admin`.
 
-After the Kubernetes Engine API is enabled you can create the cluster by running `gcloud container clusters create dwk-cluster --zone=europe-north1-b --cluster-version=1.36 --disk-size=32 --num-nodes=4 --machine-type=e2-small --gateway-api=standard --workload-pool=PROJECT_ID.svc.id.goog`. `PROJECT_ID` needs to be set to match the Google Cloud project ID. The installation will take few minutes.
+After the Kubernetes Engine API is enabled you can create the cluster by running `gcloud container clusters create dwk-cluster --zone=europe-north1-b --cluster-version=1.36 --disk-size=32 --num-nodes=3 --enable-autoscaling --min-nodes=1 --max-nodes=4 --machine-type=e2-small --gateway-api=standard --workload-pool=PROJECT_ID.svc.id.goog`. `PROJECT_ID` needs to be set to match the Google Cloud project ID. The installation will take few minutes.
 
 When the cluster is created with `--workload-pool` the Workload Identity Federation is enabled for all created pools in the cluster. Another option would be to create a node pool with Workload Identity Federation enabled with for example `gcloud container node-pools create db-backup-pool --cluster=dwk-cluster --location=europe-north1-b --disk-size=30GB --spot --workload-metadata=GKE_METADATA`. The `--workload-metadata=GKE_METADATA` flag configures the node pool to use the GKE metadata server. `--disk-size=30GB` and `--spot` are added just for cost effectiveness, by default the reserved disk size is 100GB which seemed excessive, you can read more about spot VMs here https://docs.cloud.google.com/compute/docs/instances/spot.
 
@@ -47,41 +47,12 @@ Delete the cluster with `gcloud container clusters delete dwk-cluster --zone=eur
 
 Note that the unlike the KSA and node pool that are tied to the cluster the IAM policy will still exist after cluster deletion and apply if the service account with the same name is created. This can be revoked with `gcloud storage buckets remove-iam-policy-binding gs://project-db-backup-bucket --member='principal://iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/PROJECT_ID.svc.id.goog/subject/ns/project/sa/db-backup-sa' --role='roles/storage.objectCreator' --all`. `PROJECT_ID` needs to be set to match the Google Cloud project ID.
 
-### Task 3.11 - Managing resources
-Task: Set sensible resource requests and limits for the project. The exact values are not important. Just test what works. You may find the command `kubectl top pods` useful.
+### Task 3.12 - Monitoring
+Task: GKE includes monitoring systems already so we can just enable the monitoring.
+Read the documentation for Kubernetes Engine Monitoring [here (opens in a new tab)](https://docs.cloud.google.com/kubernetes-engine/docs/concepts/observability). Find out how to find the application logs for the project in GKE. Add to your repository a picture of the logs when a new todo is created.
 
-Since the task given isn't very strict in terms of the end result we can start by setting some goals that seem reasonable based on the material. Until now we have been creating a cluster with `--num-nodes=4` which is defined as `The number of nodes to be created in each of the cluster's zones.` which means four nodes in our single zone cluster definition. Since our practice application most likely uses very little resources we can try to set the limits for individual deployments so that we could run all of the pods of the application in a single node (while it isn't sensible to run all of the db statefulset pods on a single node it doesn't matter in this test environment case). Then we could set the cluster the autoscale between 1 node as minimum and the current 4 as maximum. If it seems the resources reserved with the resource limits are not enough for consistent operation we can set the deployments to scale horizontally with a HorizontalPodAutoscaler.
+The documentation says that `By default, GKE clusters are configured to do the following: Send system logs, audit logs, and application logs to Cloud Logging.` which makes it seem like the application logs are already available without needing to be separately enabled.
 
-We can use `kubectl top pods` to get some resource usage metrics from the pods:
+Looking from the Google Cloud Logs Explorer you can filter by a cluster, namespace and a container. We can filter the POST logs of the todoapp backend container. I am assuming that the logs for receiving the todo at the backend are enough since the task didn't have a requirement for adding any new logs.
 
-```
-kubectl top pods
-NAME                           CPU(cores)   MEMORY(bytes)
-postgres-stset-0               2m           37Mi
-postgres-stset-1               141m         35Mi  <- stset initializing?
-todoapp-dep-789b7dd6f5-w854v   29m          70Mi
-
-kubectl top pods
-NAME                           CPU(cores)   MEMORY(bytes)
-postgres-stset-0               1m           40Mi
-postgres-stset-1               1m           40Mi
-todoapp-dep-789b7dd6f5-w854v   8m           76Mi
-
-kubectl top pods
-NAME                           CPU(cores)   MEMORY(bytes)
-postgres-stset-0               1m           40Mi
-postgres-stset-1               1m           40Mi
-todoapp-dep-789b7dd6f5-w854v   27m          77Mi
-```
-
-The resource usage of the app is very low and I wasn't able to capture a point in time where the resource usage would considerably change even during posting todos. We can probably assume that the postgres database is the potentially most resource intensive part of the current application depending on the queries performed meaning it makes sense to give it the most resources while giving to others enough to run them normally.
-
-[Based on Google documentation](https://docs.cloud.google.com/compute/docs/general-purpose-machines#e2_machine_types) `e2-small` machines have 2 vCPUs with combined 0.5 CPU sustained performance and 1GB of memory per vCPU. [GKE reserves](https://docs.cloud.google.com/kubernetes-engine/docs/concepts/plan-node-sizes) 25% + 100Mib of memory resources and 1060m of the CPU resource. This would leave us with 940m CPU resource and less than 1400Mi memory resource. Looking at `kubectl describe node node-name-here` it seems that a lot of the node resources are consumed by GKE related overhead and we shouldn't request more than roughly half of the available resource. With the goal of running the application on a single node leaving some headroom and based on the `kubectl top pods` results I decided to set resource requests for the todoapp backend and frontend to cpu: 75m and memory: 100Mi while requesting cpu: 200m and memory: 300Mi for the postgres database since there is also the replica pod running. For limits I doubled the frontend and backend pod requested resource amount and limited the postgres pods to 400m CPU resource and 700Mi memory resource in which case they would reserve most of a single node resources. For the jobs we can limit the db backup job to match the postgres deployment limits with the assumption it can reserve a single node at most. The resource requirement for the wikipedia backup job is minimal, I'll set the limits to cpu: 100m and memory: 150Mi to prevent any accidental overallocation.
-
-Create a autoscaling cluster with 1 to 4 nodes starting with two nodes with `gcloud container clusters create dwk-cluster --zone=europe-north1-b --cluster-version=1.36 --disk-size=32 --num-nodes=3 --enable-autoscaling --min-nodes=1 --max-nodes=4 --machine-type=e2-small --gateway-api=standard --workload-pool=PROJECT_ID.svc.id.goog`. `PROJECT_ID` needs to be set to match the Google Cloud project ID.
-
-While looking at the running node resource allocation details I realized from the [Google documentation](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) that `All new node pools that you create default to using Workload Identity Federation for GKE if the cluster has Workload Identity Federation for GKE enabled.` and since I am creating the cluster with Workload Identity Federation I don't need to create a separate job node pool like I did in task 3.10. since Workload Identity Federation is enabled for the default node pool when enabled on cluster creation.
-
-Letting the cluster run with this setup and checking with `kubectl top nodes` and `kubectl describe node node-name-here` it seems that the cluster never scales down under 3 nodes with one of the nodes running only gke processes, the todoapp deployment and postgres-0 being scheduled on one node and postgres-1 on another. When running the scheduled jobs on one minute intervals for testing the cluster scaled up to four nodes. I think that looking at the resource usage metrics the resource requests and limits are quite reasonable in that they seem quite safe for normal application operation. The goal I set of running the application on a single node on the other hand doesn't seem reasonable because of the limited resources of the e2-small machines and considerable GKE process overhead in the nodes.
-
-As a note I have noticed some inconsistencies in db behaviour in tasks 3.10 and 3.11 because of the Postgres StatefulSet database replica contents aren't synced. I went back the course material to check that I hadn't missed such a step or requirement and googled how the syncing is usually done and I'm quite sure this isn't covered in the course material this far. It's just that in some cases this causes inconsistent behavior in what content gets backed up or served to the client depending on which db service replica gets hit.
+![Image of backend container logs in Google Cloud Logs Explorer when a new todo gets posted.](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.11/todo_app/post_todo_backend_logs_google_cloud_logging.png)

@@ -42,3 +42,4 @@
 - [3.9.](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.9/todo_app#task-39---dbaas-vs-diy-pros-and-cons-of-the-solutions-in-terms-of-meaningful-differences)
 - [3.10.](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.10/todo_app#task-310---configuration-for-backup-cronjob)
 - [3.11.](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.11/todo_app#task-311---managing-resources)
+- [3.12.](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.12/todo_app#task-312---monitoring)
