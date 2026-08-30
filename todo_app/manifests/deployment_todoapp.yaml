@@ -22,11 +22,11 @@ spec:
           image: PROJECT/FRONTENDIMAGE
           resources:
             requests:
-              cpu: "100m"
-              memory: "150Mi"
+              cpu: "75m"
+              memory: "100Mi"
             limits:
-              cpu: "200m"
-              memory: "300Mi"
+              cpu: "150m"
+              memory: "200Mi"
           volumeMounts: # Mount volume
             - name: todoapp
               mountPath: /app/dynamic/images
@@ -39,11 +39,11 @@ spec:
           image: PROJECT/BACKENDIMAGE
           resources:
             requests:
-              cpu: "100m"
-              memory: "150Mi"
+              cpu: "75m"
+              memory: "100Mi"
             limits:
-              cpu: "200m"
-              memory: "300Mi"
+              cpu: "150m"
+              memory: "200Mi"
           env:
             - name: PGPASSWORD
               valueFrom:

@@ -53,3 +53,8 @@ spec:
                     name: secret-postgres-config
                     key: POSTGRES_PASSWORD
           restartPolicy: OnFailure
+          tolerations:
+            - key: "job"
+            - operator: "Equal"
+            - value: "db-backup"
+            - effect: "NoSchedule"

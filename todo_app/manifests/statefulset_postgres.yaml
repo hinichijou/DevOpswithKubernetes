@@ -23,8 +23,8 @@ spec:
           image: postgres:18-alpine3.24
           resources:
             requests:
-              cpu: "300m"
-              memory: "500Mi"
+              cpu: "200m"
+              memory: "300Mi"
             limits:
               cpu: "800m"
               memory: "1300Mi"
