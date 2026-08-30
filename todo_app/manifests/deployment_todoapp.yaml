@@ -20,6 +20,13 @@ spec:
       containers:
         - name: todoapp-frontend
           image: PROJECT/FRONTENDIMAGE
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "150Mi"
+            limits:
+              cpu: "200m"
+              memory: "300Mi"
           volumeMounts: # Mount volume
             - name: todoapp
               mountPath: /app/dynamic/images
@@ -30,6 +37,13 @@ spec:
                 name: todoappapiroutes-config
         - name: todoapp-backend
           image: PROJECT/BACKENDIMAGE
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "150Mi"
+            limits:
+              cpu: "200m"
+              memory: "300Mi"
           env:
             - name: PGPASSWORD
               valueFrom:
