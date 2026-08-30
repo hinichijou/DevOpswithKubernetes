@@ -55,4 +55,4 @@ The documentation says that `By default, GKE clusters are configured to do the f
 
 Looking from the Google Cloud Logs Explorer you can filter by a cluster, namespace and a container. We can filter the POST logs of the todoapp backend container. I am assuming that the logs for receiving the todo at the backend are enough since the task didn't have a requirement for adding any new logs.
 
-![Image of backend container logs in Google Cloud Logs Explorer when a new todo gets posted.](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.11/todo_app/post_todo_backend_logs_google_cloud_logging.png)
+![Image of backend container logs in Google Cloud Logs Explorer when a new todo gets posted.](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.12/todo_app/post_todo_backend_logs_google_cloud_logging.png)
