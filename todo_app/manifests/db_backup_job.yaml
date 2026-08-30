@@ -16,9 +16,10 @@ spec:
           containers:
           - name: backup
             image: PROJECT/DBBACKUPJOBIMAGE
-            limits:
-              cpu: "800m"
-              memory: "3000Mi"
+            resources:
+              limits:
+                cpu: "800m"
+                memory: "3000Mi"
             env:
               - name: POSTGRES_SVC
                 value: postgres-svc
