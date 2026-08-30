@@ -49,10 +49,10 @@ Note that the unlike the KSA and node pool that are tied to the cluster the IAM 
 
 ### Task 3.12 - Monitoring
 Task: GKE includes monitoring systems already so we can just enable the monitoring.
-Read the documentation for Kubernetes Engine Monitoring [here (opens in a new tab)](https://docs.cloud.google.com/kubernetes-engine/docs/concepts/observability). Find out how to find the application logs for the project in GKE. Add to your repository a picture of the logs when a new todo is created.
+Read the documentation for Kubernetes Engine Monitoring [here](https://docs.cloud.google.com/kubernetes-engine/docs/concepts/observability). Find out how to find the application logs for the project in GKE. Add to your repository a picture of the logs when a new todo is created.
 
 The documentation says that `By default, GKE clusters are configured to do the following: Send system logs, audit logs, and application logs to Cloud Logging.` which makes it seem like the application logs are already available without needing to be separately enabled.
 
 Looking from the Google Cloud Logs Explorer you can filter by a cluster, namespace and a container. We can filter the POST logs of the todoapp backend container. I am assuming that the logs for receiving the todo at the backend are enough since the task didn't have a requirement for adding any new logs.
 
-![Image of backend container logs in Google Cloud Logs Explorer when a new todo gets posted.](https://github.com/hinichijou/DevOpswithKubernetes/tree/3.12/todo_app/post_todo_backend_logs_google_cloud_logging.png)
+![Image of backend container logs in Google Cloud Logs Explorer when a new todo gets posted.](https://github.com/hinichijou/DevOpswithKubernetes/blob/3.12/todo_app/post_todo_backend_logs_google_cloud_logging.png?raw=true)
