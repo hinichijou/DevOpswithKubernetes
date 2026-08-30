@@ -19,7 +19,7 @@ spec:
             resources:
               limits:
                 cpu: "800m"
-                memory: "2000Mi"
+                memory: "1300Mi"
             env:
               - name: POSTGRES_SVC
                 value: postgres-svc
@@ -53,8 +53,3 @@ spec:
                     name: secret-postgres-config
                     key: POSTGRES_PASSWORD
           restartPolicy: OnFailure
-          tolerations:
-            - key: "job"
-              operator: "Equal"
-              value: "db-backup"
-              effect: "NoSchedule"
