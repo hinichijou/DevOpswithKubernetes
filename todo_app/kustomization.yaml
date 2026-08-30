@@ -27,6 +27,6 @@ resources:
   # The deployment is done by decrypting enc_secret_postgres.yaml and applying it directly in the GitHub workflow
   # - manifests/secret_postgres.yaml
   - manifests/configmap_postgres.yaml
-  - manifests/wikipedia_todo_job.yml
+  - manifests/wikipedia_todo_job.yaml
   - manifests/db_backup_job.yaml
   - manifests/healthcheckpolicies.yaml
