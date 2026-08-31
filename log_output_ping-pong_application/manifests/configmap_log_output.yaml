@@ -5,4 +5,6 @@ metadata:
   namespace: exercises
 data:
   MESSAGE: "hello world"
-  PINGS_URL: "http://pingpongapp-svc:2345/pings"
+  PING_PONG_APP_URL: "http://pingpongapp-svc:2345"
+  PING_PONG_APP_PINGS_PATH: "/pings"
+  PING_PONG_APP_READY_PATH: "/ready"

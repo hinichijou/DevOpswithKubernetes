@@ -5,9 +5,9 @@ metadata:
   name: log-output-pingpong-gateway
 spec:
   # For local use with k3d cluster and envoy gateway
-  #gatewayClassName: eg
+  gatewayClassName: eg
   # For GKE use
-  gatewayClassName: gke-l7-global-external-managed
+  #gatewayClassName: gke-l7-global-external-managed
   listeners:
   - name: http
     protocol: HTTP

@@ -41,5 +41,17 @@ spec:
           - name: information-vol
             mountPath: /usr/src/app
             readOnly: true
+          livenessProbe:
+            initialDelaySeconds: 5 # Initial delay until the liveness is tested
+            periodSeconds: 5 # How often to test
+            httpGet:
+               path: /health
+               port: 3000
+          readinessProbe:
+            initialDelaySeconds: 10 # Initial delay until the readiness is tested
+            periodSeconds: 5 # How often to test
+            httpGet:
+               path: /ready
+               port: 3000
       securityContext:
         fsGroup: 1001

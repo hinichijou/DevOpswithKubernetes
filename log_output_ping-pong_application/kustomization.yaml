@@ -3,9 +3,9 @@ kind: Kustomization
 namespace: exercises
 images:
   - name: PROJECT/PINGPOGAPPIMAGE
-    newName: hinichijou/pingpong_application:q8msboac
+    newName: hinichijou/pingpong_application:6q7loxje
   - name: PROJECT/LOGOUTPUTREADERIMAGE
-    newName: hinichijou/log_output-reader:jqznch4x
+    newName: hinichijou/log_output-reader:vm6s2wcf
   - name: PROJECT/LOGOUTPUTWRITERIMAGE
     newName: hinichijou/log_output-writer:7xzfeyk3
 configMapGenerator:

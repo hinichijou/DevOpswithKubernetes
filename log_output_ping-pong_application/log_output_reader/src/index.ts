@@ -1,11 +1,22 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
+import { logger } from 'hono/logger'
 import { readFile } from 'fs'
 import { join } from 'path'
 
 const PORT = process.env.PORT || 3000
 
 const app = new Hono()
+
+app.use(async (c, next) => {
+  if(c.req.path === '/health' || c.req.path === '/ready') {
+    // Skip logging
+    return await next()
+  }
+
+  //logger() is a middleware factory function, the output gets called with (c, next)
+  return logger()(c, next)
+})
 
 const rootDirectory = join('/', 'usr', 'src', 'app')//'./'
 const filesDirectory = join(rootDirectory, 'files')
@@ -41,12 +52,28 @@ const getLastLine = (content: string) => {
 app.get('/', async (c) => {
   const info = await getFile(informationFilePath)
   const log = getLastLine(await getFile(logFilePath))
-  const res = await request(process.env.PINGS_URL)
+  const res = await request(process.env.PING_PONG_APP_URL + process.env.PING_PONG_APP_PINGS_PATH)
   const pingpongs = res.ok ? await res.text() : 'Unable to get response'
 
   const resp = `file content: ${info}\nenv variable: MESSAGE=${process.env.MESSAGE}\n${log}.\nPing / Pongs: ${pingpongs}`
 
   return c.text(resp)
+})
+
+// Health check path
+app.get('/health', (c) => {
+  return c.text('Log output reader healthy.')
+})
+
+// Readiness check path
+app.get('/ready', async (c) => {
+  const res = await request(process.env.PING_PONG_APP_URL + process.env.PING_PONG_APP_READY_PATH)
+
+  if (res.ok) {
+    return c.text('Log output reader ready.')
+  } else {
+    return c.text('Ping-pong application not ready.', 503)
+  }
 })
 
 const server = serve({
