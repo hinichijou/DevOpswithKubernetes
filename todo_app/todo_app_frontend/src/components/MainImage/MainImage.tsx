@@ -1,7 +1,7 @@
 import { connection } from 'next/server'
 //import Image from 'next/image'
 
-import './MainImage.css'
+import styles from './MainImage.module.css'
 import imageService from '@/services/image'
 import { imagePathInternal } from '@/src/constants'
 
@@ -14,7 +14,7 @@ async function MainImage () {
   const imagePath = imagePathInternal()
   console.log(`Looking image from path ${imagePath}`)
   //Next Image component provides caching functionality if necessary
-  return available ? <img src={`${imagePath}`} alt='Random picture' /> : <></>
+  return available ? <img src={`${imagePath}`} className={styles.img} alt='Random picture' /> : <></>
 }
 
 export default MainImage

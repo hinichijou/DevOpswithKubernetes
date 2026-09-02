@@ -1,11 +1,12 @@
-import './TodoItem.css'
+import styles from './TodoItem.module.css'
+import styles_TodoList from '@/components/TodoList/TodoList.module.css'
 import { type Todo } from '@/src/types'
 
 const TodoItem = ({todo}: {todo:Todo}) => (
-  <div className='todoitemcontainer'>
-    <span className='todoitem'></span>
-    <div className='todoitem'>
-      <div className='todoitemtext'>
+  <div className={styles.todoitemcontainer}>
+    <span className={styles.colorstrip}></span>
+    <div className={styles.todoitem}>
+      <div className={styles.todoitemtext}>
         {todo.title}
       </div>
     </div>

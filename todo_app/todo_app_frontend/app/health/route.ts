@@ -1,8 +1,14 @@
 import { NextResponse } from 'next/server'
 
-// A path to serve as the default health check path for GKE
-const healthRequest = (req: Request) => {
-  return new NextResponse('Todo frontend healthy.', { status: 200 })
+import { getAppBroken } from '@/services/test'
+
+// A path to serve as the default health check path
+const healthRequest = async (req: Request) => {
+  const breakApp = await getAppBroken()
+  const message = breakApp ? 'Todo frontend unhealthy.' : 'Todo frontend healthy.'
+  const status = breakApp ? 500 : 200
+
+  return new NextResponse(message, { status: status })
 }
 
 export { healthRequest as GET }

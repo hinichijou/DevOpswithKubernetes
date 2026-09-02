@@ -1,0 +1,38 @@
+.div {
+  width: 600px;
+  height: 600px;
+  outline-width: 4px;
+  outline-style: solid;
+  outline-color: rgb(196, 112, 108);
+  background-color: rgb(245, 203, 203);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: 10px;
+  line-height: 2.5;
+}
+
+.maintext {
+  font-size: xxx-large;
+  font-weight: bold;
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  overflow: auto;
+  word-break: break-all;
+  color: rgb(105, 15, 11);
+}
+
+.subtext {
+  font-size: large;
+  display: flex;
+  flex: 1;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  overflow: auto;
+  word-break: break-all;
+  color: rgb(105, 15, 11);
+}

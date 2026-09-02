@@ -7,6 +7,9 @@ Fetches a new image from https://picsum.photos/1200 every 10 minutes. The pictur
 Serves following routes:
 * `GET /images/image.jpg`: serves the image asset to the browser.
 * `GET /health`: health check path.
+* `GET /ready`: readiness check path.
+
+Has a button with the text `Break the app` which can be used to cause the health check path to fail. A file called `unhealthy` is saved under the `DYN_ASSET_DIR_PATH`, the file is used because dynamic global server variables didn't seem to work with Next.js outside dev. This triggers a service unavailable modal which can be removed by removing the file from the `DYN_ASSET_DIR_PATH`.
 
 The frontend project can be tested locally by running:
 
@@ -18,10 +21,11 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 Uses the following environment values:
 * `BACKEND_SERVICE_URL`: cluster internal url of the backend service. If cluster not used this is same as `NEXT_PUBLIC_API_URL`.
+* `BACKEND_READY_PATH`: path of the backend service ready route. Used to define if the frontend service is ready to receive traffic.
 * `NEXT_PUBLIC_API_URL`: external url of the backend service. If cluster not used default os the same as `BACKEND_SERVICE_URL`. If cluster is used this can be left empty, the requests target the Next.js backend and the cluster routing directs the request to the backend service based on path if necessary.
 * `API_PATH`: The base path of the backend API. Since the api path is now rewritten by cluster route path rewrite rule instead of the backend app having a base path this is only required for cluster external requests. Default value ``.
 * `DYN_ASSET_DIR_PATH`: defines the location of dynamic directory where dynamic assets are saved. Default value is `./dynamic`.
 * `IMAGE_FETCH_URL`: the URL from where the displayed image is fetched. Default value https://picsum.photos/1200.
-* `IMAGE_DIR_NAME`: the directory in dynamic folder where the image is saved. Default value is `images`.
+* `IMAGE_DIR_NAME`: the api route where the image is fetched from. The fetch route will be composed of `IMAGE_DIR_NAME`/`IMAGE_NAME`.  Default value is `images`.
 * `IMAGE_NAME`: the name of the file where the image is saved. Default value `image.jpg`.
 * `IMAGE_FETCH_TIMEOUT`: the timeout after which a new image is fetched. Default value `600000`.

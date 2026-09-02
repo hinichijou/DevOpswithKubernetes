@@ -1,4 +1,4 @@
-p.input {
+.input {
   display: flex;
   flex-direction: row;
   width: 600px;

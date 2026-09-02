@@ -3,14 +3,14 @@ import { stat } from 'fs/promises'
 
 import ns from './networkService'
 import { writeImage } from '@/src/utils/web_only_utils'
-import { imageFetchUrl, imageDirectoryRootRelative, imagePathRootRelative, imageFetchTimeout } from '../constants'
+import { imageFetchUrl, dynamicAssetDirectory, imagePathRootRelative, imageFetchTimeout } from '../constants'
 
 console.log(`Searching image from path ${imagePathRootRelative()}`)
 const stats = await stat(imagePathRootRelative()).catch(() => null)
 let lastSaveTime = stats !== null ? stats.mtime.getTime() : 0
 let imageLoaded = lastSaveTime !== 0
 if(lastSaveTime === 0){
-  await new Promise<void>(res => mkdir(imageDirectoryRootRelative(), {'recursive': true}, (err) => res()))
+  await new Promise<void>(res => mkdir(dynamicAssetDirectory(), {'recursive': true}, (err) => res()))
 }
 const timeSinceLastImageSave = () => Date.now() - lastSaveTime
 

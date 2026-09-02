@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import './InputRow.css'
+import styles from './InputRow.module.css'
+import styles_InputField from '@/components/InputField/InputField.module.css'
 import InputField from '@/components/InputField/InputField'
 import InputButton from '@/components/InputButton/InputButton'
 import { setStateWithTimeout, clearStateWithTimeout } from '@/src/utils/client_safe_utils'
@@ -15,7 +16,7 @@ const InputRow = ({apiUrl}: {apiUrl: string}) => {
   //useActionState could be useful here as well
   const [addTodoInProgress, setAddTodoInProgress] = useState(false)
   const inputState =  useState<string>("")
-  const styleState = useState<string>("input field normal")
+  const styleState = useState<string>(`${styles_InputField.field}`)
 
   const submitTodo = async (e: React.SubmitEvent) => {
     e.preventDefault()
@@ -33,7 +34,7 @@ const InputRow = ({apiUrl}: {apiUrl: string}) => {
       const newTodo = await createTodo(apiUrl, {title: todoValue.toString()})
       if (newTodo !== null) {
         inputState[1]("")
-        styleState[1]("input field normal")
+        styleState[1](`${styles_InputField.field}`)
         router.refresh()
       }
     }
@@ -43,7 +44,7 @@ const InputRow = ({apiUrl}: {apiUrl: string}) => {
 
   return <div>
     <form onSubmit={submitTodo}>
-      <p className="input">
+      <p className={styles.input}>
         <InputField states={Array(inputState, styleState)}/>
         <InputButton/>
       </p>

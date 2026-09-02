@@ -3,7 +3,7 @@ import { serve } from '@hono/node-server'
 import { HTTPException} from 'hono/http-exception'
 import { sValidator } from '@hono/standard-validator'
 import { logger } from 'hono/logger'
-import { Client } from 'pg'
+import { Pool } from 'pg'
 //import { cors } from 'hono/cors'
 
 import { todoSchema, type Todo }  from './model.js'
@@ -11,7 +11,17 @@ import { todoSchema, type Todo }  from './model.js'
 const PORT = process.env.PORT !== undefined ? Number(process.env.PORT) : 3001
 
 const app = new Hono()
-app.use(logger())
+
+app.use(async (c, next) => {
+  if(c.req.path === '/health' || c.req.path === '/ready') {
+    // Skip logging
+    return await next()
+  }
+
+  //logger() is a middleware factory function, the output gets called with (c, next)
+  return logger()(c, next)
+})
+
 //This is not required if using the frontend as a proxy or routing through ingress
 //app.use('/*', cors())
 
@@ -29,16 +39,33 @@ export const postLogger = async (c: Context, next: Next) => {
 app.post(postLogger)
 
 // Uses Postgres environment variables set for configuring the connection
-const client = await new Client().connect()
+const pool = new Pool()
+
+pool.on('error', (err) => {
+  console.error('Pg pool error!', err.message)
+})
 
 const getTodosFromDB = async () => {
-  const q_res = await client.query('SELECT id, title FROM todos')
+  const q_res = await pool.query('SELECT id, title FROM todos')
   return q_res.rows
 }
 
 // Cluster service health check path
 app.get('/health', (c) => {
   return c.text('Todo backend healthy.')
+})
+
+// Readiness check path
+// It seems that the best way to check the postgres connection is to perform a cheap query.
+// For example: https://github.com/brianc/node-postgres/issues/3208
+app.get('/ready', async (c) => {
+  try {
+    // Will throw if not successful
+    await pool.query('SELECT 1')
+    return c.text('Todo backend ready.')
+  } catch {
+    return c.text('Database connection not ready.', 503)
+  }
 })
 
 app.get('/todos', async (c) => {
@@ -60,7 +87,7 @@ app.post('/todos',
   }),
   async (c) => {
     const todo = c.req.valid('json')
-    const res_id = await client.query(todoInsert, [todo.title])
+    const res_id = await pool.query(todoInsert, [todo.title])
 
     return c.text(res_id.rows[0]['id'], 201)
   }
@@ -82,7 +109,8 @@ const server = serve({
   console.log(`Server started in port ${info.port}`)
 })
 
-const onExit = (exitvalue: number) => {
+const onExit = async (exitvalue: number) => {
+  await pool.end()
   process.exit(exitvalue)
 }
 

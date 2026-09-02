@@ -46,3 +46,4 @@
 
 ### Chapter 5
 - [4.1.](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.1/log_output_ping-pong_application#task-41)
+- [4.2.](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.2/todo_app#task-42)

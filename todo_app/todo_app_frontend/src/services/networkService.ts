@@ -14,7 +14,7 @@ const makeRequest = async (url: string, readFunction: Function, options: Request
       res = await request(url, options)
     }
     catch (e){
-      console.error(`${e}`)
+      console.error(`Request to ${url} failed. Error: ${e}`)
     }
 
     if (res !== undefined && res.ok) {

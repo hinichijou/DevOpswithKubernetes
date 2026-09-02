@@ -7,6 +7,7 @@ data:
   # The frontend targets the Next.js backend by default which goes through the gateway and gets rerouted to api backend depending on path
   NEXT_PUBLIC_API_URL: ""
   BACKEND_SERVICE_URL: "http://todoapp-backend-svc:3001"
+  BACKEND_READY_PATH: "/ready"
   DYN_ASSET_DIR_PATH: "./dynamic"
   IMAGE_FETCH_URL: "https://picsum.photos/1200"
   IMAGE_DIR_NAME: "images"

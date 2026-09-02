@@ -2,7 +2,7 @@
 
 import { Dispatch, SetStateAction, useState, type ChangeEvent } from 'react'
 
-import './InputField.css'
+import styles from './InputField.module.css'
 
 type InputFieldProps = {
   states:  Array<[string, Dispatch<SetStateAction<string>>]>
@@ -17,16 +17,16 @@ const InputField = ({states}:InputFieldProps) => {
 
     if (newInput.length > 140) {
       newInput = newInput.slice(0, 140)
-      setStyle("input field overlimit")
+      setStyle(`${styles.overlimit}`)
     }
     else if (newInput.length === 140) {
-      setStyle("input field overlimit")
+      setStyle(`${styles.field} ${styles.overlimit}`)
     }
-    else if (newInput.length > 1){
-      setStyle("input field valid")
+    else if (newInput.length >= 1){
+      setStyle(`${styles.field} ${styles.valid}`)
     }
     else{
-      setStyle("input field")
+      setStyle(`${styles.field}`)
     }
 
     setInput(newInput)

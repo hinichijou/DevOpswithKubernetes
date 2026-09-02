@@ -3,9 +3,9 @@ kind: Kustomization
 namespace: project
 images:
   - name: PROJECT/FRONTENDIMAGE
-    newName: hinichijou/todo_app_frontend:19oavfbl
+    newName: hinichijou/todo_app_frontend:t8u50v6h
   - name: PROJECT/BACKENDIMAGE
-    newName: hinichijou/todo_app_backend:aknp6vo7
+    newName: hinichijou/todo_app_backend:o1h4u8ik
   - name: PROJECT/WIKIPEDIATODOJOBIMAGE
     newName: hinichijou/wikipedia_todo_job:gtioyq7v
   - name: PROJECT/DBBACKUPJOBIMAGE
@@ -24,9 +24,10 @@ resources:
   - manifests/service_todoapp.yaml
   - manifests/service_postgres.yaml
   - manifests/statefulset_postgres.yaml
-  # The deployment is done by decrypting enc_secret_postgres.yaml and applying it directly in the GitHub workflow
-  # - manifests/secret_postgres.yaml
+  # Deployment to GKE is done by decrypting enc_secret_postgres.yaml and applying it directly in the GitHub workflow. Uncomment for local use.
+  - manifests/secret_postgres.yaml
   - manifests/configmap_postgres.yaml
   - manifests/wikipedia_todo_job.yaml
   - manifests/db_backup_job.yaml
-  - manifests/healthcheckpolicies.yaml
+  # Healthcheckpolicy is a GKE component. Uncomment when deploying to GKE unless using some alternative for defining health check paths.
+  # - manifests/healthcheckpolicies.yaml

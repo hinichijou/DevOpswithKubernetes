@@ -7,4 +7,4 @@ README.md
 .env.development.local
 node_modules
 .next
-dynamic/images/*
+dynamic/*
