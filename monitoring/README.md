@@ -82,6 +82,6 @@ kubectl -n prometheus get pods
 kubectl -n prometheus port-forward prometheus-kube-prometheus-stack-1788-prometheus-0 9090:9090
 ```
 
-In this case I can find two pods with the query `kube_pod_info{created_by_kind="StatefulSet", namespace="prometheus"}`. The task says there should be three but this could be a change in the default congfiguration or there might be a slight change to the configuration somewhere in the GitHub material but I believe my answer is correct with the information I have.
+In this case I can find two pods with the query `kube_pod_info{created_by_kind="StatefulSet", namespace="prometheus"}`. The task says there should be three but this could be a change in the default configuration or there might be a slight change to the configuration somewhere in the GitHub material but I believe my answer is correct with the information I have.
 
 ![Image of the query results](https://github.com/hinichijou/DevOpswithKubernetes/blob/4.3/monitoring/prometheus_query.png?raw=true)

@@ -4,7 +4,8 @@ metadata:
   namespace: exercises
   name: pingpongapp-dep
 spec:
-  replicas: 1
+  # Task 4.4: this deployment is referred from an argo rollout
+  replicas: 0
   selector:
     matchLabels:
       app: pingpongapp
