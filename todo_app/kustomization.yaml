@@ -3,9 +3,9 @@ kind: Kustomization
 namespace: project
 images:
   - name: PROJECT/FRONTENDIMAGE
-    newName: hinichijou/todo_app_frontend:t8u50v6h
+    newName: hinichijou/todo_app_frontend:nyw30c6r
   - name: PROJECT/BACKENDIMAGE
-    newName: hinichijou/todo_app_backend:o1h4u8ik
+    newName: hinichijou/todo_app_backend:pc78keng
   - name: PROJECT/WIKIPEDIATODOJOBIMAGE
     newName: hinichijou/wikipedia_todo_job:gtioyq7v
   - name: PROJECT/DBBACKUPJOBIMAGE

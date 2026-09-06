@@ -1,7 +1,7 @@
 import ns from '@/services/networkService'
 import { localApiUrl } from '@/src/constants'
 import { type Todo } from '@/src/types'
-import { readJSONResponse, createPostOptions } from '@/src/utils/client_safe_utils'
+import { readJSONResponse, readTextResponse, createJSONBodyOptions } from '@/src/utils/client_safe_utils'
 
 export const fetchTodos = async  () => {
   console.log(`Making get todos request to url ${localApiUrl()}todos`)
@@ -16,8 +16,16 @@ export const createTodo = async (apiUrl: string, newTodo: object) : Promise<stri
   //const resp = await fetch('api/backend-proxy/todos', createPostOptions(newTodo))
   //const todoIdObj = await resp.json()
   console.log(`Making post todo request to url ${apiUrl}todos`)
-  const todoIdObj = await ns.makeRequest(`${apiUrl}todos`, readJSONResponse, createPostOptions(newTodo))
+  const todoIdObj = await ns.makeRequest(`${apiUrl}todos`, readJSONResponse, createJSONBodyOptions(newTodo))
   const todo = todoIdObj !== null ? todoIdObj as string : null
 
   return todo
+}
+
+// The request is made from client so the url needs to be passed from the server components as it isn't available build time
+export const setDone = async (apiUrl: string, id: string, done: boolean) : Promise<boolean | null> => {
+  const putUrl = `${apiUrl}todos/${id}`
+  console.log(`Making set done ${done} request to url ${putUrl}`)
+  const resp = await ns.makeRequest(`${putUrl}`, readTextResponse, createJSONBodyOptions({done: done}, 'put'))
+  return resp !== null
 }

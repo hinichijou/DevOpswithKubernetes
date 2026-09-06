@@ -6,13 +6,15 @@ import { writeImage } from '@/src/utils/web_only_utils'
 import { imageFetchUrl, dynamicAssetDirectory, imagePathRootRelative, imageFetchTimeout } from '../constants'
 
 console.log(`Searching image from path ${imagePathRootRelative()}`)
-const stats = await stat(imagePathRootRelative()).catch(() => null)
-let lastSaveTime = stats !== null ? stats.mtime.getTime() : 0
-let imageLoaded = lastSaveTime !== 0
-if(lastSaveTime === 0){
+//Can't rely on a global variable in server components so needs to be re-fetched on evaluation
+const getImageStats = async () => await stat(imagePathRootRelative()).catch(() => null)
+const getLastSaveTime = async () => (await getImageStats())?.mtime.getTime() ?? 0
+const getImageLoaded = async () => await getLastSaveTime() !== 0
+
+if(await getLastSaveTime() === 0){
   await new Promise<void>(res => mkdir(dynamicAssetDirectory(), {'recursive': true}, (err) => res()))
 }
-const timeSinceLastImageSave = () => Date.now() - lastSaveTime
+const getTimeSinceLastImageSave = async () => Date.now() - await getLastSaveTime()
 
 const getAndWriteImage = async () => {
   const options = {
@@ -25,24 +27,19 @@ const getAndWriteImage = async () => {
 
   const saved = await ns.makeRequest(imageFetchUrl(), writeImage, options)
 
-  if(saved){
-    lastSaveTime = Date.now()
-    imageLoaded = true
+  //If not saved end the image fetch loop. The image save path is most likely faulty and the image won't be written
+  if(saved)
     imageFetch()
-  }
-  else{
-    //end the image fetch loop. The image save path is most likely faulty and the image won't be written
-  }
 }
 
-const imageFetch = () => {
-  setTimeout(getAndWriteImage, imageFetchTimeout() - timeSinceLastImageSave())
+const imageFetch = async () => {
+  setTimeout(getAndWriteImage, imageFetchTimeout() - await getTimeSinceLastImageSave())
 }
 
 imageFetch()
 
-const checkImage = () : boolean => {
-  return imageLoaded
+const checkImage = async () : Promise<boolean> => {
+  return await getImageLoaded()
 }
 
 export default { checkImage }

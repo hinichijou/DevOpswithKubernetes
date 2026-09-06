@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import styles from './InputRow.module.css'
@@ -9,9 +9,11 @@ import InputField from '@/components/InputField/InputField'
 import InputButton from '@/components/InputButton/InputButton'
 import { setStateWithTimeout, clearStateWithTimeout } from '@/src/utils/client_safe_utils'
 import { createTodo } from '@/services/todos'
+import { ApiContext } from '@/contexts/ApiProvider'
 
-const InputRow = ({apiUrl}: {apiUrl: string}) => {
+const InputRow = () => {
   const router = useRouter()
+  const apiUrl = useContext(ApiContext)
 
   //useActionState could be useful here as well
   const [addTodoInProgress, setAddTodoInProgress] = useState(false)

@@ -1,9 +1,11 @@
 import MainImage from '@/components/MainImage/MainImage'
-import ServerInputRow from '@/components/InputRow/ServerInputRow'
+import InputRow from '@/components/InputRow/InputRow'
 import TodoList from '@/components/TodoList/TodoList'
 import BreakAppButton from '@/components/BreakAppButton/BreakAppButton'
 import AppBrokenBanner from '@/src/components/AppBrokenBanner/AppBrokenBanner'
 import { getAppBroken } from '@/services/test'
+import ApiProvider from '@/contexts/ApiProvider'
+import { publicApiUrl } from '@/src/constants'
 
 async function App () {
   const healthy = !await getAppBroken()
@@ -14,7 +16,9 @@ async function App () {
         <h1>Todo app</h1>
         <div>
           <MainImage/>
-          <ServerInputRow/>
+          <ApiProvider publicApiUrl={publicApiUrl()} >
+            <InputRow/>
+          </ApiProvider>
         </div>
         <h2>Todos</h2>
         <div>

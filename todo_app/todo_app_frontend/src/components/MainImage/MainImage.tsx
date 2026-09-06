@@ -9,7 +9,7 @@ async function MainImage () {
   //A way to avoid component prerendering so the image updates during runtime
   await connection()
 
-  const available = imageService.checkImage()
+  const available = await imageService.checkImage()
 
   const imagePath = imagePathInternal()
   console.log(`Looking image from path ${imagePath}`)

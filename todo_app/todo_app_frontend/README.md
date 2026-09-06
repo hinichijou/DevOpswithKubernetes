@@ -2,14 +2,14 @@
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Fetches a new image from https://picsum.photos/1200 every 10 minutes. The picture is saved under `DYN_ASSET_DIR_PATH`. Displays the image and a list of todos fetched from backend.
+Fetches a new image from https://picsum.photos/1200 every 10 minutes. The picture is saved under `DYN_ASSET_DIR_PATH`. Displays the image and a list of todos fetched from backend. Has functionality for adding a new todo and marking a todo as done.
+
+Has a button with the text `Break the app` which can be used to cause the health check path to fail. A file called `unhealthy` is saved under the `DYN_ASSET_DIR_PATH`, the file is used because dynamic global server variables didn't seem to work with Next.js outside dev. This triggers a service unavailable modal which can be removed by removing the file from the `DYN_ASSET_DIR_PATH`.
 
 Serves following routes:
 * `GET /images/image.jpg`: serves the image asset to the browser.
 * `GET /health`: health check path.
 * `GET /ready`: readiness check path.
-
-Has a button with the text `Break the app` which can be used to cause the health check path to fail. A file called `unhealthy` is saved under the `DYN_ASSET_DIR_PATH`, the file is used because dynamic global server variables didn't seem to work with Next.js outside dev. This triggers a service unavailable modal which can be removed by removing the file from the `DYN_ASSET_DIR_PATH`.
 
 The frontend project can be tested locally by running:
 

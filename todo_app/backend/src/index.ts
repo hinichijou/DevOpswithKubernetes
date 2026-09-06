@@ -4,9 +4,10 @@ import { HTTPException} from 'hono/http-exception'
 import { sValidator } from '@hono/standard-validator'
 import { logger } from 'hono/logger'
 import { Pool } from 'pg'
+import type { StandardSchemaV1 } from '@standard-schema/spec'
 //import { cors } from 'hono/cors'
 
-import { todoSchema, type Todo }  from './model.js'
+import { createTodoSchema, updateTodoSchema, TodoSchemaFields, TodoTableName }  from './model.js'
 
 const PORT = process.env.PORT !== undefined ? Number(process.env.PORT) : 3001
 
@@ -25,7 +26,7 @@ app.use(async (c, next) => {
 //This is not required if using the frontend as a proxy or routing through ingress
 //app.use('/*', cors())
 
-export const postLogger = async (c: Context, next: Next) => {
+export const bodyLogger = async (c: Context, next: Next) => {
   try {
     // Clone because the stream gets consumed if read
     console.log(`Request body: ${ await c.req.raw.clone().text()}`)
@@ -36,7 +37,8 @@ export const postLogger = async (c: Context, next: Next) => {
   await next()
 }
 
-app.post(postLogger)
+app.post(bodyLogger)
+app.put(bodyLogger)
 
 // Uses Postgres environment variables set for configuring the connection
 const pool = new Pool()
@@ -46,7 +48,7 @@ pool.on('error', (err) => {
 })
 
 const getTodosFromDB = async () => {
-  const q_res = await pool.query('SELECT id, title FROM todos')
+  const q_res = await pool.query(`SELECT ${TodoSchemaFields.ID}, ${TodoSchemaFields.TITLE}, ${TodoSchemaFields.DONE} FROM ${TodoTableName}`)
   return q_res.rows
 }
 
@@ -74,22 +76,62 @@ app.get('/todos', async (c) => {
   })
 })
 
-const todoInsert = 'INSERT INTO todos (title) VALUES($1) RETURNING id'
-
-app.post('/todos',
-  sValidator('json', todoSchema, (result, c) => {
-    if (!result.success) {
+type ResultType = ({ success: true; data: Object; } | { success: false; error: readonly StandardSchemaV1.Issue[]; data: Object; })
+const todoValidationCallback = (result: ResultType, c: Context) => {
+  if (!result.success) {
       const failedString = `Todo validation failed! ${result.error.flatMap(e => e.message).join(", ")}`
       console.log(failedString)
       return c.text(failedString, 400)
-    }
-    else console.log(`Todo validation successful.`)
-  }),
+  }
+  else console.log(`Todo validation successful.`)
+}
+
+const todoInsert = `INSERT INTO ${TodoTableName} (${TodoSchemaFields.TITLE}, ${TodoSchemaFields.DONE}) VALUES($1, $2) RETURNING ${TodoSchemaFields.ID}`
+
+app.post('/todos',
+  sValidator('json', createTodoSchema, todoValidationCallback),
   async (c) => {
     const todo = c.req.valid('json')
-    const res_id = await pool.query(todoInsert, [todo.title])
+    const res_id = await pool.query(todoInsert, [todo.title, false])
 
     return c.text(res_id.rows[0]['id'], 201)
+  }
+)
+
+app.put('/todos/:id',
+  sValidator('json', updateTodoSchema, todoValidationCallback),
+  async (c) => {
+    const todo = c.req.valid('json')
+    const id = c.req.param('id')
+    const todoKeys = Object.keys(todo)
+
+    if (todoKeys.length > 0){
+      const updates = []
+      const values = []
+      for (const [i, [k, v]] of Object.entries(todo).entries()) {
+        updates.push(`${k} = $${i + 1}`)
+        values.push(v)
+      }
+
+      values.push(id)
+
+      const todoUpdate = `UPDATE ${TodoTableName} SET ${updates.join(", ")} WHERE id = $${values.length}`
+
+      console.log(`Updating todos: ${todoUpdate}`)
+
+      try {
+        await pool.query(todoUpdate, values)
+        return c.text('Updated.', 201)
+      }
+      catch(e) {
+        console.error(`Updating todos failed: ${e}`)
+        return c.text(`Update failed: ${e}`, 503)
+      }
+    }
+    else {
+      console.error(`Updating todos failed`)
+      return c.text('Update failed.', 400)
+    }
   }
 )
 

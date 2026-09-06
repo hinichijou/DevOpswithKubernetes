@@ -13,8 +13,8 @@ export const clearStateWithTimeout = <T> (setState: Dispatch<SetStateAction<T>>,
   clearTimeout(timeout)
 }
 
-export const createPostOptions = (bodyObj: object) => {
-  return {method: "POST", headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyObj)}
+export const createJSONBodyOptions = (bodyObj: object, method = "POST") => {
+  return {method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bodyObj)}
 }
 
 export const readJSONResponse = (res: Response) => {

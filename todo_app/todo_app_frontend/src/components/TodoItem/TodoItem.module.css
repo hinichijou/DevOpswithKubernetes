@@ -1,5 +1,4 @@
 .todoitem {
-  background-color: rgb(249 249 249);
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   padding-left: 15px;
@@ -12,22 +11,47 @@
     inset 2px 2px 3px rgb(255 255 255 / 0.6),
     inset -2px -2px 3px rgba(138, 138, 138, 0.6);
   box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+}
+
+.todoitem_undone {
+  composes: todoitem;
+  background-color: rgb(249 249 249);
+}
+
+.todoitem_done {
+  composes: todoitem;
+  background-color: rgb(241 241 241);
 }
 
 .todoitemtext {
   font-size: large;
   display: flex;
-  align-items: center;
+  align-items: safe center;
   text-align: left;
   box-sizing: border-box;
   height: 100%;
-  width: 100%;
+  width: 80%;
   overflow: auto;
   word-break: break-all;
 }
 
+.todoitemtext_done {
+  composes: todoitemtext;
+  text-decoration: line-through;
+  color: rgb(101, 101, 101);
+}
+
+.markdonecontainer {
+  height: 100%;
+  width: 20%;
+  display: flex;
+  align-items: safe center;
+  flex-direction: row-reverse;
+}
+
 .colorstrip {
-  background-color: rgb(78 176 83);
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   padding-top: 5px;
@@ -36,6 +60,16 @@
   flex-shrink: 0;
   height: 100%;
   box-sizing: border-box;
+}
+
+.colorstrip_undone {
+  composes: colorstrip;
+  background-color: rgb(78 176 83);
+}
+
+.colorstrip_done {
+  composes: colorstrip;
+  background-color: rgb(153 153 153);
 }
 
 .todoitemcontainer {

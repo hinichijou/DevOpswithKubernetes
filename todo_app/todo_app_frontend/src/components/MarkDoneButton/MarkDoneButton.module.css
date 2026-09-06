@@ -1,0 +1,32 @@
+.button {
+  height: 80%;
+  width: 90%;
+  border: 0;
+  line-height: 2.5;
+  font-size: small;
+  text-align: center;
+  color: white;
+  text-shadow: 1px 1px 1px black;
+  border-radius: 10px;
+  background-color: rgb(28, 117, 210);
+  box-shadow:
+    inset 2px 2px 3px rgb(255 255 255 / 0.6),
+    inset -2px -2px 3px rgb(0 0 0 / 0.6);
+}
+
+.button:hover {
+  background-color: rgb(14, 60, 109);
+}
+
+.text {
+  font-size: large;
+  display: flex;
+  direction: rtl;
+  align-items: safe center;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  word-break: break-all;
+  color: rgb(46, 126, 50);
+}
