@@ -49,6 +49,6 @@ The cluster can be stopped with `k3d cluster stop` and started with `k3d cluster
 ### Task 4.5
 Task: Speaking of updating. Our todo application could use "Done" field for todos that are already done. It should be a PUT request to `/todos/<id>`.
 
-The PUT `/todos/<id>` route is defined in [backend/index.ts](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.5/todo_app/backend/index.ts)
+The PUT `/todos/<id>` route is defined in [backend/index.ts](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.5/todo_app/backend/src/index.ts)
 
 ![Image of the application](https://github.com/hinichijou/DevOpswithKubernetes/blob/4.5/todo_app/task_screenshots/task_4-5.png?raw=true)
