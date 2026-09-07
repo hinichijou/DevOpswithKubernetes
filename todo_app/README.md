@@ -80,17 +80,20 @@ helm repo update
 helm upgrade --install my-nats nats/nats --namespace nats --create-namespace --set promExporter.enabled=true
 ```
 
-See the [broadcaster folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.6/broadcaster) and the [broadcaster readme](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.6/broadcaster/README.md) for the broadcaster implementation and an explanation of the environment variables.
+See the [broadcaster folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.6/todo_app/broadcaster) and the [broadcaster readme](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.6/todo_app/broadcaster/README.md) for the broadcaster implementation and an explanation of the environment variables.
 
-The [backend](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.6/todo_app/backend) publishes a NATS message on `/todos` POST and PUT with the subject defined in [configmap_nats.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.6/manifests/configmap_nats.yaml). The broadcaster in turn subscribes to this subject.
+The [backend](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.6/todo_app/backend) publishes a NATS message on `/todos` POST and PUT with the subject defined in [configmap_nats.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.6/todo_app/manifests/configmap_nats.yaml). The broadcaster in turn subscribes to this subject.
 
-Expects a file `manifests/secret_discord_webhook.yaml` to which the [broadcaster deployment](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.6/manifests/deployment_broadcaster.yaml) refers with the name `secret-discord-webhook-config` which contains the value for the environment variable `EXTERNAL_SERVICE_URL`. I used the Full Stack Discord webhook for testing, the url is not pushed to GitHub. If we would like to deploy the messaging configuration to GKE it would probably make sense to handle the url as an environment secret and inject it in the deployment workflow.
+Expects a file `manifests/secret_discord_webhook.yaml` to which the [broadcaster deployment](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.6/todo_app/manifests/deployment_broadcaster.yaml) refers with the name `secret-discord-webhook-config` which contains the value for the environment variable `EXTERNAL_SERVICE_URL`. I used the Full Stack Discord webhook for testing, the url is not pushed to GitHub. If we would like to deploy the messaging configuration to GKE it would probably make sense to handle the url as an environment secret and inject it in the deployment workflow.
 
 The PUT and POST path messages were forwarded to Discord successfully:
+
 ![Image of the messages in discord](https://github.com/hinichijou/DevOpswithKubernetes/blob/4.6/todo_app/task_screenshots/task_4-6a.png?raw=true)
 
 The messages were handled only once and the six replicas ran without issues:
+
 ![Image of the replicas](https://github.com/hinichijou/DevOpswithKubernetes/blob/4.6/todo_app/task_screenshots/task_4-6b.png?raw=true)
 
 The messages were picked up by two different subscriber replicas:
+
 ![Image of the subscriber logs](https://github.com/hinichijou/DevOpswithKubernetes/blob/4.6/todo_app/task_screenshots/task_4-6c.png?raw=true)
