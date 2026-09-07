@@ -5,6 +5,7 @@ import { sValidator } from '@hono/standard-validator'
 import { logger } from 'hono/logger'
 import { Pool } from 'pg'
 import type { StandardSchemaV1 } from '@standard-schema/spec'
+import { connect } from '@nats-io/transport-node'
 //import { cors } from 'hono/cors'
 
 import { createTodoSchema, updateTodoSchema, TodoSchemaFields, TodoTableName }  from './model.js'
@@ -47,9 +48,23 @@ pool.on('error', (err) => {
   console.error('Pg pool error!', err.message)
 })
 
+const nc = await connect({
+  servers: process.env.NATS_URL || 'nats://nats:4222',
+}).catch((err) => {
+  console.error(
+    'Failed to connect to NATS. Messages will not be published.',
+    err,
+  )
+})
+
 const getTodosFromDB = async () => {
   const q_res = await pool.query(`SELECT ${TodoSchemaFields.ID}, ${TodoSchemaFields.TITLE}, ${TodoSchemaFields.DONE} FROM ${TodoTableName}`)
   return q_res.rows
+}
+
+const publishMessage = (message: string) => {
+  console.log(`Publishing message: ${message}`)
+  nc?.publish(process.env.SUBJECT, message)
 }
 
 // Cluster service health check path
@@ -94,6 +109,8 @@ app.post('/todos',
     const todo = c.req.valid('json')
     const res_id = await pool.query(todoInsert, [todo.title, false])
 
+    publishMessage(`New todo: ${todo.title}.`)
+
     return c.text(res_id.rows[0]['id'], 201)
   }
 )
@@ -108,19 +125,21 @@ app.put('/todos/:id',
     if (todoKeys.length > 0){
       const updates = []
       const values = []
+      let updateMessage = ''
       for (const [i, [k, v]] of Object.entries(todo).entries()) {
         updates.push(`${k} = $${i + 1}`)
         values.push(v)
+        updateMessage += i === 0 ? `${k}: ${v}` : `, ${k}: ${v}`
       }
 
       values.push(id)
-
-      const todoUpdate = `UPDATE ${TodoTableName} SET ${updates.join(", ")} WHERE id = $${values.length}`
+      const todoUpdate = `UPDATE ${TodoTableName} SET ${updates.join(', ')} WHERE id = $${values.length}`
 
       console.log(`Updating todos: ${todoUpdate}`)
 
       try {
         await pool.query(todoUpdate, values)
+        publishMessage(`Todo with id ${id} updated: ${updateMessage}.`)
         return c.text('Updated.', 201)
       }
       catch(e) {
@@ -153,6 +172,8 @@ const server = serve({
 
 const onExit = async (exitvalue: number) => {
   await pool.end()
+  // drain() is also an option, see https://github.com/nats-io/nats.js/blob/main/core/README.md
+  await nc?.close()
   process.exit(exitvalue)
 }
 

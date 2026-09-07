@@ -90,6 +90,8 @@ spec:
                 name: todoappbackend-config
             - configMapRef:
                 name: postgres-config
+            - configMapRef:
+                name: nats-config
           livenessProbe:
             initialDelaySeconds: 5 # Initial delay until the liveness is tested
             periodSeconds: 5 # How often to test
