@@ -1,8 +1,8 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  namespace: project
-  name: todoapp-gateway
+  namespace: infra
+  name: infra-gateway
 spec:
   # For local use with k3d cluster and envoy gateway
   gatewayClassName: eg
@@ -15,3 +15,8 @@ spec:
     allowedRoutes:
       kinds:
       - kind: HTTPRoute
+      namespaces:
+        from: Selector
+        selector:
+          matchLabels:
+            shared-gateway-access: "true"

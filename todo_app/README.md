@@ -6,17 +6,9 @@ First run a Kubernetes cluster. In chapter 5 of the course we move back to using
 
 Check with `kubectl cluster-info` that your configuration is pointing to the local cluster. If it is not we can correct this by running `kubectl config get-contexts` to get the name of the context and set it with `kubectl config use-context *context-name*`.
 
-The deployment uses a gateway which dowsn't work in k3d cluster out of the box. Install [Envoy gateway](https://gateway.envoyproxy.io/) with `kubectl apply --server-side -f https://github.com/envoyproxy/gateway/releases/latest/download/install.yaml` and `kubectl -n envoy-gateway-system rollout status deployment/envoy-gateway --timeout=180s`. For the gateway we need to define `gatewayClassName: eg` for [`manifests/gateway.yaml`](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.6/todo_app/manifests/gateway.yaml) which isn't included in the installation. The contents can however be found from the [project GitHub repository](https://github.com/envoyproxy/gateway/blob/main/examples/kubernetes/quickstart.yaml) and are quite simple. Save the following to file `gatewayclass.yaml` and apply the file with `kubectl apply -f gatewayclass.yaml`:
-```
-apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata:
-  name: eg
-spec:
-  controllerName: gateway.envoyproxy.io/gatewayclass-controller
-```
+The cluster uses a gateway resource to handle inter-namespace routing from a single externally exposed port to different services. Apply the infra resources using the instructions from [infrastucture_manifests folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/infrastucture_manifests). This also creates the necessary namespaces.
 
-The project uses a namespace called project. You can create the namespace by running `kubectl create namespace project`. You can set the namespace as the default namespace by running `kubectl config set-context --current --namespace=project` or if you have [kubens](https://github.com/ahmetb/kubectx) installed more conviniently with `kubens project`. You can check the current active namespace by checking current context namespace with `kubectl config view` or just by calling `kubens`.
+The cluster uses a gateway resource which doesn't exist in a k3d cluster out of the box. Install the Envoy gateway using the instructions from the [envoy_gateway folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/services/envoy_gateway).
 
 For the PersistentVolume to work you first need to create the local path in the node we are binding it to. We can create the folder `/tmp/kube` in container `k3d-k3s-default-agent-0` with `docker exec k3d-k3s-default-agent-0 mkdir -p /tmp/kube`.
 

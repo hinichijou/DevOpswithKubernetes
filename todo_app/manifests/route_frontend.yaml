@@ -5,7 +5,8 @@ metadata:
   name: todo-frontend-route
 spec:
   parentRefs:
-  - name: todoapp-gateway
+  - name: infra-gateway
+    namespace: infra
   rules:
   - matches:
     - path:

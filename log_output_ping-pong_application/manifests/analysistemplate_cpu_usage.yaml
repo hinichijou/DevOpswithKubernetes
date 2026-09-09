@@ -14,7 +14,7 @@ spec:
     provider:
       prometheus:
         # DNS name for my Prometheus, find yours with kubectl describe svc ...
-        address: http://kube-prometheus-stack-1788-prometheus.prometheus.svc.cluster.local:9090
+        address: http://prom-kube-prometheus-stack-prometheus.prometheus.svc.cluster.local:9090
         query: |
           scalar(
             sum(rate(container_cpu_usage_seconds_total{image!="",job="kubelet",metrics_path="/metrics/cadvisor",namespace="exercises"}[90s]))

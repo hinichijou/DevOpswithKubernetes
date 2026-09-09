@@ -5,7 +5,8 @@ metadata:
   name: pingpongapp-route
 spec:
   parentRefs:
-  - name: log-output-pingpong-gateway
+  - name: infra-gateway
+    namespace: infra
   rules:
   - matches:
     - path:

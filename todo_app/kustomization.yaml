@@ -17,7 +17,6 @@ configMapGenerator:
   files:
   - manifests/init_todo_db.sql
 resources:
-  - manifests/gateway.yaml
   - manifests/persistentvolumeclaim_todoapp.yaml
   - manifests/configmap_nats.yaml
   - manifests/configmap_todoapp.yaml

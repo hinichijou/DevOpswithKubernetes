@@ -13,7 +13,6 @@ configMapGenerator:
   files:
   - assets/information.txt
 resources:
-  - manifests/gateway.yaml
   - manifests/analysistemplate_cpu_usage.yaml
   - manifests/persistentvolumeclaim_log_output.yaml
   - manifests/configmap_log_output.yaml
