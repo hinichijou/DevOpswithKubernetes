@@ -25,5 +25,5 @@ resources:
   - manifests/route_ping_pong.yaml
   - manifests/service_postgres.yaml
   - manifests/statefulset_postgres.yaml
-  - manifests/secret_postgres.yaml
+  - manifests/sealed_secret_postgres.yaml
   - manifests/configmap_postgres.yaml
