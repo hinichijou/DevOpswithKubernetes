@@ -161,7 +161,7 @@ jobs:
           image_alias: "${{ env.LOG_OUTPUT_WRITER_IMAGE_ALIAS }}"
 
       - name : 'Build & Publish todo app frontend image'
-        if: steps.changes.outputs.todo_app_frontend == 'true'
+        if: steps.changes.outputs.todo_frontend == 'true'
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
@@ -171,7 +171,7 @@ jobs:
           image_alias: "${{ env.TODO_FRONTEND_IMAGE_ALIAS }}"
 
       - name : 'Fetch existing todo app frontend image (builds the image if existing image not found)'
-        if: steps.changes.outputs.todo_app_frontend != 'true' && steps.todo_file_changes.outputs.deploy == 'true'
+        if: steps.changes.outputs.todo_frontend != 'true' && steps.todo_file_changes.outputs.deploy == 'true'
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
@@ -181,7 +181,7 @@ jobs:
           image_alias: "${{ env.TODO_FRONTEND_IMAGE_ALIAS }}"
 
       - name : 'Build & Publish todo app backend image'
-        if: steps.changes.outputs.todo_app_backend == 'true'
+        if: steps.changes.outputs.todo_backend == 'true'
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
@@ -191,7 +191,7 @@ jobs:
           image_alias: "${{ env.TODO_BACKEND_IMAGE_ALIAS }}"
 
       - name : 'Fetch existing todo app backend image (builds the image if existing image not found)'
-        if: steps.changes.outputs.todo_app_backend != 'true' && steps.todo_file_changes.outputs.deploy == 'true'
+        if: steps.changes.outputs.todo_backend != 'true' && steps.todo_file_changes.outputs.deploy == 'true'
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"

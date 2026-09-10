@@ -28,7 +28,7 @@ const subscribe = async () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: body
-        }).catch((e) => console.error(`Fetch failed: ${e}.`))
+        })
 
         if (!res.ok) {
           console.error(`Fetch failed. Status: ${res.status}. Text: ${await res.text()}`)
