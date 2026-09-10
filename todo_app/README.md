@@ -78,12 +78,12 @@ Expects a file `manifests/secret_discord_webhook.yaml` to which the [broadcaster
 
 The PUT and POST path messages were forwarded to Discord successfully:
 
-![Image of the messages in discord](https://github.com/hinichijou/DevOpswithKubernetes/blob/4.6/todo_app/task_screenshots/task_4-6a.png?raw=true)
+![Image of the messages in discord](https://github.com/hinichijou/DevOpswithKubernetes/blob/4.7/task_screenshots/task_4-6a.png?raw=true)
 
 The messages were handled only once and the six replicas ran without issues:
 
-![Image of the replicas](https://github.com/hinichijou/DevOpswithKubernetes/blob/4.6/todo_app/task_screenshots/task_4-6b.png?raw=true)
+![Image of the replicas](https://github.com/hinichijou/DevOpswithKubernetes/blob/4.7/task_screenshots/task_4-6b.png?raw=true)
 
 The messages were picked up by two different subscriber replicas:
 
-![Image of the subscriber logs](https://github.com/hinichijou/DevOpswithKubernetes/blob/4.6/todo_app/task_screenshots/task_4-6c.png?raw=true)
+![Image of the subscriber logs](https://github.com/hinichijou/DevOpswithKubernetes/blob/4.7/task_screenshots/task_4-6c.png?raw=true)
