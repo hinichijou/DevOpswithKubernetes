@@ -40,3 +40,5 @@ spec:
                port: 3000
       securityContext:
         fsGroup: 1001
+  strategy:
+    type: Recreate
