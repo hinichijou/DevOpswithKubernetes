@@ -2,28 +2,31 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: exercises
 images:
-  - name: PROJECT/PINGPONGAPPIMAGE
-    newName: hinichijou/pingpong_application:6q7loxje
-  - name: PROJECT/LOGOUTPUTREADERIMAGE
-    newName: hinichijou/log_output-reader:vm6s2wcf
-  - name: PROJECT/LOGOUTPUTWRITERIMAGE
-    newName: hinichijou/log_output-writer:7xzfeyk3
+- digest: sha256:a0c15e6887a3778cef36b3486a1c1866f1bbc01474c66c0ee0a34bf766f5523c
+  name: PROJECT/LOGOUTPUTREADERIMAGE
+  newName: hinichijou/log_output-reader
+- digest: sha256:d30893ab19b745bebbb76a347d6fd2ad0e96b1dc944ca1c7a50307cb677fe7ab
+  name: PROJECT/LOGOUTPUTWRITERIMAGE
+  newName: hinichijou/log_output-writer
+- digest: sha256:6b527f46ecbfdde3a2137363959367c315464b8a02efd7400ccf457c99bc7921
+  name: PROJECT/PINGPONGAPPIMAGE
+  newName: hinichijou/pingpong_application
 configMapGenerator:
-- name: information-txt-config
-  files:
+- files:
   - assets/information.txt
+  name: information-txt-config
 resources:
-  - manifests/analysistemplate_cpu_usage.yaml
-  - manifests/persistentvolumeclaim_log_output.yaml
-  - manifests/configmap_log_output.yaml
-  - manifests/deployment_log_output.yaml
-  - manifests/service_log_output_reader.yaml
-  - manifests/route_log_output.yaml
-  - manifests/rollout_ping_pong.yaml
-  - manifests/deployment_ping_pong.yaml
-  - manifests/service_ping_pong.yaml
-  - manifests/route_ping_pong.yaml
-  - manifests/service_postgres.yaml
-  - manifests/statefulset_postgres.yaml
-  - manifests/sealed_secret_postgres.yaml
-  - manifests/configmap_postgres.yaml
+- manifests/analysistemplate_cpu_usage.yaml
+- manifests/persistentvolumeclaim_log_output.yaml
+- manifests/configmap_log_output.yaml
+- manifests/deployment_log_output.yaml
+- manifests/service_log_output_reader.yaml
+- manifests/route_log_output.yaml
+- manifests/rollout_ping_pong.yaml
+- manifests/deployment_ping_pong.yaml
+- manifests/service_ping_pong.yaml
+- manifests/route_ping_pong.yaml
+- manifests/service_postgres.yaml
+- manifests/statefulset_postgres.yaml
+- manifests/sealed_secret_postgres.yaml
+- manifests/configmap_postgres.yaml
