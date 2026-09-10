@@ -12,4 +12,8 @@ Apply manifests with `kubectl apply -k .`.
 
 After applying the configmap changes you may have to restart the ArgoCD server with `kubectl rollout restart deployment.apps/argocd-server -n argocd` for the changes to be applied. Because of browser caching you may have to clear the browser cookies.
 
+The Argo CD service can be accessed at http://localhost:8081/argocd.
+
 The admin account password can be found by base64 decoding the password from: `kubectl get -n argocd secrets argocd-initial-admin-secret -o yaml`.
+
+When adding the application give the app a name, use the project `default`, and leave the sync policy as Manual. For Destination, set cluster URL to `https://kubernetes.default.svc` (or `in-cluster` for cluster name) and namespace to `default`. Connect the repo to Argo CD by setting source repository url to the github repo url and leave the revision as HEAD, and set path to match the application folder. After a manual sync, set the sync to automatic from the app page details view.
