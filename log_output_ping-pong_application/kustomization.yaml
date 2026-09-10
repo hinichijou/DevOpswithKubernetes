@@ -4,13 +4,13 @@ namespace: exercises
 images:
 - name: PROJECT/LOGOUTPUTREADERIMAGE
   newName: hinichijou/log_output-reader
-  newTag: main-25f39af2cf78004af8d4c2ca7b72eafd95abd9ba
+  newTag: main-457aac07b888d57ab322a0aaa418e833b299c768
 - name: PROJECT/LOGOUTPUTWRITERIMAGE
   newName: hinichijou/log_output-writer
-  newTag: main-25f39af2cf78004af8d4c2ca7b72eafd95abd9ba
-- name: PROJECT/PINGPONGAPPIMAGE
+  newTag: main-457aac07b888d57ab322a0aaa418e833b299c768
+- digest: sha256:a843e248149a3b360fb83e536824697bd70f9da7869a03f1ee36b23e3be8d7aa
+  name: PROJECT/PINGPONGAPPIMAGE
   newName: hinichijou/pingpong_application
-  newTag: main-25f39af2cf78004af8d4c2ca7b72eafd95abd9ba
 configMapGenerator:
 - files:
   - assets/information.txt
