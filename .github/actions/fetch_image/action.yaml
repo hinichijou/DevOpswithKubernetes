@@ -19,7 +19,7 @@ runs:
       id: 'sha'
       shell: bash
       run: |
-        echo "image_sha=$(curl https://hub.docker.com/v2/namespaces/${{ inputs.namespace }}/repositories/${{ inputs.image_name }}/tags | jq '-results | sort_by(.last_pushed) | reverse | .[0].digest')" >> $GITHUB_OUTPUT
+        echo "image_sha=$(curl -s https://hub.docker.com/v2/namespaces/${{ inputs.namespace }}/repositories/${{ inputs.image_name }}/tags | jq '.results | sort_by(.last_pushed) | reverse | .[0].digest')" >> $GITHUB_OUTPUT
 
     - name: Build image if not found
       if: steps.sha.outputs.image_sha == ''
