@@ -23,14 +23,18 @@ const subscribe = async () => {
       const body = JSON.stringify({ content: message })
       console.log(`Forwarding message with body ${body}`)
 
-      const res = await fetch(process.env.EXTERNAL_SERVICE_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: body
-      }).catch((e) => console.error(`Fetch failed: ${e}.`))
+      try {
+        const res = await fetch(process.env.EXTERNAL_SERVICE_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: body
+        }).catch((e) => console.error(`Fetch failed: ${e}.`))
 
-      if (!res.ok) {
-        console.error(`Fetch failed. Status: ${res.status}. Text: ${await res.text()}`)
+        if (!res.ok) {
+          console.error(`Fetch failed. Status: ${res.status}. Text: ${await res.text()}`)
+        }
+      } catch(e) {
+        console.error(`Fetch failed: ${e}.`)
       }
 
       subscribe()
