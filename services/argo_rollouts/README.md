@@ -1,4 +1,4 @@
-It is assumed that the [infrastucture_manifests folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/infrastucture_manifests) resources are applied first. This creates the necessary namespace(s).
+It is assumed that the [infrastructure_manifests folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/infrastructure_manifests) resources are applied first. This creates the necessary namespace(s).
 
 To use the rollout and analysis template resources in the project we need to install [Argo Rollouts](https://argoproj.github.io/argo-rollouts/architecture/#rollout-resource):
 ```

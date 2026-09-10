@@ -6,7 +6,7 @@ Check with `kubectl cluster-info` that your configuration is pointing to the loc
 
 The cluster uses a gateway resource which doesn't exist in a k3d cluster out of the box. Install the Envoy gateway using the instructions from the [envoy_gateway folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/services/envoy_gateway).
 
-The gateway resource handles inter-namespace routing from a single externally exposed port to different services. Apply the infra resources using the instructions from [infrastucture_manifests folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/infrastucture_manifests). This also creates the necessary namespaces.
+The gateway resource handles inter-namespace routing from a single externally exposed port to different services. Apply the infra resources using the instructions from [infrastructure_manifests folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/infrastructure_manifests). This also creates the necessary namespaces.
 
 Install rollout and analysis template resources using the instructions from [argo_rollouts folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/services/argo_rollouts).
 
@@ -37,7 +37,7 @@ The cluster can be stopped with `k3d cluster stop` and started with `k3d cluster
 ### Task 4.7
 Task: Move the Log output application to use GitOps so that when you commit to the repository, the application is automatically updated.
 
-As we are increasingly adding third party services that are not necessarily related to a single application I decided to route the traffic with gateway and route resources so we could theoretically access Argo CD service, Prometheus, logoutput-ping-pong application and the todo app simultaneously from the same exposed port without issues. Apply the infra resources using the instructions from [infrastucture_manifests folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/infrastucture_manifests). Then apply the Argo CD resources using the instructions from [argocd service folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/services/argocd).
+As we are increasingly adding third party services that are not necessarily related to a single application I decided to route the traffic with gateway and route resources so we could theoretically access Argo CD service, Prometheus, logoutput-ping-pong application and the todo app simultaneously from the same exposed port without issues. Apply the infra resources using the instructions from [infrastructure_manifests folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/infrastructure_manifests). Then apply the Argo CD resources using the instructions from [argocd service folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/services/argocd).
 
 We can now access the Argo CD service from http://localhost:8081/argocd. We can get the admin account password by base64 decoding the password from: `kubectl get -n argocd secrets argocd-initial-admin-secret -o yaml`.
 

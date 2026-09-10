@@ -1,4 +1,4 @@
-It is assumed that the [infrastucture_manifests folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/infrastucture_manifests) resources are applied first. This creates the necessary namespace(s).
+It is assumed that the [infrastructure_manifests folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/infrastructure_manifests) resources are applied first. This creates the necessary namespace(s).
 
 Installs the [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack).
 

@@ -10,4 +10,4 @@ Uses the repository secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` which con
 
 Uses custom actions [build image](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/.github/actions/build_image/action.yaml) which builds the image, pushes it to a repository and adds the image tag to the `kustomization.yaml` and [fetch image](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/.github/actions/fetch_image/action.yaml) which tries to fetch an existing image from the Docker repository, and if the fetch fails builds a new image with the build image action.
 
-Argo CD is configured to watch for changes to the application manifests and any changes to `kustomization.yaml` or the manifests it refers to will trigger a new deployment of the application to a local cluster.
+Argo CD is configured to watch for changes to the application manifests and any changes to a specific `kustomization.yaml` or the manifests it refers to will trigger a new deployment of the application to a local cluster.
