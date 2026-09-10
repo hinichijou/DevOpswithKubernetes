@@ -2,13 +2,13 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: exercises
 images:
-- digest: sha256:a0c15e6887a3778cef36b3486a1c1866f1bbc01474c66c0ee0a34bf766f5523c
+- digest: sha256:7d566db02856505712985c7ffec9002e36e5f529acd1969da67866d436139351
   name: PROJECT/LOGOUTPUTREADERIMAGE
   newName: hinichijou/log_output-reader
 - digest: sha256:d30893ab19b745bebbb76a347d6fd2ad0e96b1dc944ca1c7a50307cb677fe7ab
   name: PROJECT/LOGOUTPUTWRITERIMAGE
   newName: hinichijou/log_output-writer
-- digest: sha256:6b527f46ecbfdde3a2137363959367c315464b8a02efd7400ccf457c99bc7921
+- digest: sha256:5c618b92266c7235194b1595fe4f6cf22d8fef38c1434a3563d87fefb29b718d
   name: PROJECT/PINGPONGAPPIMAGE
   newName: hinichijou/pingpong_application
 configMapGenerator:
