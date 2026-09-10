@@ -32,8 +32,6 @@ See the [monitoring folder](https://github.com/hinichijou/DevOpswithKubernetes/t
 
 You can view the HTML page served from http://localhost:8081. The frontend fetches a new image from https://picsum.photos/1200 every 10 minutes. The frontend writes the image to persistent storage so it persists between application restarts. Frontend reads said image from the persistent storage and displays it. The backend has get, post and put paths for todos at `/todos` which is accessable at http://localhost:8081/api/todos. The frontend has the functionality for displaying the todos, adding a new todo and marking a todo as done. The Wikipedia todo CronJob is scheduled to post a new todo with a random Wikipedia link every hour.
 
-The application also has a [github deployment workflow](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.6/.github/workflows/deploy-on-push.yaml) which deploys the application to Google Cloud GKE cluster to a namespace that matches the branch that gets pushed.
-
 You can remove the resources applied with the kustomization file with `kubectl delete -k .`. This doesn't delete the postgres persistent volumes which are not directly created in the manifests. You can delete them by finding the names with `kubectl get pvc` and calling delete directly for the persistent volume claims. You can also delete all resources of certain type, for example `kubectl delete --all deployments` would delete all deployment resources in the current namespace. Deleting the whole namespace with `kubectl delete namespace project` will also delete all the resources in the namespace.
 
 The cluster can be stopped with `k3d cluster stop` and started with `k3d cluster start`. The cluster can be deleted with `k3d cluster delete`.

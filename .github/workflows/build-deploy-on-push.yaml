@@ -1,0 +1,128 @@
+name: Build and publish application
+
+on:
+  push:
+
+env:
+  LOG_OUTPUT_PINGPONG_APP_FOLDER: ./log_output_ping-pong_application
+  PINGPONG_IMAGE_NAME: pingpong_application
+  PINGPONG_IMAGE_ALIAS: PROJECT/PINGPONGAPPIMAGE
+  PINGPONG_FOLDER: ping-pong_application
+  LOG_OUTPUT_READER_IMAGE_NAME: log_output-reader
+  LOG_OUTPUT_READER_IMAGE_ALIAS: PROJECT/LOGOUTPUTREADERIMAGE
+  LOG_OUTPUT_READER_FOLDER: log_output_reader
+  LOG_OUTPUT_WRITER_IMAGE_NAME: log_output-writer
+  LOG_OUTPUT_WRITER_IMAGE_ALIAS: PROJECT/LOGOUTPUTWRITERIMAGE
+  LOG_OUTPUT_WRITER_FOLDER: log_output_writer
+
+jobs:
+  build-publish:
+    name: Build, Push, Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - uses: dorny/paths-filter@v4
+        id: changes
+        with:
+          filters: |
+            manifests:
+              - 'infrastructure_manifests/kustomization.yaml'
+              - 'infrastructure_manifests/manifests/**'
+              - 'log_output_ping-pong_application/manifests/**'
+              - 'log_output_ping-pong_application/kustomization.yaml'
+            ping-pong:
+              - 'log_output_ping-pong_application/ping-pong_application/**'
+            log_output_writer:
+              - 'log_output_ping-pong_application/log_output_writer/**'
+            log_output_reader:
+              - 'log_output_ping-pong_application/log_output_reader/**'
+
+      - name: 'Have deploy relevant files changed'
+        id: 'file_changes'
+        run: |
+          echo "deploy=${{
+              steps.changes.outputs.ping-pong == 'true' ||
+              steps.changes.outputs.log_output_writer == 'true' ||
+              steps.changes.outputs.log_output_reader == 'true' ||
+              steps.changes.outputs.manifests == 'true'
+            }}" >> $GITHUB_OUTPUT
+
+      - name: Login to Docker Hub
+        if: steps.file_changes.outputs.deploy == 'true'
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Kustomize
+        if: steps.file_changes.outputs.deploy == 'true'
+        uses: imranismail/setup-kustomize@v3
+
+      - name : 'Build & Publish ping-pong app image'
+        if: steps.changes.outputs.ping-pong == 'true'
+        uses: ./.github/actions/build_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          image_name: "${{ env.PINGPONG_IMAGE_NAME }}"
+          build_folder: "${{ env.PINGPONG_FOLDER }}"
+          image_alias: "${{ env.PINGPONG_IMAGE_ALIAS }}"
+
+      - name : 'Fetch existing ping-pong app image (builds the image if existing image not found)'
+        if: steps.changes.outputs.ping-pong != 'true'
+        uses: ./.github/actions/fetch_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          image_name: "${{ env.PINGPONG_IMAGE_NAME }}"
+          build_folder: "${{ env.PINGPONG_FOLDER }}"
+          image_alias: "${{ env.PINGPONG_IMAGE_ALIAS }}"
+
+      - name : 'Build & Publish log output reader image'
+        if: steps.changes.outputs.log_output_reader == 'true'
+        uses: ./.github/actions/build_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          image_name: "${{ env.LOG_OUTPUT_READER_IMAGE_NAME }}"
+          build_folder: "${{ env.LOG_OUTPUT_READER_FOLDER }}"
+          image_alias: "${{ env.LOG_OUTPUT_READER_IMAGE_ALIAS }}"
+
+      - name : 'Fetch existing log output reader image (builds the image if existing image not found)'
+        if: steps.changes.outputs.log_output_reader != 'true'
+        uses: ./.github/actions/fetch_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          image_name: "${{ env.LOG_OUTPUT_READER_IMAGE_NAME }}"
+          build_folder: "${{ env.LOG_OUTPUT_READER_FOLDER }}"
+          image_alias: "${{ env.LOG_OUTPUT_READER_IMAGE_ALIAS }}"
+
+      - name : 'Build & Publish log output writer image'
+        if: steps.changes.outputs.log_output_writer == 'true'
+        uses: ./.github/actions/build_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          image_name: "${{ env.LOG_OUTPUT_WRITER_IMAGE_NAME }}"
+          build_folder: "${{ env.LOG_OUTPUT_WRITER_FOLDER }}"
+          image_alias: "${{ env.LOG_OUTPUT_WRITER_IMAGE_ALIAS }}"
+
+      - name : 'Fetch existing log output writer image (builds the image if existing image not found)'
+        if: steps.changes.outputs.log_output_writer != 'true'
+        uses: ./.github/actions/fetch_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          image_name: "${{ env.LOG_OUTPUT_WRITER_IMAGE_NAME }}"
+          build_folder: "${{ env.LOG_OUTPUT_WRITER_FOLDER }}"
+          image_alias: "${{ env.LOG_OUTPUT_WRITER_IMAGE_ALIAS }}"
+
+      - name: commit kustomization.yaml to GitHub
+        uses: EndBug/add-and-commit@v10
+        with:
+          add: 'kustomization.yaml'
+          message: New version released ${{ github.sha }}

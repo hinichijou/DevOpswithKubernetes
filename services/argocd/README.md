@@ -1,6 +1,6 @@
 It is assumed that the [infrastucture_manifests folder](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/infrastucture_manifests) resources are applied first. This creates the necessary namespace(s).
 
-Install [ArgoCD](https://argo-cd.readthedocs.io/en/stable/getting_started/) with the following commands:
+Install [ArgoCD](https://argo-cd.readthedocs.io/en/stable/getting_started/) with the following command(s):
 ```
 kubectl apply --server-side -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```

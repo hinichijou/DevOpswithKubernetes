@@ -1,11 +1,7 @@
 name: 'Fetch Image'
 description: 'Fetches existing image from repository or builds if not found and adds image to kustomization.yaml'
 inputs:
-  namespace:
-    required: true
   image_name:
-    required: true
-  app_folder:
     required: true
   build_folder:
     required: true
@@ -19,15 +15,18 @@ runs:
       id: 'sha'
       shell: bash
       run: |
-        echo "image_sha=$(curl https://hub.docker.com/v2/namespaces/${{ inputs.namespace }}/repositories/${{ inputs.image_name }}/tags | jq '-results | sort_by(.last_pushed) | reverse | .[0].digest')" >> $GITHUB_OUTPUT
+        IMAGE_PATH="$REGISTRY/$PROJECT_ID/$REPOSITORY/${{ inputs.image_name }}"
+        echo "image_sha=$(gcloud artifacts docker tags list $IMAGE_PATH \
+        --filter="tag~${{ github.ref_name }}*" \
+        --sort-by="~UPDATE_TIME" \
+        --limit=1 \
+        --format="value(version)")" >> $GITHUB_OUTPUT
 
     - name: Build image if not found
       if: steps.sha.outputs.image_sha == ''
       uses: ./.github/actions/build_image
       with:
-        namespace: "${{ inputs.namespace }}"
         image_name: "${{ inputs.image_name }}"
-        app_folder: "${{ inputs.app_folder }}"
         build_folder: "${{ inputs.build_folder }}"
         image_alias: "${{ inputs.image_alias }}"
 
@@ -35,7 +34,7 @@ runs:
       if: steps.sha.outputs.image_sha != ''
       shell: bash
       # Assumes that the kustomize file is in the working directory root
-      working-directory: "${{ inputs.app_folder }}"
+      working-directory: "${{ env.WORKING_DIRECTORY }}"
       run: |
-        IMAGE_PATH="${{ inputs.namespace }}/${{ inputs.image_name }}"
+        IMAGE_PATH="$REGISTRY/$PROJECT_ID/$REPOSITORY/${{ inputs.image_name }}"
         kustomize edit set image "${{ inputs.image_alias }}"="$IMAGE_PATH@${{ steps.sha.outputs.image_sha }}"

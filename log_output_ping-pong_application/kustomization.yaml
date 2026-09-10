@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: exercises
 images:
-  - name: PROJECT/PINGPOGAPPIMAGE
+  - name: PROJECT/PINGPONGAPPIMAGE
     newName: hinichijou/pingpong_application:6q7loxje
   - name: PROJECT/LOGOUTPUTREADERIMAGE
     newName: hinichijou/log_output-reader:vm6s2wcf
