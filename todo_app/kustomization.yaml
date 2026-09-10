@@ -5,18 +5,18 @@ images:
 - digest: sha256:0cb80c8e16d5c313d833021de7b911313fd1a88d017403b12e68dd49e808b79f
   name: PROJECT/BACKENDIMAGE
   newName: hinichijou/todo_app_backend
-- digest: sha256:0afd5f09eb7bd7fd1bd41efa02247403088d3289d0f633740d19a9fdb3b36a19
-  name: PROJECT/BROADCASTERIMAGE
+- name: PROJECT/BROADCASTERIMAGE
   newName: hinichijou/broadcaster
-- digest: sha256:746167d0a797c4cb647a39adefd1ff6fb2e60a7a1190d3b8819c4c80247ad145
-  name: PROJECT/DBBACKUPJOBIMAGE
+  newTag: main-f6d5dff6070089aa6fb934015f239a8269fb5ab5
+- name: PROJECT/DBBACKUPJOBIMAGE
   newName: hinichijou/db_backup_job
+  newTag: main-f6d5dff6070089aa6fb934015f239a8269fb5ab5
 - digest: sha256:3cbf7f0e02aad67cbdbe066d4c1d96f75614d207c5e0e02267030612bc38f69e
   name: PROJECT/FRONTENDIMAGE
   newName: hinichijou/todo_app_frontend
-- digest: sha256:cd192738fcbb61eea9326d4619e91af40702db2b7c553adb22938084973779d2
-  name: PROJECT/WIKIPEDIATODOJOBIMAGE
+- name: PROJECT/WIKIPEDIATODOJOBIMAGE
   newName: hinichijou/wikipedia_todo_job
+  newTag: main-f6d5dff6070089aa6fb934015f239a8269fb5ab5
 configMapGenerator:
 - files:
   - manifests/init_todo_db.sql
