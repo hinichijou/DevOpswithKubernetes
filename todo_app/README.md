@@ -54,3 +54,5 @@ Then similarly to task [4.7](https://github.com/hinichijou/DevOpswithKubernetes/
 The deployment and building of images & redeployment on git push worked without particular issues similarly to the previous task:
 
 ![Image of the deployment in ArgoCD](https://github.com/hinichijou/DevOpswithKubernetes/blob/4.8/task_screenshots/task_4-8.png?raw=true)
+
+Example of a successful workflow run: https://github.com/hinichijou/DevOpswithKubernetes/actions/runs/34537631815/job/103072825835
