@@ -5,3 +5,5 @@ Node.js Hono server application. Reads and outputs the last line of a log file w
 Has path `/health` for health checks and `/ready` for readiness checks. The readiness path checks the response from `PING_PONG_APP_READY_PATH` to define if the app can receive data from the ping pong application.
 
 Can be run locally with `npm run dev`. With default port available at http://localhost:3000/.
+
+4.7: test triggering an image build

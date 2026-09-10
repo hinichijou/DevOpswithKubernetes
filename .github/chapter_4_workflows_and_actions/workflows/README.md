@@ -55,7 +55,7 @@ The built images are stored to the Google Cloud project Artifact registry reposi
 
 It makes sense to build and upload only the images if there are changes to the related files. For that reason to workflow checks if there are changes to the related folder before triggering the build step. There is a popular GitHub Action [dorny/paths-filter](https://github.com/dorny/paths-filter) that seems to be built just for this purpose so this can be leveraged in our workflow to get a neat solution for monitoring changes in certain folders.
 
-If there are no changes fo the image relevant folder the workflow will search for the latest image built from the branch and uses that. The workflow assumes that I image for the branch exists
+If there are no changes for the image relevant folder the workflow will search for the latest image built from the branch and uses that. The workflow assumes that an image for the branch exists
 
 The workflow creates a namespace for each deployment based on the branch that gets pushed. The namespace name will be the branch name. The only exception is the main branch which gets deployed to a branch called project.
 

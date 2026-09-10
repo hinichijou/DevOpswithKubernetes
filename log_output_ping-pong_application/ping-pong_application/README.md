@@ -5,5 +5,3 @@ Node.js express server application. Counts how many times http://localhost:*inse
 Has path `/health` for health checks and `/ready` for readiness checks. The readiness path checks the existence of the postgres client variable to define if the app has connection the database.
 
 Can be run locally with `npm run dev`. With default port available at http://localhost:3000.
-
-4.7: test triggering a ping-pong app image build
