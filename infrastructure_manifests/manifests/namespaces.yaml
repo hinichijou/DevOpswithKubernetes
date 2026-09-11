@@ -15,6 +15,20 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: project-production
+  labels:
+    shared-gateway-access: "true"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-staging
+  labels:
+    shared-gateway-access: "true"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: argocd
   labels:
     shared-gateway-access: "true"

@@ -2,6 +2,12 @@ name: Build and publish application
 
 on:
   push:
+    branches:
+      - main
+    tags:
+      # - '[0-9]+.[0-9]+'should work for task tags. But the task was to trigger with every tag
+      - '**'
+
 
 env:
   LOG_OUTPUT_PINGPONG_APP_FOLDER: log_output_ping-pong_application
@@ -30,6 +36,10 @@ env:
   BROADCASTER_IMAGE_NAME: broadcaster
   BROADCASTER_IMAGE_ALIAS: PROJECT/BROADCASTERIMAGE
   BROADCASTER_FOLDER: broadcaster
+  # The return value is the one that is evaluated last
+  ENVIRONMENT: ${{ github.ref_type == 'branch' && 'staging' || 'production' }}
+  TODO_KUSTOMIZATION_FOLDER: ${{ github.ref_type == 'branch' && 'todo_app/overlays/staging' || 'todo_app/overlays/prod' }}
+  IMAGE_TAG: ${{ github.ref_type == 'branch' && github.sha || github.ref_name }}
 
 jobs:
   build-publish:
@@ -40,22 +50,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - uses: dorny/paths-filter@v4
+      # Since I decided to build todo app on every tag and the lp app isn't currently built on tag push I'll just skip this on tag trigger
+      # It is possible to diff changes between the previous tag and new tag and build images for all changed apps
+      - if: env.ENVIRONMENT != 'production'
+        uses: dorny/paths-filter@v4
         id: changes
         with:
           filters: |
-            lpa_manifests:
-              - '${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}/manifests/**'
-              - '${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}/kustomization.yaml'
             ping-pong:
               - '${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}/${{ env.PINGPONG_FOLDER }}/**'
             log_output_writer:
               - '${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}/${{ env.LOG_OUTPUT_WRITER_FOLDER }}/**'
             log_output_reader:
               - '${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}/${{ env.LOG_OUTPUT_READER_FOLDER }}/**'
-            todo_manifests:
-              - '${{ env.TODO_APP_FOLDER }}/manifests/**'
-              - '${{ env.TODO_APP_FOLDER }}/kustomization.yaml'
             todo_frontend:
               - '${{ env.TODO_APP_FOLDER }}/${{ env.TODO_FRONTEND_FOLDER }}/**'
             todo_backend:
@@ -73,15 +80,14 @@ jobs:
           echo "deploy=${{
               steps.changes.outputs.ping-pong == 'true' ||
               steps.changes.outputs.log_output_writer == 'true' ||
-              steps.changes.outputs.log_output_reader == 'true' ||
-              steps.changes.outputs.lpa_manifests == 'true'
+              steps.changes.outputs.log_output_reader == 'true'
             }}" >> $GITHUB_OUTPUT
 
       - name: 'Have todo app deploy relevant files changed'
         id: 'todo_file_changes'
         run: |
           echo "deploy=${{
-              steps.changes.outputs.todo_manifests == 'true' ||
+              env.ENVIRONMENT == 'production' ||
               steps.changes.outputs.todo_frontend == 'true' ||
               steps.changes.outputs.todo_backend == 'true' ||
               steps.changes.outputs.wikipedia_job == 'true' ||
@@ -105,8 +111,8 @@ jobs:
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
-          image_name: "${{ env.PINGPONG_IMAGE_NAME }}"
+          kustomization_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          image_name: "${{ env.PINGPONG_IMAGE_NAME }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.PINGPONG_FOLDER }}"
           image_alias: "${{ env.PINGPONG_IMAGE_ALIAS }}"
 
@@ -115,7 +121,7 @@ jobs:
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          kustomization_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           image_name: "${{ env.PINGPONG_IMAGE_NAME }}"
           build_folder: "${{ env.PINGPONG_FOLDER }}"
           image_alias: "${{ env.PINGPONG_IMAGE_ALIAS }}"
@@ -125,8 +131,8 @@ jobs:
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
-          image_name: "${{ env.LOG_OUTPUT_READER_IMAGE_NAME }}"
+          kustomization_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          image_name: "${{ env.LOG_OUTPUT_READER_IMAGE_NAME }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.LOG_OUTPUT_READER_FOLDER }}"
           image_alias: "${{ env.LOG_OUTPUT_READER_IMAGE_ALIAS }}"
 
@@ -135,7 +141,7 @@ jobs:
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          kustomization_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           image_name: "${{ env.LOG_OUTPUT_READER_IMAGE_NAME }}"
           build_folder: "${{ env.LOG_OUTPUT_READER_FOLDER }}"
           image_alias: "${{ env.LOG_OUTPUT_READER_IMAGE_ALIAS }}"
@@ -145,8 +151,8 @@ jobs:
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
-          image_name: "${{ env.LOG_OUTPUT_WRITER_IMAGE_NAME }}"
+          kustomization_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          image_name: "${{ env.LOG_OUTPUT_WRITER_IMAGE_NAME }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.LOG_OUTPUT_WRITER_FOLDER }}"
           image_alias: "${{ env.LOG_OUTPUT_WRITER_IMAGE_ALIAS }}"
 
@@ -155,108 +161,108 @@ jobs:
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          kustomization_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           image_name: "${{ env.LOG_OUTPUT_WRITER_IMAGE_NAME }}"
           build_folder: "${{ env.LOG_OUTPUT_WRITER_FOLDER }}"
           image_alias: "${{ env.LOG_OUTPUT_WRITER_IMAGE_ALIAS }}"
 
       - name : 'Build & Publish todo app frontend image'
-        if: steps.changes.outputs.todo_frontend == 'true'
+        if: steps.changes.outputs.todo_frontend == 'true' || env.ENVIRONMENT == 'production'
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.TODO_APP_FOLDER }}"
-          image_name: "${{ env.TODO_FRONTEND_IMAGE_NAME }}"
+          kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
+          image_name: "${{ env.TODO_FRONTEND_IMAGE_NAME }}-${{ env.ENVIRONMENT }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.TODO_FRONTEND_FOLDER }}"
           image_alias: "${{ env.TODO_FRONTEND_IMAGE_ALIAS }}"
 
       - name : 'Fetch existing todo app frontend image (builds the image if existing image not found)'
-        if: steps.changes.outputs.todo_frontend != 'true' && steps.todo_file_changes.outputs.deploy == 'true'
+        if: steps.changes.outputs.todo_frontend != 'true' && steps.todo_file_changes.outputs.deploy == 'true' && env.ENVIRONMENT == 'staging'
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.TODO_APP_FOLDER }}"
-          image_name: "${{ env.TODO_FRONTEND_IMAGE_NAME }}"
+          kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
+          image_name: "${{ env.TODO_FRONTEND_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           build_folder: "${{ env.TODO_FRONTEND_FOLDER }}"
           image_alias: "${{ env.TODO_FRONTEND_IMAGE_ALIAS }}"
 
       - name : 'Build & Publish todo app backend image'
-        if: steps.changes.outputs.todo_backend == 'true'
+        if: steps.changes.outputs.todo_backend == 'true' || env.ENVIRONMENT == 'production'
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.TODO_APP_FOLDER }}"
-          image_name: "${{ env.TODO_BACKEND_IMAGE_NAME }}"
+          kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
+          image_name: "${{ env.TODO_BACKEND_IMAGE_NAME }}-${{ env.ENVIRONMENT }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.TODO_BACKEND_FOLDER }}"
           image_alias: "${{ env.TODO_BACKEND_IMAGE_ALIAS }}"
 
       - name : 'Fetch existing todo app backend image (builds the image if existing image not found)'
-        if: steps.changes.outputs.todo_backend != 'true' && steps.todo_file_changes.outputs.deploy == 'true'
+        if: steps.changes.outputs.todo_backend != 'true' && steps.todo_file_changes.outputs.deploy == 'true' && env.ENVIRONMENT == 'staging'
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.TODO_APP_FOLDER }}"
-          image_name: "${{ env.TODO_BACKEND_IMAGE_NAME }}"
+          kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
+          image_name: "${{ env.TODO_BACKEND_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           build_folder: "${{ env.TODO_BACKEND_FOLDER }}"
           image_alias: "${{ env.TODO_BACKEND_IMAGE_ALIAS }}"
 
       - name : 'Build & Publish wikipedia job image'
-        if: steps.changes.outputs.wikipedia_job == 'true'
+        if: steps.changes.outputs.wikipedia_job == 'true' || env.ENVIRONMENT == 'production'
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.TODO_APP_FOLDER }}"
-          image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}"
+          kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
+          image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}-${{ env.ENVIRONMENT }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.WIKIPEDIA_JOB_FOLDER }}"
           image_alias: "${{ env.WIKIPEDIA_JOB_IMAGE_ALIAS }}"
 
       - name : 'Fetch existing wikipedia job image (builds the image if existing image not found)'
-        if: steps.changes.outputs.wikipedia_job != 'true' && steps.todo_file_changes.outputs.deploy == 'true'
+        if: steps.changes.outputs.wikipedia_job != 'true' && steps.todo_file_changes.outputs.deploy == 'true' && env.ENVIRONMENT == 'staging'
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.TODO_APP_FOLDER }}"
-          image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}"
+          kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
+          image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           build_folder: "${{ env.WIKIPEDIA_JOB_FOLDER }}"
           image_alias: "${{ env.WIKIPEDIA_JOB_IMAGE_ALIAS }}"
 
       - name : 'Build & Publish db backup job image'
-        if: steps.changes.outputs.db_backup_job == 'true'
+        if: steps.changes.outputs.db_backup_job == 'true' || env.ENVIRONMENT == 'production'
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.TODO_APP_FOLDER }}"
-          image_name: "${{ env.DB_BACKUP_JOB_IMAGE_NAME }}"
+          kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
+          image_name: "${{ env.DB_BACKUP_JOB_IMAGE_NAME }}-${{ env.ENVIRONMENT }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.DB_BACKUP_JOB_FOLDER }}"
           image_alias: "${{ env.DB_BACKUP_JOB_IMAGE_ALIAS }}"
 
       - name : 'Fetch existing db backup job image (builds the image if existing image not found)'
-        if: steps.changes.outputs.db_backup_job != 'true'  && steps.todo_file_changes.outputs.deploy == 'true'
+        if: steps.changes.outputs.db_backup_job != 'true'  && steps.todo_file_changes.outputs.deploy == 'true' && env.ENVIRONMENT == 'staging'
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.TODO_APP_FOLDER }}"
-          image_name: "${{ env.DB_BACKUP_JOB_IMAGE_NAME }}"
+          kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
+          image_name: "${{ env.DB_BACKUP_JOB_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           build_folder: "${{ env.DB_BACKUP_JOB_FOLDER }}"
           image_alias: "${{ env.DB_BACKUP_JOB_IMAGE_ALIAS }}"
 
       - name : 'Build & Publish broadcaster image'
-        if: steps.changes.outputs.broadcaster == 'true'
+        if: steps.changes.outputs.broadcaster == 'true' || env.ENVIRONMENT == 'production'
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.TODO_APP_FOLDER }}"
-          image_name: "${{ env.BROADCASTER_IMAGE_NAME }}"
+          kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
+          image_name: "${{ env.BROADCASTER_IMAGE_NAME }}-${{ env.ENVIRONMENT }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.BROADCASTER_FOLDER }}"
           image_alias: "${{ env.BROADCASTER_IMAGE_ALIAS }}"
 
       - name : 'Fetch existing broadcaster image (builds the image if existing image not found)'
-        if: steps.changes.outputs.broadcaster != 'true' && steps.todo_file_changes.outputs.deploy == 'true'
+        if: steps.changes.outputs.broadcaster != 'true' && steps.todo_file_changes.outputs.deploy == 'true' && env.ENVIRONMENT == 'staging'
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
-          app_folder: "${{ env.TODO_APP_FOLDER }}"
-          image_name: "${{ env.BROADCASTER_IMAGE_NAME }}"
+          kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
+          image_name: "${{ env.BROADCASTER_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           build_folder: "${{ env.BROADCASTER_FOLDER }}"
           image_alias: "${{ env.BROADCASTER_IMAGE_ALIAS }}"
 
@@ -271,5 +277,5 @@ jobs:
         if: steps.todo_file_changes.outputs.deploy == 'true'
         uses: EndBug/add-and-commit@v10
         with:
-          add: '${{ env.TODO_APP_FOLDER }}/kustomization.yaml'
-          message: New todo app version released ${{ github.sha }}
+          add: '${{ env.TODO_KUSTOMIZATION_FOLDER }}/kustomization.yaml'
+          message: New todo app ${{ env.ENVIRONMENT }} version released ${{ github.sha }}

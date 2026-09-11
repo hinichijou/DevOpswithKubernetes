@@ -23,7 +23,7 @@ Has following environment variables :
 * `NATS_URL`: the address for connecting to NATS server. Default value: `nats://nats:4222`.
 * `SUBJECT`: the subject for the messages published to NATS.
 
-Saves the todos to and fetches them from a Postgres database which means a local Postgres instance is required. Expects the environment variable `PGPASSWORD` to be set to the environment and match the database password. You should also consider setting `PGUSER`, `PGHOST` and `PGDATABASE` to suitable values. Fetches the values `id` and `title` `done` from table `todos` see [`manifests/init_todo_db.sql`](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.5/todo_app/manifests/init_todo_db.sql) for how the todos table is defined.
+Saves the todos to and fetches them from a Postgres database which means a local Postgres instance is required. Expects the environment variable `PGPASSWORD` to be set to the environment and match the database password. You should also consider setting `PGUSER`, `PGHOST` and `PGDATABASE` to suitable values. Fetches the values `id` and `title` `done` from table `todos` see [`init_todo_db.sql`](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.9/todo_app/base/manifests/init_todo_db.sql) for how the todos table is defined.
 
 Every request made to the backend and the body of every post and put request received is logged to console.
 

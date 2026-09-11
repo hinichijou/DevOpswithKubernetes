@@ -5,7 +5,7 @@ inputs:
     required: true
   image_name:
     required: true
-  app_folder:
+  kustomization_folder:
     required: true
   build_folder:
     required: true
@@ -26,16 +26,15 @@ runs:
       uses: ./.github/actions/build_image
       with:
         namespace: "${{ inputs.namespace }}"
-        image_name: "${{ inputs.image_name }}"
-        app_folder: "${{ inputs.app_folder }}"
+        image_name: "${{ inputs.image_name }}:${{ env.IMAGE_TAG }}"
+        kustomization_folder: "${{ inputs.kustomization_folder }}"
         build_folder: "${{ inputs.build_folder }}"
         image_alias: "${{ inputs.image_alias }}"
 
     - name: Set found image
       if: steps.sha.outputs.image_sha != ''
       shell: bash
-      # Assumes that the kustomize file is in the working directory root
-      working-directory: "${{ inputs.app_folder }}"
+      working-directory: "${{ inputs.kustomization_folder }}"
       run: |
         IMAGE_PATH="${{ inputs.namespace }}/${{ inputs.image_name }}"
         kustomize edit set image "${{ inputs.image_alias }}"="$IMAGE_PATH@${{ steps.sha.outputs.image_sha }}"

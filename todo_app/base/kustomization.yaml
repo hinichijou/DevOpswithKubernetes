@@ -8,14 +8,14 @@ images:
 - name: PROJECT/BROADCASTERIMAGE
   newName: hinichijou/broadcaster
   newTag: main-aec6c3ad499f7e17f684f94a47462dda29a38c51
-- name: PROJECT/DBBACKUPJOBIMAGE
-  newName: hinichijou/db_backup_job
-  newTag: main-aec6c3ad499f7e17f684f94a47462dda29a38c51
 - name: PROJECT/FRONTENDIMAGE
   newName: hinichijou/todo_app_frontend
   newTag: main-aec6c3ad499f7e17f684f94a47462dda29a38c51
 - name: PROJECT/WIKIPEDIATODOJOBIMAGE
   newName: hinichijou/wikipedia_todo_job
+  newTag: main-aec6c3ad499f7e17f684f94a47462dda29a38c51
+- name: PROJECT/DBBACKUPJOBIMAGE
+  newName: hinichijou/db_backup_job
   newTag: main-aec6c3ad499f7e17f684f94a47462dda29a38c51
 configMapGenerator:
 - files:
