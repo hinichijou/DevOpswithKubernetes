@@ -22,7 +22,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 Uses the following environment values:
 * `BACKEND_SERVICE_URL`: cluster internal url of the backend service. If cluster not used this is same as `NEXT_PUBLIC_API_URL`.
 * `BACKEND_READY_PATH`: path of the backend service ready route. Used to define if the frontend service is ready to receive traffic.
-* `NEXT_PUBLIC_API_URL`: external url of the backend service. If cluster not used default os the same as `BACKEND_SERVICE_URL`. If cluster is used this can be left empty, the requests target the Next.js backend and the cluster routing directs the request to the backend service based on path if necessary.
+* `NEXT_PUBLIC_API_URL`: external url of the backend service. If cluster not used default is the same as `BACKEND_SERVICE_URL`. If cluster is used this should be the app root path, the requests target the Next.js backend and the cluster routing directs the request to the backend service based on path if necessary.
 * `API_PATH`: The base path of the backend API. Since the api path is now rewritten by cluster route path rewrite rule instead of the backend app having a base path this is only required for cluster external requests. Default value ``.
 * `DYN_ASSET_DIR_PATH`: defines the location of dynamic directory where dynamic assets are saved. Default value is `./dynamic`.
 * `IMAGE_FETCH_URL`: the URL from where the displayed image is fetched. Default value https://picsum.photos/1200.

@@ -11,3 +11,4 @@ resources:
 patches:
   - path: patches/db_backup_job.yaml
   - path: patches/persistentvolumeclaim_todoapp_staging.yaml
+  - path: patches/configmap_todoapp_staging.yaml
