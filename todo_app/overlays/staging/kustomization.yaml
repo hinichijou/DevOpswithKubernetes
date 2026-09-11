@@ -4,11 +4,27 @@ namespace: project-staging
 # Seems to cause potential issues
 # namePrefix: staging-
 resources:
-  - resources/sealed_secret_postgres_staging.yaml
-  - resources/route_frontend_staging.yaml
-  - resources/route_backend_staging.yaml
-  - ./../../base
+- resources/sealed_secret_postgres_staging.yaml
+- resources/route_frontend_staging.yaml
+- resources/route_backend_staging.yaml
+- ./../../base
 patches:
-  - path: patches/db_backup_job.yaml
-  - path: patches/persistentvolumeclaim_todoapp_staging.yaml
-  - path: patches/configmap_todoapp_staging.yaml
+- path: patches/db_backup_job.yaml
+- path: patches/persistentvolumeclaim_todoapp_staging.yaml
+- path: patches/configmap_todoapp_staging.yaml
+images:
+- digest: "null"
+  name: PROJECT/BACKENDIMAGE
+  newName: hinichijou/todo_app_backend-staging
+- digest: "null"
+  name: PROJECT/BROADCASTERIMAGE
+  newName: hinichijou/broadcaster-staging
+- digest: "null"
+  name: PROJECT/DBBACKUPJOBIMAGE
+  newName: hinichijou/db_backup_job-staging
+- name: PROJECT/FRONTENDIMAGE
+  newName: hinichijou/todo_app_frontend-staging
+  newTag: 4a273e246851dc1b1d2b7e5e3ed70edd6ec7d573
+- digest: "null"
+  name: PROJECT/WIKIPEDIATODOJOBIMAGE
+  newName: hinichijou/wikipedia_todo_job-staging
