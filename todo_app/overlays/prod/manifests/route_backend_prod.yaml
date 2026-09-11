@@ -1,7 +1,6 @@
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
-  namespace: project-production
   name: todo-backend-route
 spec:
   rules:
