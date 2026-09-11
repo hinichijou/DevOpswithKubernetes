@@ -25,7 +25,6 @@ configMapGenerator:
   # Not pushed to GitHub, would probably make sense as an env secret if deploying to GKE. Could also use Sealed Secret.
   # - manifests/secret_discord_webhook.yaml
 resources:
-- manifests/persistentvolumeclaim_todoapp.yaml
 - manifests/configmap_nats.yaml
 - manifests/configmap_todoapp.yaml
 - manifests/deployment_todoapp.yaml

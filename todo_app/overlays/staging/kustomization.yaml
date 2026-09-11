@@ -5,6 +5,7 @@ namespace: project-staging
 # namePrefix: staging-
 resources:
   - manifests/sealed_secret_postgres_staging.yaml
+  - manifests/persistentvolumeclaim_todoapp_staging.yaml
   - ./../../base
 patches:
   - path: manifests/db_backup_job.yaml
