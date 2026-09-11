@@ -2,7 +2,8 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: backup
-  namespace: project
+  # Setting the namespace prevents patching if not set to the same namespace. Probably generally best to set the namespace always in the kustomization file
+  # namespace: project
 spec:
   schedule: "0 0 * * *"
   jobTemplate:
