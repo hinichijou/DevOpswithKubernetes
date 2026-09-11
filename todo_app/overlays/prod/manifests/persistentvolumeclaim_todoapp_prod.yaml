@@ -7,8 +7,3 @@ spec:
   # 3.5: Google Kubernetes Engine will automatically provision a persistent disk for your PersistentVolumeClaim - just don't set the storage class.
   # Uncomment for local use
   storageClassName: sc-todoapp-production-pv # this is the name of the persistent volume we are claiming
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100Mi
