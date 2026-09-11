@@ -5,6 +5,8 @@ inputs:
     required: true
   image_name:
     required: true
+  app_folder:
+    required: true
   kustomization_folder:
     required: true
   build_folder:
@@ -27,6 +29,7 @@ runs:
       with:
         namespace: "${{ inputs.namespace }}"
         image_name: "${{ inputs.image_name }}:${{ env.IMAGE_TAG }}"
+        app_folder: "${{ inputs.app_folder }}"
         kustomization_folder: "${{ inputs.kustomization_folder }}"
         build_folder: "${{ inputs.build_folder }}"
         image_alias: "${{ inputs.image_alias }}"

@@ -111,6 +111,7 @@ jobs:
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           kustomization_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           image_name: "${{ env.PINGPONG_IMAGE_NAME }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.PINGPONG_FOLDER }}"
@@ -121,6 +122,7 @@ jobs:
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           kustomization_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           image_name: "${{ env.PINGPONG_IMAGE_NAME }}"
           build_folder: "${{ env.PINGPONG_FOLDER }}"
@@ -131,6 +133,7 @@ jobs:
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           kustomization_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           image_name: "${{ env.LOG_OUTPUT_READER_IMAGE_NAME }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.LOG_OUTPUT_READER_FOLDER }}"
@@ -141,6 +144,7 @@ jobs:
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           kustomization_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           image_name: "${{ env.LOG_OUTPUT_READER_IMAGE_NAME }}"
           build_folder: "${{ env.LOG_OUTPUT_READER_FOLDER }}"
@@ -151,6 +155,7 @@ jobs:
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           kustomization_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           image_name: "${{ env.LOG_OUTPUT_WRITER_IMAGE_NAME }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.LOG_OUTPUT_WRITER_FOLDER }}"
@@ -161,6 +166,7 @@ jobs:
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           kustomization_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
           image_name: "${{ env.LOG_OUTPUT_WRITER_IMAGE_NAME }}"
           build_folder: "${{ env.LOG_OUTPUT_WRITER_FOLDER }}"
@@ -171,6 +177,7 @@ jobs:
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
           kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
           image_name: "${{ env.TODO_FRONTEND_IMAGE_NAME }}-${{ env.ENVIRONMENT }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.TODO_FRONTEND_FOLDER }}"
@@ -181,6 +188,7 @@ jobs:
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
           kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
           image_name: "${{ env.TODO_FRONTEND_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           build_folder: "${{ env.TODO_FRONTEND_FOLDER }}"
@@ -191,6 +199,7 @@ jobs:
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
           kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
           image_name: "${{ env.TODO_BACKEND_IMAGE_NAME }}-${{ env.ENVIRONMENT }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.TODO_BACKEND_FOLDER }}"
@@ -201,6 +210,7 @@ jobs:
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
           kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
           image_name: "${{ env.TODO_BACKEND_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           build_folder: "${{ env.TODO_BACKEND_FOLDER }}"
@@ -211,6 +221,7 @@ jobs:
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
           kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
           image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}-${{ env.ENVIRONMENT }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.WIKIPEDIA_JOB_FOLDER }}"
@@ -221,6 +232,7 @@ jobs:
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
           kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
           image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           build_folder: "${{ env.WIKIPEDIA_JOB_FOLDER }}"
@@ -231,6 +243,7 @@ jobs:
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
           kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
           image_name: "${{ env.DB_BACKUP_JOB_IMAGE_NAME }}-${{ env.ENVIRONMENT }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.DB_BACKUP_JOB_FOLDER }}"
@@ -241,6 +254,7 @@ jobs:
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
           kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
           image_name: "${{ env.DB_BACKUP_JOB_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           build_folder: "${{ env.DB_BACKUP_JOB_FOLDER }}"
@@ -251,6 +265,7 @@ jobs:
         uses: ./.github/actions/build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
           kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
           image_name: "${{ env.BROADCASTER_IMAGE_NAME }}-${{ env.ENVIRONMENT }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.BROADCASTER_FOLDER }}"
@@ -261,6 +276,7 @@ jobs:
         uses: ./.github/actions/fetch_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
           kustomization_folder: "${{ env.TODO_KUSTOMIZATION_FOLDER }}"
           image_name: "${{ env.BROADCASTER_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           build_folder: "${{ env.BROADCASTER_FOLDER }}"
