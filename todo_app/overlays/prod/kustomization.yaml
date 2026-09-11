@@ -5,6 +5,8 @@ namespace: project-production
 # namePrefix: prod-
 resources:
   - manifests/sealed_secret_postgres_production.yaml
+  - resources/route_frontend_prod.yaml
+  - resources/route_backend_prod.yaml
   - ./../../base
 patches:
   - path: manifests/persistentvolumeclaim_todoapp_prod.yaml

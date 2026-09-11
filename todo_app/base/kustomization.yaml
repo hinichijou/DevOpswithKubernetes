@@ -29,8 +29,6 @@ resources:
 - manifests/configmap_nats.yaml
 - manifests/configmap_todoapp.yaml
 - manifests/deployment_todoapp.yaml
-- manifests/route_frontend.yaml
-- manifests/route_backend.yaml
 - manifests/service_todoapp.yaml
 - manifests/service_postgres.yaml
 - manifests/statefulset_postgres.yaml
