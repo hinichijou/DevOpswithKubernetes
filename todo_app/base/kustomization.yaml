@@ -34,7 +34,6 @@ resources:
 - manifests/service_todoapp.yaml
 - manifests/service_postgres.yaml
 - manifests/statefulset_postgres.yaml
-- manifests/sealed_secret_postgres.yaml
 - manifests/configmap_postgres.yaml
 - manifests/wikipedia_todo_job.yaml
 - manifests/db_backup_job.yaml
