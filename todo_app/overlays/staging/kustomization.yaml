@@ -9,7 +9,7 @@ resources:
 - resources/route_backend_staging.yaml
 - ./../../base
 patches:
-- path: patches/db_backup_job.yaml
+- path: patches/db_backup_job_staging.yaml
 - path: patches/persistentvolumeclaim_todoapp_staging.yaml
 - path: patches/configmap_todoapp_staging.yaml
 images:
