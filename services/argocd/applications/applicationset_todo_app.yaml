@@ -10,7 +10,7 @@ spec:
       elements:
       - name: todoapp-production
         path: todo_app/overlays/prod
-        targetRevision: prod-build-*
+        targetRevision: HEAD
       - name: todoapp-staging
         path: todo_app/overlays/staging
         targetRevision: HEAD

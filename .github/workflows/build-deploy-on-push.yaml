@@ -6,10 +6,7 @@ on:
       - main
     tags:
       # - '[0-9]+.[0-9]+'should work for task tags. But the task was to trigger with every tag
-      # Since I'm creating the prod-build tag to trigger the deployment to workflow needs to ignore it
-      # Can't have tags and tags-ignore in same event: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onpushbranchestagsbranches-ignoretags-ignore
       - '**'
-      - '!prod-build-**'
 
 
 env:
@@ -298,5 +295,5 @@ jobs:
         with:
           add: '${{ env.TODO_KUSTOMIZATION_FOLDER }}/kustomization.yaml'
           message: New todo app ${{ env.ENVIRONMENT }} version released ${{ github.sha }}
+          # Pushes the detached head to main on tag trigger
           push: ${{ github.ref_type == 'branch' && true || 'origin HEAD:main' }}
-          tag: ${{ github.ref_type == 'tag' && format('prod-build-{0}', github.ref_name) || '' }}
