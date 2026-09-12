@@ -21,13 +21,14 @@ runs:
       id: 'build'
       working-directory: "${{ inputs.app_folder }}"
       shell: bash
+      # awk: print the third field delimited by space from the line containing digest
       run: |
         IMAGE_TAG="${{ inputs.namespace }}/${{ inputs.image_name }}"
         echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
         docker build --tag $IMAGE_TAG "${{ inputs.build_folder }}"
-        docker push $IMAGE_TAG
+        echo "sha=$(docker push $IMAGE_TAG | awk '/digest:/ { print $3 }')" >> $GITHUB_OUTPUT
 
     - name: Set to kustomization
       working-directory: "${{ inputs.kustomization_folder }}"
       shell: bash
-      run: kustomize edit set image "${{ inputs.image_alias }}"=${{ steps.build.outputs.image_tag }}
+      run: kustomize edit set image "${{ inputs.image_alias }}"=${{ steps.build.outputs.sha }}
