@@ -19,10 +19,10 @@ images:
 - digest: sha256:c6d8ece4b4ae90957b04eb2f4fb098e4f5d8841b599057317da958c70715d59a
   name: PROJECT/BROADCASTERIMAGE
   newName: hinichijou/broadcaster-staging
-- digest: sha256:5ef135ca3237205ce60348deabb0959a66f66866397778a6b12077749c67c07d
+- digest: sha256:e76e7b5777d5d744018ad5ccdcefd5586f09def7e0483d253b3e75ce1f010587
   name: PROJECT/DBBACKUPJOBIMAGE
   newName: hinichijou/db_backup_job-staging
-  newTag: 760e38c311dddce058426ac50a21215a6713938b
+  newTag: fb1ad38a5cd34d664e5ea55e86f73bcd8e64512f
 - digest: sha256:b48d1fce718ff5a2857d11bdd26e9c1f319d20441743e89e4eeaf2e82b9a62fa
   name: PROJECT/FRONTENDIMAGE
   newName: hinichijou/todo_app_frontend-staging
