@@ -13,3 +13,5 @@ Uses the following environment variables:
 * PGPASSWORD: Password for the postgres database.
 * POSTGRES_DB: The name of the postgres database being backed up.
 * NAMESPACE: The namespace where the pod is deployed to. Used to form the backup file name.
+
+4.9: test building image
