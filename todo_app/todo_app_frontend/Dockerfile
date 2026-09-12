@@ -35,6 +35,9 @@
   # Copy application source code
   COPY . .
 
+  # The arguments need to be declared in the build stage to make them available. https://docs.docker.com/build/building/variables/#multi-platform-build-arguments
+  ARG BASE_PATH
+
   # Next.js collects completely anonymous telemetry data about general usage.
   # Learn more here: https://nextjs.org/telemetry
   # Uncomment the following line in case you want to disable telemetry during the build.
