@@ -16,20 +16,16 @@ images:
 - digest: sha256:b5a35754d57eda995326fb508f9630a830e0a45c1e34e4898176ff1c88129254
   name: PROJECT/BACKENDIMAGE
   newName: hinichijou/todo_app_backend-staging
-  newTag: 737749b5e595d6c4386e1d5db604dd33449a2a60
 - digest: sha256:c6d8ece4b4ae90957b04eb2f4fb098e4f5d8841b599057317da958c70715d59a
   name: PROJECT/BROADCASTERIMAGE
   newName: hinichijou/broadcaster-staging
-  newTag: 737749b5e595d6c4386e1d5db604dd33449a2a60
 - digest: sha256:8302161185615bcb98be2385cb82c4cc8a9e159045e332443361bcf972a89e63
   name: PROJECT/DBBACKUPJOBIMAGE
   newName: hinichijou/db_backup_job-staging
-  newTag: 737749b5e595d6c4386e1d5db604dd33449a2a60
-- digest: sha256:8f4e94c595eb73cff56b7a7c8c1c03fd144856998c61db8ce9a5a4b0d948700f
+- digest: sha256:a010a9b4ef2d5b731b01e13638176ab8414691f9b8bbb3e91ece04a3ed9d5a5e
   name: PROJECT/FRONTENDIMAGE
   newName: hinichijou/todo_app_frontend-staging
-  newTag: 737749b5e595d6c4386e1d5db604dd33449a2a60
+  newTag: 14a67f42b1073d2468c4365e272671921e6882cf
 - digest: sha256:a928777459f87c2998e01929a84a63fcd5c49189a7bf38c01f64b72988934882
   name: PROJECT/WIKIPEDIATODOJOBIMAGE
   newName: hinichijou/wikipedia_todo_job-staging
-  newTag: 737749b5e595d6c4386e1d5db604dd33449a2a60
