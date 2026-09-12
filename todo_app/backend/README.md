@@ -28,5 +28,3 @@ Saves the todos to and fetches them from a Postgres database which means a local
 Every request made to the backend and the body of every post and put request received is logged to console.
 
 Publishes a message on NATS with every `POST /todos` and `PUT /todos/:id`. The POST message includes the todo text and the PUT message includes the todo id and the updated values.
-
-4.9: trigger build
