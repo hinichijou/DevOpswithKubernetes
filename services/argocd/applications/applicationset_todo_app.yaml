@@ -10,8 +10,10 @@ spec:
       elements:
       - name: todoapp-production
         path: todo_app/overlays/prod
+        targetRevision: prod-build-*
       - name: todoapp-staging
         path: todo_app/overlays/staging
+        targetRevision: HEAD
   template:
     metadata:
       name: '{{.name}}'
@@ -20,7 +22,7 @@ spec:
       project: default
       source:
         repoURL: https://github.com/hinichijou/DevOpswithKubernetes.git
-        targetRevision: HEAD
+        targetRevision: '{{.targetRevision}}'
         path: '{{.path}}'
       destination:
         server: https://kubernetes.default.svc
