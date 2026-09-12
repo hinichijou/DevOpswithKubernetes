@@ -20,3 +20,10 @@ spec:
           path:
             type: ReplacePrefixMatch
             replacePrefixMatch: /
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /_next
+    backendRefs:
+    - name: todoapp-frontend-svc
+      port: 2345
