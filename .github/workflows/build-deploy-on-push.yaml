@@ -6,10 +6,10 @@ on:
       - main
     tags:
       # - '[0-9]+.[0-9]+'should work for task tags. But the task was to trigger with every tag
-      - '**'
-    tags-ignore:
       # Since I'm creating the prod-build tag to trigger the deployment to workflow needs to ignore it
-      - 'prod-build-**'
+      # Can't have tags and tags-ignore in same event: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onpushbranchestagsbranches-ignoretags-ignore
+      - '**'
+      - '!prod-build-**'
 
 
 env:
