@@ -3,7 +3,7 @@ import { connection } from 'next/server'
 
 import styles from './MainImage.module.css'
 import imageService from '@/services/image'
-import { imagePathInternal } from '@/src/constants'
+import { imagePathInternal, publicUrl } from '@/src/constants'
 
 async function MainImage () {
   //A way to avoid component prerendering so the image updates during runtime
@@ -11,7 +11,7 @@ async function MainImage () {
 
   const available = await imageService.checkImage()
 
-  const imagePath = imagePathInternal()
+  const imagePath = publicUrl() + imagePathInternal()
   console.log(`Looking image from path ${imagePath}`)
   //Next Image component provides caching functionality if necessary
   return available ? <img src={`${imagePath}`} className={styles.img} alt='Random picture' /> : <></>

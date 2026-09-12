@@ -6,6 +6,9 @@ export const backendReadyURL = () => process.env.BACKEND_SERVICE_URL !== undefin
   process.env.BACKEND_READY_PATH !== undefined ?
   `${process.env.BACKEND_SERVICE_URL}${process.env.BACKEND_READY_PATH}` :
   `http://localhost:3001/ready`
+export const publicUrl = () =>  process.env.NEXT_PUBLIC_API_URL !== undefined ?
+  `${process.env.NEXT_PUBLIC_API_URL}/` :
+  `http://localhost:3001/`
 export const publicApiUrl = () =>  process.env.NEXT_PUBLIC_API_URL !== undefined ?
   `${process.env.NEXT_PUBLIC_API_URL}${apiPath()}/` :
   `http://localhost:3001${apiPath()}/`
