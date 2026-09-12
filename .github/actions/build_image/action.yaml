@@ -31,4 +31,6 @@ runs:
     - name: Set to kustomization
       working-directory: "${{ inputs.kustomization_folder }}"
       shell: bash
-      run: kustomize edit set image "${{ inputs.image_alias }}"=${{ steps.build.outputs.sha }}
+      run: |
+        IMAGE_PATH="${{ inputs.namespace }}/${{ inputs.image_name }}"
+        kustomize edit set image "${{ inputs.image_alias }}"="$IMAGE_PATH@${{ steps.build.outputs.sha }}"
