@@ -13,18 +13,18 @@ patches:
 - path: patches/persistentvolumeclaim_todoapp_staging.yaml
 - path: patches/configmap_todoapp_staging.yaml
 images:
-- digest: "null"
-  name: PROJECT/BACKENDIMAGE
+- name: PROJECT/BACKENDIMAGE
   newName: hinichijou/todo_app_backend-staging
-- digest: "null"
-  name: PROJECT/BROADCASTERIMAGE
+  newTag: 5b83381b8823a1ac70659ff5e8c15a0c365a1797
+- name: PROJECT/BROADCASTERIMAGE
   newName: hinichijou/broadcaster-staging
-- digest: "null"
-  name: PROJECT/DBBACKUPJOBIMAGE
+  newTag: 5b83381b8823a1ac70659ff5e8c15a0c365a1797
+- name: PROJECT/DBBACKUPJOBIMAGE
   newName: hinichijou/db_backup_job-staging
+  newTag: 5b83381b8823a1ac70659ff5e8c15a0c365a1797
 - name: PROJECT/FRONTENDIMAGE
   newName: hinichijou/todo_app_frontend-staging
-  newTag: 4a273e246851dc1b1d2b7e5e3ed70edd6ec7d573
-- digest: "null"
-  name: PROJECT/WIKIPEDIATODOJOBIMAGE
+  newTag: 5b83381b8823a1ac70659ff5e8c15a0c365a1797
+- name: PROJECT/WIKIPEDIATODOJOBIMAGE
   newName: hinichijou/wikipedia_todo_job-staging
+  newTag: 5b83381b8823a1ac70659ff5e8c15a0c365a1797
