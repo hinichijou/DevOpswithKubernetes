@@ -24,6 +24,7 @@ env:
   TODO_FRONTEND_IMAGE_NAME: todo_app_frontend
   TODO_FRONTEND_IMAGE_ALIAS: PROJECT/FRONTENDIMAGE
   TODO_FRONTEND_FOLDER: todo_app_frontend
+  TODO_FRONTEND_BUILD_ARG_STRING: '--build-arg BASE_PATH=/todoapp-staging'
   TODO_BACKEND_IMAGE_NAME: todo_app_backend
   TODO_BACKEND_IMAGE_ALIAS: PROJECT/BACKENDIMAGE
   TODO_BACKEND_FOLDER: backend
@@ -182,6 +183,7 @@ jobs:
           image_name: "${{ env.TODO_FRONTEND_IMAGE_NAME }}-${{ env.ENVIRONMENT }}:${{ env.IMAGE_TAG }}"
           build_folder: "${{ env.TODO_FRONTEND_FOLDER }}"
           image_alias: "${{ env.TODO_FRONTEND_IMAGE_ALIAS }}"
+          build_arg_string: "${{ env.TODO_FRONTEND_BUILD_ARG_STRING }}"
 
       - name : 'Fetch existing todo app frontend image (builds the image if existing image not found)'
         if: steps.changes.outputs.todo_frontend != 'true' && steps.todo_file_changes.outputs.deploy == 'true' && env.ENVIRONMENT == 'staging'
@@ -193,6 +195,7 @@ jobs:
           image_name: "${{ env.TODO_FRONTEND_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           build_folder: "${{ env.TODO_FRONTEND_FOLDER }}"
           image_alias: "${{ env.TODO_FRONTEND_IMAGE_ALIAS }}"
+          build_arg_string: "${{ env.TODO_FRONTEND_BUILD_ARG_STRING }}"
 
       - name : 'Build & Publish todo app backend image'
         if: steps.changes.outputs.todo_backend == 'true' || env.ENVIRONMENT == 'production'

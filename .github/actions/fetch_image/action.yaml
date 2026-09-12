@@ -13,6 +13,8 @@ inputs:
     required: true
   image_alias:
     required: true
+  build_arg_string:
+    required: false
 
 runs:
   using: "composite"
@@ -33,6 +35,7 @@ runs:
         kustomization_folder: "${{ inputs.kustomization_folder }}"
         build_folder: "${{ inputs.build_folder }}"
         image_alias: "${{ inputs.image_alias }}"
+        build_arg_string: "${{ inputs.build_arg_string }}"
 
     - name: Set found image
       if: steps.sha.outputs.image_sha != ''

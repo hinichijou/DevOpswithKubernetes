@@ -10,6 +10,7 @@ spec:
   - matches:
     - path:
         type: PathPrefix
+        # To redefine this needs to be set as the application basePath on build time as well as changing the configmap value
         value: /todoapp-staging
     backendRefs:
     - name: todoapp-frontend-svc
@@ -20,10 +21,3 @@ spec:
           path:
             type: ReplacePrefixMatch
             replacePrefixMatch: /
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /_next
-    backendRefs:
-    - name: todoapp-frontend-svc
-      port: 2345

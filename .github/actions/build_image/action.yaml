@@ -13,6 +13,8 @@ inputs:
     required: true
   image_alias:
     required: true
+  build_arg_string:
+    required: false
 
 runs:
   using: "composite"
@@ -25,7 +27,7 @@ runs:
       run: |
         IMAGE_TAG="${{ inputs.namespace }}/${{ inputs.image_name }}"
         echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
-        docker build --tag $IMAGE_TAG "${{ inputs.build_folder }}"
+        docker build ${{ inputs.build_arg_string }} --tag $IMAGE_TAG "${{ inputs.build_folder }}"
         echo "sha=$(docker push $IMAGE_TAG | awk '/digest:/ { print $3 }')" >> $GITHUB_OUTPUT
 
     - name: Set to kustomization

@@ -20,12 +20,13 @@ The frontend project can be tested locally by running:
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 Uses the following environment values:
-* `BACKEND_SERVICE_URL`: cluster internal url of the backend service. If cluster not used this is same as `NEXT_PUBLIC_API_URL`.
+* `BACKEND_SERVICE_URL`: cluster internal url of the backend service. If cluster not used this should be the localhost address of the backend.
 * `BACKEND_READY_PATH`: path of the backend service ready route. Used to define if the frontend service is ready to receive traffic.
-* `NEXT_PUBLIC_API_URL`: external url of the backend service. If cluster not used default is the same as `BACKEND_SERVICE_URL`. If cluster is used this should be the app root path, the requests target the Next.js backend and the cluster routing directs the request to the backend service based on path if necessary.
+* `NEXT_PUBLIC_API_URL`: external url of the backend service. If cluster not used default is the same as `BACKEND_SERVICE_URL`. If cluster is used with the current configuration this should be the app root path, the requests target the Next.js backend and the cluster routing directs the request to the backend service based on path if necessary.
 * `API_PATH`: The base path of the backend API. Since the api path is now rewritten by cluster route path rewrite rule instead of the backend app having a base path this is only required for cluster external requests. Default value ``.
 * `DYN_ASSET_DIR_PATH`: defines the location of dynamic directory where dynamic assets are saved. Default value is `./dynamic`.
 * `IMAGE_FETCH_URL`: the URL from where the displayed image is fetched. Default value https://picsum.photos/1200.
 * `IMAGE_DIR_NAME`: the api route where the image is fetched from. The fetch route will be composed of `IMAGE_DIR_NAME`/`IMAGE_NAME`.  Default value is `images`.
 * `IMAGE_NAME`: the name of the file where the image is saved. Default value `image.jpg`.
 * `IMAGE_FETCH_TIMEOUT`: the timeout after which a new image is fetched. Default value `600000`.
+* `BASE_PATH`: Defines [next.config.ts](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.9/todo_app/todo_app_frontend/next.config.ts) `basePath` during build time. This should be passed to the Docker context when building for cluster use if using a custom route because Next.JS internal _nextjs path requests need to be routed correctly, with the default they target the cluster root.
