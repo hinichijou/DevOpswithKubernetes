@@ -4,10 +4,26 @@ namespace: project-production
 # Seems to cause potential issues
 # namePrefix: prod-
 resources:
-  - resources/sealed_secret_postgres_production.yaml
-  - resources/route_frontend_prod.yaml
-  - resources/route_backend_prod.yaml
-  - ./../../base
+- resources/sealed_secret_postgres_production.yaml
+- resources/route_frontend_prod.yaml
+- resources/route_backend_prod.yaml
+- ./../../base
 patches:
-  - path: patches/persistentvolumeclaim_todoapp_prod.yaml
-  - path: patches/configmap_todoapp_prod.yaml
+- path: patches/persistentvolumeclaim_todoapp_prod.yaml
+- path: patches/configmap_todoapp_prod.yaml
+images:
+- name: PROJECT/BACKENDIMAGE
+  newName: hinichijou/todo_app_backend-production
+  newTag: 4.9-test
+- name: PROJECT/BROADCASTERIMAGE
+  newName: hinichijou/broadcaster-production
+  newTag: 4.9-test
+- name: PROJECT/DBBACKUPJOBIMAGE
+  newName: hinichijou/db_backup_job-production
+  newTag: 4.9-test
+- name: PROJECT/FRONTENDIMAGE
+  newName: hinichijou/todo_app_frontend-production
+  newTag: 4.9-test
+- name: PROJECT/WIKIPEDIATODOJOBIMAGE
+  newName: hinichijou/wikipedia_todo_job-production
+  newTag: 4.9-test
