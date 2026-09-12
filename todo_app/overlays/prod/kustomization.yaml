@@ -12,23 +12,23 @@ patches:
 - path: patches/persistentvolumeclaim_todoapp_prod.yaml
 - path: patches/configmap_todoapp_prod.yaml
 images:
-- digest: sha256:d1bb22cc63391d75982bf1bbb04cdccd95716b8470efcee9e417dcdc71ca1623
+- digest: sha256:ab22f5a171be228d4f358576475ef7ccaf1597658bfb487961dcd40173f543b2
   name: PROJECT/BACKENDIMAGE
   newName: hinichijou/todo_app_backend-production
-  newTag: test-4.9
-- digest: sha256:ce1300d3a9ee8e1d25f3ec7006e9ccce916a679caff3c018400d6c07c850982a
+  newTag: "4.9"
+- digest: sha256:8740f14c7b299a319733a72f94ada99e680574d4717850dcb6ddfed6a6e465a0
   name: PROJECT/BROADCASTERIMAGE
   newName: hinichijou/broadcaster-production
-  newTag: test-4.9
-- digest: sha256:37e07913d749164ff375f8752ab5da9b7b32a2c799c933b92ad90e758b80b28a
+  newTag: "4.9"
+- digest: sha256:8c0457fe1af8a70bf7d66ea71911f47f1de9ccf3dbf00467d7b8a0af87b33779
   name: PROJECT/DBBACKUPJOBIMAGE
   newName: hinichijou/db_backup_job-production
-  newTag: test-4.9
-- digest: sha256:883660782db530ed3577d6d73bc05565932b3795919480dc27fa1d39a2b4ea83
+  newTag: "4.9"
+- digest: sha256:73670690b28fc7bab4f26561931e0e4cd9f9db66876235549727a1e4f1bfba25
   name: PROJECT/FRONTENDIMAGE
   newName: hinichijou/todo_app_frontend-production
-  newTag: test-4.9
-- digest: sha256:78416c3b4059793eece4837e78d7d6e142069195ce86281bafdec61b51ee60bc
+  newTag: "4.9"
+- digest: sha256:fc5d150a7706130ee0767cd8527e95f8d7909587dc608328776d0d4aa7e3ebdd
   name: PROJECT/WIKIPEDIATODOJOBIMAGE
   newName: hinichijou/wikipedia_todo_job-production
-  newTag: test-4.9
+  newTag: "4.9"
