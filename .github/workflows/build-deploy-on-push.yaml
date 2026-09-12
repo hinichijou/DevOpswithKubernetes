@@ -24,7 +24,8 @@ env:
   TODO_FRONTEND_IMAGE_NAME: todo_app_frontend
   TODO_FRONTEND_IMAGE_ALIAS: PROJECT/FRONTENDIMAGE
   TODO_FRONTEND_FOLDER: todo_app_frontend
-  TODO_FRONTEND_BUILD_ARG_STRING: '--build-arg BASE_PATH=/todoapp-staging'
+  # Needs to be the same in route resources, also in app configmap if backend behind the same base route
+  TODO_FRONTEND_BUILD_ARG_STRING: "--build-arg BASE_PATH=/todoapp-${{ github.ref_type == 'branch' && 'staging' || 'prod' }}"
   TODO_BACKEND_IMAGE_NAME: todo_app_backend
   TODO_BACKEND_IMAGE_ALIAS: PROJECT/BACKENDIMAGE
   TODO_BACKEND_FOLDER: backend
