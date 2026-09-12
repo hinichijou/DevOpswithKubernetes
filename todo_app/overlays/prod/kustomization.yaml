@@ -14,16 +14,16 @@ patches:
 images:
 - name: PROJECT/BACKENDIMAGE
   newName: hinichijou/todo_app_backend-production
-  newTag: 4.9-test
+  newTag: 0.0.1
 - name: PROJECT/BROADCASTERIMAGE
   newName: hinichijou/broadcaster-production
-  newTag: 4.9-test
+  newTag: 0.0.1
 - name: PROJECT/DBBACKUPJOBIMAGE
   newName: hinichijou/db_backup_job-production
-  newTag: 4.9-test
+  newTag: 0.0.1
 - name: PROJECT/FRONTENDIMAGE
   newName: hinichijou/todo_app_frontend-production
-  newTag: 4.9-test
+  newTag: 0.0.1
 - name: PROJECT/WIKIPEDIATODOJOBIMAGE
   newName: hinichijou/wikipedia_todo_job-production
-  newTag: 4.9-test
+  newTag: 0.0.1
