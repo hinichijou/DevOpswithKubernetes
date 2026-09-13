@@ -1,0 +1,225 @@
+name: Build application
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      # - '[0-9]+.[0-9]+'should work for task tags. But the task was to trigger with every tag
+      - '**'
+
+
+env:
+  LOG_OUTPUT_PINGPONG_APP_FOLDER: log_output_ping-pong_application
+  PINGPONG_IMAGE_NAME: pingpong_application
+  PINGPONG_IMAGE_ALIAS: PROJECT/PINGPONGAPPIMAGE
+  PINGPONG_FOLDER: ping-pong_application
+  LOG_OUTPUT_READER_IMAGE_NAME: log_output-reader
+  LOG_OUTPUT_READER_IMAGE_ALIAS: PROJECT/LOGOUTPUTREADERIMAGE
+  LOG_OUTPUT_READER_FOLDER: log_output_reader
+  LOG_OUTPUT_WRITER_IMAGE_NAME: log_output-writer
+  LOG_OUTPUT_WRITER_IMAGE_ALIAS: PROJECT/LOGOUTPUTWRITERIMAGE
+  LOG_OUTPUT_WRITER_FOLDER: log_output_writer
+  TODO_APP_FOLDER: todo_app
+  TODO_FRONTEND_IMAGE_NAME: todo_app_frontend
+  TODO_FRONTEND_IMAGE_ALIAS: PROJECT/FRONTENDIMAGE
+  TODO_FRONTEND_FOLDER: todo_app_frontend
+  # Needs to be the same in route resources, also in app configmap if backend behind the same base route
+  TODO_FRONTEND_BUILD_ARG_STRING: "--build-arg BASE_PATH=/todoapp-${{ github.ref_type == 'branch' && 'staging' || 'prod' }}"
+  TODO_BACKEND_IMAGE_NAME: todo_app_backend
+  TODO_BACKEND_IMAGE_ALIAS: PROJECT/BACKENDIMAGE
+  TODO_BACKEND_FOLDER: backend
+  WIKIPEDIA_JOB_IMAGE_NAME: wikipedia_todo_job
+  WIKIPEDIA_JOB_IMAGE_ALIAS: PROJECT/WIKIPEDIATODOJOBIMAGE
+  WIKIPEDIA_JOB_FOLDER: wikipedia_todo_job
+  DB_BACKUP_JOB_IMAGE_NAME: db_backup_job
+  DB_BACKUP_JOB_IMAGE_ALIAS: PROJECT/DBBACKUPJOBIMAGE
+  DB_BACKUP_JOB_FOLDER: db_backup_job
+  BROADCASTER_IMAGE_NAME: broadcaster
+  BROADCASTER_IMAGE_ALIAS: PROJECT/BROADCASTERIMAGE
+  BROADCASTER_FOLDER: broadcastera
+  # The return value is the one that is evaluated last
+  ENVIRONMENT: ${{ github.ref_type == 'branch' && 'staging' || 'production' }}
+  IMAGE_TAG: ${{ github.ref_type == 'branch' && github.sha || github.ref_name }}
+
+jobs:
+  build-publish:
+    name: Build on change
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      # Since I decided to build todo app on every tag and the lp app isn't currently built on tag push I'll just skip this on tag trigger
+      # It is possible to diff changes between the previous tag and new tag and build images for all changed apps
+      - if: env.ENVIRONMENT != 'production'
+        uses: dorny/paths-filter@v4
+        id: changes
+        with:
+          filters: |
+            ping-pong:
+              - '${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}/${{ env.PINGPONG_FOLDER }}/**'
+            log_output_writer:
+              - '${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}/${{ env.LOG_OUTPUT_WRITER_FOLDER }}/**'
+            log_output_reader:
+              - '${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}/${{ env.LOG_OUTPUT_READER_FOLDER }}/**'
+            todo_frontend:
+              - '${{ env.TODO_APP_FOLDER }}/${{ env.TODO_FRONTEND_FOLDER }}/**'
+            todo_backend:
+              - '${{ env.TODO_APP_FOLDER }}/${{ env.TODO_BACKEND_FOLDER }}/**'
+            wikipedia_job:
+              - '${{ env.TODO_APP_FOLDER }}/${{ env.WIKIPEDIA_JOB_FOLDER }}/**'
+            db_backup_job:
+              - '${{ env.TODO_APP_FOLDER }}/${{ env.DB_BACKUP_JOB_FOLDER }}/**'
+            broadcaster:
+              - '${{ env.TODO_APP_FOLDER }}/${{ env.BROADCASTER_FOLDER }}/**'
+
+      - name: 'Have lpa deploy relevant files changed'
+        id: 'lpa_file_changes'
+        run: |
+          echo "deploy=${{
+              steps.changes.outputs.ping-pong == 'true' ||
+              steps.changes.outputs.log_output_writer == 'true' ||
+              steps.changes.outputs.log_output_reader == 'true'
+            }}" >> $GITHUB_OUTPUT
+
+      - name: 'Have todo app deploy relevant files changed'
+        id: 'todo_file_changes'
+        run: |
+          echo "deploy=${{
+              env.ENVIRONMENT == 'production' ||
+              steps.changes.outputs.todo_frontend == 'true' ||
+              steps.changes.outputs.todo_backend == 'true' ||
+              steps.changes.outputs.wikipedia_job == 'true' ||
+              steps.changes.outputs.db_backup_job == 'true' ||
+              steps.changes.outputs.broadcaster == 'true'
+            }}" >> $GITHUB_OUTPUT
+
+      - name: Login to Docker Hub
+        if: steps.lpa_file_changes.outputs.deploy == 'true' || steps.todo_file_changes.outputs.deploy == 'true'
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Kustomize
+        if: steps.lpa_file_changes.outputs.deploy == 'true'  || steps.todo_file_changes.outputs.deploy == 'true'
+        uses: imranismail/setup-kustomize@v3
+
+      - name : 'Fetch existing ping-pong app image (builds the image if existing image not found or build required)'
+        id: ping-pong_image
+        if: steps.lpa_file_changes.outputs.deploy == 'true'
+        uses: ./.github/actions/fetch_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          image_name: "${{ env.PINGPONG_IMAGE_NAME }}"
+          image_alias: "${{ env.PINGPONG_IMAGE_ALIAS }}"
+          build_folder: "${{ env.PINGPONG_FOLDER }}"
+          force_build: steps.changes.outputs.ping-pong == 'true'
+
+      - name : 'Fetch existing log output reader image (builds the image if existing image not found or build required)'
+        id: log_output_reader_image
+        if: steps.lpa_file_changes.outputs.deploy == 'true'
+        uses: ./.github/actions/fetch_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          image_name: "${{ env.LOG_OUTPUT_READER_IMAGE_NAME }}"
+          image_alias: "${{ env.LOG_OUTPUT_READER_IMAGE_ALIAS }}"
+          build_folder: "${{ env.LOG_OUTPUT_READER_FOLDER }}"
+          force_build: steps.changes.outputs.log_output_reader == 'true'
+
+      - name : 'Fetch existing log output writer image (builds the image if existing image not found or build required)'
+        id: log_output_writer_image
+        if: steps.lpa_file_changes.outputs.deploy == 'true'
+        uses: ./.github/actions/fetch_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
+          image_name: "${{ env.LOG_OUTPUT_WRITER_IMAGE_NAME }}"
+          image_alias: "${{ env.LOG_OUTPUT_WRITER_IMAGE_ALIAS }}"
+          build_folder: "${{ env.LOG_OUTPUT_WRITER_FOLDER }}"
+          force_build: steps.changes.outputs.log_output_writer == 'true'
+
+      - name : 'Fetch existing todo app frontend image (builds the image if existing image not found or build required)'
+        id: todo_frontend_image
+        if: steps.todo_file_changes.outputs.deploy == 'true'
+        uses: ./.github/actions/fetch_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
+          image_name: "${{ env.TODO_FRONTEND_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
+          image_alias: "${{ env.TODO_FRONTEND_IMAGE_ALIAS }}"
+          build_folder: "${{ env.TODO_FRONTEND_FOLDER }}"
+          build_arg_string: "${{ env.TODO_FRONTEND_BUILD_ARG_STRING }}"
+          force_build: steps.changes.outputs.todo_frontend == 'true' || env.ENVIRONMENT == 'production'
+
+      - name : 'Fetch existing todo app backend image (builds the image if existing image not found or build required)'
+        id: todo_backend_image
+        if: steps.todo_file_changes.outputs.deploy == 'true'
+        uses: ./.github/actions/fetch_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
+          image_name: "${{ env.TODO_BACKEND_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
+          image_alias: "${{ env.TODO_BACKEND_IMAGE_ALIAS }}"
+          build_folder: "${{ env.TODO_BACKEND_FOLDER }}"
+          force_build: steps.changes.outputs.todo_backend == 'true' || env.ENVIRONMENT == 'production'
+
+      - name : 'Fetch existing wikipedia job image (builds the image if existing image not found or build required)'
+        id: wikipedia_job_image
+        if: steps.todo_file_changes.outputs.deploy == 'true'
+        uses: ./.github/actions/fetch_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
+          image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
+          image_alias: "${{ env.WIKIPEDIA_JOB_IMAGE_ALIAS }}"
+          build_folder: "${{ env.WIKIPEDIA_JOB_FOLDER }}"
+          force_build: steps.changes.outputs.wikipedia_job == 'true' || env.ENVIRONMENT == 'production'
+
+      - name : 'Fetch existing db backup job image (builds the image if existing image not found or build required)'
+        id: db_backup_job_image
+        if: steps.todo_file_changes.outputs.deploy == 'true'
+        uses: ./.github/actions/fetch_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
+          image_name: "${{ env.DB_BACKUP_JOB_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
+          image_alias: "${{ env.DB_BACKUP_JOB_IMAGE_ALIAS }}"
+          build_folder: "${{ env.DB_BACKUP_JOB_FOLDER }}"
+          force_build: steps.changes.outputs.db_backup_job == 'true' || env.ENVIRONMENT == 'production'
+
+      - name : 'Fetch existing broadcaster image (builds the image if existing image not found or build required)'
+        id: broadcaster_image
+        if: steps.todo_file_changes.outputs.deploy == 'true'
+        uses: ./.github/actions/fetch_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.TODO_APP_FOLDER }}"
+          image_name: "${{ env.BROADCASTER_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
+          image_alias: "${{ env.BROADCASTER_IMAGE_ALIAS }}"
+          build_folder: "${{ env.BROADCASTER_FOLDER }}"
+          force_build: steps.changes.outputs.broadcaster == 'true' || env.ENVIRONMENT == 'production'
+
+      - name: Trigger manifests repo workflow
+        if: steps.lpa_file_changes.outputs.deploy == 'true' || steps.todo_file_changes.outputs.deploy == 'true'
+        # https://cli.github.com/manual/gh_workflow_run. repo scope required for classic or "Actions" repository permissions (write) for fine-grained: https://docs.github.com/en/rest/actions/workflows?apiVersion=2026-03-10#create-a-workflow-dispatch-event
+        env:
+          GH_TOKEN: "${{ secrets.MANIFESTS_ACTIONS_FGPAT }}"
+        run: |
+          gh workflow run push_image_changes_on_dispatch.yaml \
+            -R hinichijou/DevOpsWithKubernetesManifests \
+            -r main \
+            -f environment="${{ env.ENVIRONMENT }}" \
+            -f tag="${{ github.ref_type == 'branch' && github.ref_name || '' }}" \
+            -f ping_pong_image="${{ steps.ping-pong_image.outputs.image }}" \
+            -f log_output_reader_image="${{ steps.log_output_reader_image.outputs.image }}" \
+            -f log_output_writer_image="${{ steps.log_output_writer_image.outputs.image }}" \
+            -f todo_frontend_image="${{ steps.todo_frontend_image.outputs.image }}" \
+            -f todo_backend_image="${{ steps.todo_backend_image.outputs.image }}" \
+            -f wikipedia_job_image="${{ steps.wikipedia_job_image.outputs.image }}" \
+            -f db_backup_job_image="${{ steps.db_backup_job_image.outputs.image }}" \
+            -f broadcaster_image="${{ steps.broadcaster_image.outputs.image }}"

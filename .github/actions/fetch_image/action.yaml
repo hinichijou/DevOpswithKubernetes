@@ -3,44 +3,66 @@ description: 'Fetches existing image from repository or builds if not found and 
 inputs:
   namespace:
     required: true
+    type: string
   image_name:
     required: true
+    type: string
   app_folder:
     required: true
-  kustomization_folder:
-    required: true
+    type: string
   build_folder:
     required: true
+    type: string
   image_alias:
     required: true
+    type: string
   build_arg_string:
     required: false
+    type: string
+  force_build:
+    required: true
+    type: bool
+outputs:
+  image:
+    value: "${{ steps.output.outputs.output}}"
+
 
 runs:
   using: "composite"
   steps:
     - name: Fetch existing image SHA
       id: 'sha'
+      if: ${{ !inputs.force_build }}
       shell: bash
       run: |
         echo "image_sha=$(curl -s https://hub.docker.com/v2/namespaces/${{ inputs.namespace }}/repositories/${{ inputs.image_name }}/tags | jq '.results | sort_by(.last_pushed) | .[0].digest')" >> $GITHUB_OUTPUT
 
-    - name: Build image if not found
-      if: steps.sha.outputs.image_sha == ''
+    - name: Build image (if existing not found or force build)
+      id: 'build'
+      if: inputs.force_build  || steps.sha.outputs.image_sha == ''
       uses: ./.github/actions/build_image
       with:
         namespace: "${{ inputs.namespace }}"
         image_name: "${{ inputs.image_name }}:${{ env.IMAGE_TAG }}"
         app_folder: "${{ inputs.app_folder }}"
-        kustomization_folder: "${{ inputs.kustomization_folder }}"
         build_folder: "${{ inputs.build_folder }}"
         image_alias: "${{ inputs.image_alias }}"
         build_arg_string: "${{ inputs.build_arg_string }}"
 
-    - name: Set found image
+    - name: Parse image
+      id: 'parse'
       if: steps.sha.outputs.image_sha != ''
       shell: bash
-      working-directory: "${{ inputs.kustomization_folder }}"
       run: |
         IMAGE_PATH="${{ inputs.namespace }}/${{ inputs.image_name }}"
-        kustomize edit set image "${{ inputs.image_alias }}"="$IMAGE_PATH@${{ steps.sha.outputs.image_sha }}"
+        echo "parsed=${{ inputs.image_alias }}=$IMAGE_PATH@${{ steps.sha.outputs.image_sha }}" >> $GITHUB_OUTPUT
+
+    - name: Output image
+      id: 'output'
+      shell: bash
+      run: |
+        if [ -n "${{ steps.sha.outputs.image_sha }}" ]; then
+          echo "output=${{ steps.build.outputs.built }}" >> $GITHUB_OUTPUT
+        else
+          echo "output=${{ steps.parse.outputs.parsed }}" >> $GITHUB_OUTPUT
+        fi
