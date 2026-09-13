@@ -37,7 +37,7 @@ env:
   DB_BACKUP_JOB_FOLDER: db_backup_job
   BROADCASTER_IMAGE_NAME: broadcaster
   BROADCASTER_IMAGE_ALIAS: PROJECT/BROADCASTERIMAGE
-  BROADCASTER_FOLDER: broadcastera
+  BROADCASTER_FOLDER: broadcaster
   # The return value is the one that is evaluated last
   ENVIRONMENT: ${{ github.ref_type == 'branch' && 'staging' || 'production' }}
   IMAGE_TAG: ${{ github.ref_type == 'branch' && github.sha || github.ref_name }}
@@ -117,7 +117,7 @@ jobs:
           image_name: "${{ env.PINGPONG_IMAGE_NAME }}"
           image_alias: "${{ env.PINGPONG_IMAGE_ALIAS }}"
           build_folder: "${{ env.PINGPONG_FOLDER }}"
-          force_build: steps.changes.outputs.ping-pong == 'true'
+          force_build: ${{ steps.changes.outputs.ping-pong == 'true' }}
 
       - name : 'Fetch existing log output reader image (builds the image if existing image not found or build required)'
         id: log_output_reader_image
@@ -129,7 +129,7 @@ jobs:
           image_name: "${{ env.LOG_OUTPUT_READER_IMAGE_NAME }}"
           image_alias: "${{ env.LOG_OUTPUT_READER_IMAGE_ALIAS }}"
           build_folder: "${{ env.LOG_OUTPUT_READER_FOLDER }}"
-          force_build: steps.changes.outputs.log_output_reader == 'true'
+          force_build: ${{ steps.changes.outputs.log_output_reader == 'true' }}
 
       - name : 'Fetch existing log output writer image (builds the image if existing image not found or build required)'
         id: log_output_writer_image
@@ -141,7 +141,7 @@ jobs:
           image_name: "${{ env.LOG_OUTPUT_WRITER_IMAGE_NAME }}"
           image_alias: "${{ env.LOG_OUTPUT_WRITER_IMAGE_ALIAS }}"
           build_folder: "${{ env.LOG_OUTPUT_WRITER_FOLDER }}"
-          force_build: steps.changes.outputs.log_output_writer == 'true'
+          force_build: ${{ steps.changes.outputs.log_output_writer == 'true' }}
 
       - name : 'Fetch existing todo app frontend image (builds the image if existing image not found or build required)'
         id: todo_frontend_image
@@ -154,7 +154,7 @@ jobs:
           image_alias: "${{ env.TODO_FRONTEND_IMAGE_ALIAS }}"
           build_folder: "${{ env.TODO_FRONTEND_FOLDER }}"
           build_arg_string: "${{ env.TODO_FRONTEND_BUILD_ARG_STRING }}"
-          force_build: steps.changes.outputs.todo_frontend == 'true' || env.ENVIRONMENT == 'production'
+          force_build: ${{ steps.changes.outputs.todo_frontend == 'true' || env.ENVIRONMENT == 'production' }}
 
       - name : 'Fetch existing todo app backend image (builds the image if existing image not found or build required)'
         id: todo_backend_image
@@ -166,7 +166,7 @@ jobs:
           image_name: "${{ env.TODO_BACKEND_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           image_alias: "${{ env.TODO_BACKEND_IMAGE_ALIAS }}"
           build_folder: "${{ env.TODO_BACKEND_FOLDER }}"
-          force_build: steps.changes.outputs.todo_backend == 'true' || env.ENVIRONMENT == 'production'
+          force_build: ${{ steps.changes.outputs.todo_backend == 'true' || env.ENVIRONMENT == 'production' }}
 
       - name : 'Fetch existing wikipedia job image (builds the image if existing image not found or build required)'
         id: wikipedia_job_image
@@ -178,7 +178,7 @@ jobs:
           image_name: "${{ env.WIKIPEDIA_JOB_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           image_alias: "${{ env.WIKIPEDIA_JOB_IMAGE_ALIAS }}"
           build_folder: "${{ env.WIKIPEDIA_JOB_FOLDER }}"
-          force_build: steps.changes.outputs.wikipedia_job == 'true' || env.ENVIRONMENT == 'production'
+          force_build: ${{ steps.changes.outputs.wikipedia_job == 'true' || env.ENVIRONMENT == 'production' }}
 
       - name : 'Fetch existing db backup job image (builds the image if existing image not found or build required)'
         id: db_backup_job_image
@@ -190,7 +190,7 @@ jobs:
           image_name: "${{ env.DB_BACKUP_JOB_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           image_alias: "${{ env.DB_BACKUP_JOB_IMAGE_ALIAS }}"
           build_folder: "${{ env.DB_BACKUP_JOB_FOLDER }}"
-          force_build: steps.changes.outputs.db_backup_job == 'true' || env.ENVIRONMENT == 'production'
+          force_build: ${{ steps.changes.outputs.db_backup_job == 'true' || env.ENVIRONMENT == 'production' }}
 
       - name : 'Fetch existing broadcaster image (builds the image if existing image not found or build required)'
         id: broadcaster_image
@@ -202,7 +202,7 @@ jobs:
           image_name: "${{ env.BROADCASTER_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
           image_alias: "${{ env.BROADCASTER_IMAGE_ALIAS }}"
           build_folder: "${{ env.BROADCASTER_FOLDER }}"
-          force_build: steps.changes.outputs.broadcaster == 'true' || env.ENVIRONMENT == 'production'
+          force_build: ${{ steps.changes.outputs.broadcaster == 'true' || env.ENVIRONMENT == 'production' }}
 
       - name: Trigger manifests repo workflow
         if: steps.lpa_file_changes.outputs.deploy == 'true' || steps.todo_file_changes.outputs.deploy == 'true'

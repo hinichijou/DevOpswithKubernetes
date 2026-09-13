@@ -24,7 +24,7 @@ inputs:
     type: bool
 outputs:
   image:
-    value: "${{ steps.output.outputs.output}}"
+    value: "${{ steps.output.outputs.output }}"
 
 
 runs:
