@@ -56,7 +56,7 @@ runs:
       shell: bash
       run: |
         if [ -n "${{ steps.sha.outputs.image_sha }}" ]; then
-          echo "output=${{ steps.build.outputs.built }}" >> $GITHUB_OUTPUT
-        else
           echo "output=${{ steps.parse.outputs.parsed }}" >> $GITHUB_OUTPUT
+        else
+          echo "output=${{ steps.build.outputs.built }}" >> $GITHUB_OUTPUT
         fi
