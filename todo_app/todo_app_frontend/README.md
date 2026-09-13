@@ -29,4 +29,4 @@ Uses the following environment values:
 * `IMAGE_DIR_NAME`: the api route where the image is fetched from. The fetch route will be composed of `IMAGE_DIR_NAME`/`IMAGE_NAME`.  Default value is `images`.
 * `IMAGE_NAME`: the name of the file where the image is saved. Default value `image.jpg`.
 * `IMAGE_FETCH_TIMEOUT`: the timeout after which a new image is fetched. Default value `600000`.
-* `BASE_PATH`: Defines [next.config.ts](https://github.com/hinichijou/DevOpswithKubernetes/todo_app/todo_app_frontend/next.config.ts) `basePath` during build time. This should be passed to the Docker context when building for cluster use if using a custom route because Next.JS internal _nextjs path requests need to be routed correctly, with the default they target the cluster root.
+* `BASE_PATH`: Defines [next.config.ts](https://github.com/hinichijou/DevOpswithKubernetes/tree/main/todo_app/todo_app_frontend/next.config.ts) `basePath` during build time. This should be passed to the Docker context when building for cluster use if using a custom route because Next.JS internal _nextjs path requests need to be routed correctly, with the default they target the cluster root.
