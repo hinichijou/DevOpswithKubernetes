@@ -3,25 +3,19 @@ description: 'Fetches existing image from repository or builds if not found and 
 inputs:
   namespace:
     required: true
-    type: string
   image_name:
     required: true
-    type: string
   app_folder:
     required: true
-    type: string
   build_folder:
     required: true
-    type: string
   image_alias:
     required: true
-    type: string
   build_arg_string:
     required: false
-    type: string
+  # booleans are not supported in composite action inputs: https://github.com/actions/runner/issues/2238
   force_build:
     required: true
-    type: bool
 outputs:
   image:
     value: "${{ steps.output.outputs.output }}"
@@ -32,14 +26,14 @@ runs:
   steps:
     - name: Fetch existing image SHA
       id: 'sha'
-      if: ${{ !inputs.force_build }}
+      if: ${{ inputs.force_build == 'false' }}
       shell: bash
       run: |
         echo "image_sha=$(curl -s https://hub.docker.com/v2/namespaces/${{ inputs.namespace }}/repositories/${{ inputs.image_name }}/tags | jq '.results | sort_by(.last_pushed) | .[0].digest')" >> $GITHUB_OUTPUT
 
     - name: Build image (if existing not found or force build)
       id: 'build'
-      if: inputs.force_build  || steps.sha.outputs.image_sha == ''
+      if: inputs.force_build == 'true'  || steps.sha.outputs.image_sha == ''
       uses: ./.github/actions/build_image
       with:
         namespace: "${{ inputs.namespace }}"
