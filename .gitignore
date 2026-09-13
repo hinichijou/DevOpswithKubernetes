@@ -2,5 +2,4 @@
 *.txt
 secret*
 debug
-cleanup-policy.json
 test.sh

@@ -54,3 +54,5 @@
 - [4.7.](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.7/log_output_ping-pong_application#task-47)
 - [4.8.](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.8/todo_app#task-48)
 - [4.9.](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.9/todo_app#task-49)
+
+This repository contains the source code for the course applications. Configuration files and instructions for running the applications in a Kubernetes cluster can be found from [a separate repository](https://github.com/hinichijou/DevOpswithKubernetesManifests).

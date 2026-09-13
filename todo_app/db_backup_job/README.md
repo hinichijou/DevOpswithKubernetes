@@ -1,6 +1,6 @@
 ## DB backup job
 
-Takes a backup of a Postgres database wit `pg_dump` and saves the result to Google Cloud Storage bucket. Requests `METADATA_URL` for an authentication token which is used to authenticate the Kubernetes service account attached to the pod for a post request to the defined Google Cloud Storage bucket.
+Takes a backup of a Postgres database with `pg_dump` and saves the result to Google Cloud Storage bucket. Requests `METADATA_URL` for an authentication token which is used to authenticate the Kubernetes service account attached to the pod for a post request to the defined Google Cloud Storage bucket.
 
 Uses the following environment variables:
 * POSTGRES_SVC: Name of the postgres service in the cluster
