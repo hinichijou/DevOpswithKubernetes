@@ -38,6 +38,9 @@ env:
   BROADCASTER_IMAGE_NAME: broadcaster
   BROADCASTER_IMAGE_ALIAS: PROJECT/BROADCASTERIMAGE
   BROADCASTER_FOLDER: broadcaster
+  DUMMYSITE_FOLDER: dummysite
+  DUMMYSITE_IMAGE_NAME: dummysite
+  DUMMYSITE_IMAGE_ALIAS: DUMMYSITEIMAGE
   # The return value is the one that is evaluated last
   ENVIRONMENT: ${{ github.ref_type == 'branch' && 'staging' || 'production' }}
   IMAGE_TAG: ${{ github.ref_type == 'branch' && github.sha || github.ref_name }}
@@ -74,6 +77,8 @@ jobs:
               - '${{ env.TODO_APP_FOLDER }}/${{ env.DB_BACKUP_JOB_FOLDER }}/**'
             broadcaster:
               - '${{ env.TODO_APP_FOLDER }}/${{ env.BROADCASTER_FOLDER }}/**'
+            dummysite:
+              - '${{ env.DUMMYSITE_FOLDER }}/**'
 
       - name: 'Have lpa deploy relevant files changed'
         id: 'lpa_file_changes'
@@ -203,6 +208,18 @@ jobs:
           image_alias: "${{ env.BROADCASTER_IMAGE_ALIAS }}"
           build_folder: "${{ env.BROADCASTER_FOLDER }}"
           force_build: ${{ steps.changes.outputs.broadcaster == 'true' || env.ENVIRONMENT == 'production' }}
+
+      - name : 'Build dummysite image on changes'
+        id: dummysite_image
+        if: steps.changes.outputs.dummysite == 'true'
+        uses: ./.github/actions/fetch_build_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.DUMMYSITE_FOLDER }}"
+          image_name: "${{ env.DUMMYSITE_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
+          image_alias: "${{ env.DUMMYSITE_IMAGE_ALIAS }}"
+          build_folder: "."
+          force_build: true
 
       - name: Trigger manifests repo workflow
         if: steps.lpa_file_changes.outputs.deploy == 'true' || steps.todo_file_changes.outputs.deploy == 'true'

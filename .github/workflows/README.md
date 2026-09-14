@@ -17,3 +17,5 @@ Since the project app now supports separate staging and production environments 
 * The todo app staging watches for pushes to certain folders to determine which images need to be built. The images are named: *image-name*-staging:*commit-sha*. Staging images are built only on push to main branch.
 
 * The todo app production images are built on every tag. The images are named: *image-name*-production:*tag-name*. Production images are built only on tag trigger.
+
+* The dummysite app is built on changes to the dummysite folder. There are currently no related manifests so nothing outside of the image build is done.
