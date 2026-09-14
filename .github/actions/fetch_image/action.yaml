@@ -43,20 +43,13 @@ runs:
         image_alias: "${{ inputs.image_alias }}"
         build_arg_string: "${{ inputs.build_arg_string }}"
 
-    - name: Parse image
-      id: 'parse'
-      if: steps.sha.outputs.image_sha != ''
-      shell: bash
-      run: |
-        IMAGE_PATH="${{ inputs.namespace }}/${{ inputs.image_name }}"
-        echo "parsed=${{ inputs.image_alias }}=$IMAGE_PATH@${{ steps.sha.outputs.image_sha }}" >> $GITHUB_OUTPUT
-
     - name: Output image
       id: 'output'
       shell: bash
       run: |
         if [ -n "${{ steps.sha.outputs.image_sha }}" ]; then
-          echo "output=${{ steps.parse.outputs.parsed }}" >> $GITHUB_OUTPUT
+          IMAGE_PATH="${{ inputs.namespace }}/${{ inputs.image_name }}"
+          echo "output=${{ inputs.image_alias }}=$IMAGE_PATH@${{ steps.sha.outputs.image_sha }}" >> $GITHUB_OUTPUT
         else
           echo "output=${{ steps.build.outputs.built }}" >> $GITHUB_OUTPUT
         fi
