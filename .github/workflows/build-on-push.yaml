@@ -110,7 +110,7 @@ jobs:
       - name : 'Fetch existing ping-pong app image (builds the image if existing image not found or build required)'
         id: ping-pong_image
         if: steps.lpa_file_changes.outputs.deploy == 'true'
-        uses: ./.github/actions/fetch_image
+        uses: ./.github/actions/fetch_build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
           app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
@@ -122,7 +122,7 @@ jobs:
       - name : 'Fetch existing log output reader image (builds the image if existing image not found or build required)'
         id: log_output_reader_image
         if: steps.lpa_file_changes.outputs.deploy == 'true'
-        uses: ./.github/actions/fetch_image
+        uses: ./.github/actions/fetch_build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
           app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
@@ -134,7 +134,7 @@ jobs:
       - name : 'Fetch existing log output writer image (builds the image if existing image not found or build required)'
         id: log_output_writer_image
         if: steps.lpa_file_changes.outputs.deploy == 'true'
-        uses: ./.github/actions/fetch_image
+        uses: ./.github/actions/fetch_build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
           app_folder: "${{ env.LOG_OUTPUT_PINGPONG_APP_FOLDER }}"
@@ -146,7 +146,7 @@ jobs:
       - name : 'Fetch existing todo app frontend image (builds the image if existing image not found or build required)'
         id: todo_frontend_image
         if: steps.todo_file_changes.outputs.deploy == 'true'
-        uses: ./.github/actions/fetch_image
+        uses: ./.github/actions/fetch_build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
           app_folder: "${{ env.TODO_APP_FOLDER }}"
@@ -159,7 +159,7 @@ jobs:
       - name : 'Fetch existing todo app backend image (builds the image if existing image not found or build required)'
         id: todo_backend_image
         if: steps.todo_file_changes.outputs.deploy == 'true'
-        uses: ./.github/actions/fetch_image
+        uses: ./.github/actions/fetch_build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
           app_folder: "${{ env.TODO_APP_FOLDER }}"
@@ -171,7 +171,7 @@ jobs:
       - name : 'Fetch existing wikipedia job image (builds the image if existing image not found or build required)'
         id: wikipedia_job_image
         if: steps.todo_file_changes.outputs.deploy == 'true'
-        uses: ./.github/actions/fetch_image
+        uses: ./.github/actions/fetch_build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
           app_folder: "${{ env.TODO_APP_FOLDER }}"
@@ -183,7 +183,7 @@ jobs:
       - name : 'Fetch existing db backup job image (builds the image if existing image not found or build required)'
         id: db_backup_job_image
         if: steps.todo_file_changes.outputs.deploy == 'true'
-        uses: ./.github/actions/fetch_image
+        uses: ./.github/actions/fetch_build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
           app_folder: "${{ env.TODO_APP_FOLDER }}"
@@ -195,7 +195,7 @@ jobs:
       - name : 'Fetch existing broadcaster image (builds the image if existing image not found or build required)'
         id: broadcaster_image
         if: steps.todo_file_changes.outputs.deploy == 'true'
-        uses: ./.github/actions/fetch_image
+        uses: ./.github/actions/fetch_build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
           app_folder: "${{ env.TODO_APP_FOLDER }}"
