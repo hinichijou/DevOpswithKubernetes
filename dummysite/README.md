@@ -1,6 +1,6 @@
 ## Dummysite
 
-Node.js Hono server application. The server sends a request to the defined url and saves the response. The saved content is then served when the root path gets requested. Simply saves the body of the request as is i.e. any assets fetched with additional requests will not be displayed.
+Node.js Hono server application. The server sends a request to the defined url and saves the response. The saved content is then served when the root path gets requested. Saves the body of the startup request as is i.e. any assets fetched with additional requests will not be displayed.
 
 Has the following environment variables:
 
