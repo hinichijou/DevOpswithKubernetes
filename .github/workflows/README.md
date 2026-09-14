@@ -8,7 +8,7 @@ Uses the repository secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` which con
 
 [build-on-push.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.10/.github/workflows/build-on-push.yaml) defines the GitHub workflow. The workflow follows changes to the log output ping-pong application related folders and todo app related folders and builds the related images and commits the app `kustomization.yaml` if necessary.
 
-Uses custom actions [build image](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.10/.github/actions/build_image/action.yaml) which builds the image and pushes it to a repository and [fetch image](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.10/.github/actions/fetch_image/action.yaml) which tries to fetch an existing image from the Docker repository, and if the fetch fails builds a new image with the build image action.
+Uses custom actions [build image](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.10/.github/actions/build_image/action.yaml) which builds the image and pushes it to a repository and [fetch image](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.10/.github/actions/fetch_build_image/action.yaml) which tries to fetch an existing image from the Docker repository, and if the fetch fails builds a new image with the build image action.
 
 Since the project app now supports separate staging and production environments while the exercises app does not the build logic and image naming schemes slightly differ.
 
