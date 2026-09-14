@@ -29,5 +29,5 @@ runs:
         IMAGE_PATH="${{ inputs.namespace }}/${{ inputs.image_name }}"
         IMAGE_TAGGED="${IMAGE_PATH}:${{ env.IMAGE_TAG }}"
         docker build ${{ inputs.build_arg_string }} --tag $IMAGE_TAGGED "${{ inputs.build_folder }}"
-        SHA="$(docker push $IMAGE_TAG | awk '/digest:/ { print $3 }')"
+        SHA="$(docker push $IMAGE_TAGGED | awk '/digest:/ { print $3 }')"
         echo "built=${{ inputs.image_alias }}=$IMAGE_PATH@$SHA" >> $GITHUB_OUTPUT
