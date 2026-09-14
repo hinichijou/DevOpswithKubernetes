@@ -214,7 +214,7 @@ jobs:
             -R hinichijou/DevOpsWithKubernetesManifests \
             -r main \
             -f environment="${{ env.ENVIRONMENT }}" \
-            -f tag="${{ github.ref_type == 'branch' && github.ref_name || '' }}" \
+            -f tag="${{ github.ref_type == 'tag' && github.ref_name || '' }}" \
             -f ping_pong_image="${{ steps.ping-pong_image.outputs.image }}" \
             -f log_output_reader_image="${{ steps.log_output_reader_image.outputs.image }}" \
             -f log_output_writer_image="${{ steps.log_output_writer_image.outputs.image }}" \
