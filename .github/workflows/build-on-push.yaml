@@ -216,7 +216,7 @@ jobs:
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
           app_folder: "${{ env.DUMMYSITE_FOLDER }}"
-          image_name: "${{ env.DUMMYSITE_IMAGE_NAME }}-${{ env.ENVIRONMENT }}"
+          image_name: "${{ env.DUMMYSITE_IMAGE_NAME }}"
           image_alias: "${{ env.DUMMYSITE_IMAGE_ALIAS }}"
           build_folder: "."
           force_build: true
