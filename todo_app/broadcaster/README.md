@@ -12,5 +12,3 @@ Can be tested locally by running:
 `npm install`
 
 `npm run dev`
-
-4.10: test triggering a build
