@@ -8,7 +8,7 @@ import { pipeline } from 'stream/promises'
 import type { ReadableStream as WebReadableStream } from 'node:stream/web';
 
 const PORT = process.env.PORT || 3000
-const URL = process.env.URL || 'https://en.wikipedia.org/wiki/Kubernetes'
+const URL = process.env.URL || 'https://example.com/'
 const FILE_DIR = process.env.FILE_DIR || 'static/'
 const FILE_NAME = process.env.FILE_NAME || 'dummy.html'
 

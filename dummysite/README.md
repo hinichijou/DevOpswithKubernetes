@@ -4,7 +4,7 @@ Node.js Hono server application. The server sends a request to the defined url a
 
 Has the following environment variables:
 
-* `URL`: defines the destination url where the content gets fetched from. Default `https://en.wikipedia.org/wiki/Kubernetes`.
+* `URL`: defines the destination url where the content gets fetched from. Default `https://example.com/`.
 
 * `PORT`: can be set to change the default port. Default `3000`.
 
