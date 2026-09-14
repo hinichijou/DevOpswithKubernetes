@@ -1,14 +1,14 @@
 ## Deployment pipeline
 
-Configuration for a pipeline that builds docker images for changed application folders, pushes them to Docker Hub and sends a workflow dispatch to the [manifests repository](https://github.com/hinichijou/DevOpswithKubernetesManifests/tree/main/.github/workflows).
+Configuration for a pipeline that builds docker images for changed application folders, pushes them to Docker Hub and sends a workflow dispatch to the [manifests repository](https://github.com/hinichijou/DevOpswithKubernetesManifests/tree/4.10/.github/workflows).
 
 It makes sense to build and upload only the images if there are changes to the related files. For that reason to workflow checks if there are changes to the related folder before triggering the build step. There is a popular GitHub Action [dorny/paths-filter](https://github.com/dorny/paths-filter) that seems to be built just for this purpose so this can be leveraged in our workflow to get a neat solution for monitoring changes in certain folders. If there are no changes to the folder relevant for the image the workflow will search for the latest image built from the branch and uses that.
 
 Uses the repository secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` which contain the dockerhub username and the access token created for accessing the dockerhub repository. Uses the repository secret `MANIFESTS_ACTIONS_FGPAT` to authenticate the workflow dispatch to another repository.
 
-[build-on-push.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/main/.github/workflows/build-on-push.yaml) defines the GitHub workflow. The workflow follows changes to the log output ping-pong application related folders and todo app related folders and builds the related images and commits the app `kustomization.yaml` if necessary.
+[build-on-push.yaml](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.10/.github/workflows/build-on-push.yaml) defines the GitHub workflow. The workflow follows changes to the log output ping-pong application related folders and todo app related folders and builds the related images and commits the app `kustomization.yaml` if necessary.
 
-Uses custom actions [build image](https://github.com/hinichijou/DevOpswithKubernetes/tree/main/.github/actions/build_image/action.yaml) which builds the image and pushes it to a repository and [fetch image](https://github.com/hinichijou/DevOpswithKubernetes/tree/main/.github/actions/fetch_image/action.yaml) which tries to fetch an existing image from the Docker repository, and if the fetch fails builds a new image with the build image action.
+Uses custom actions [build image](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.10/.github/actions/build_image/action.yaml) which builds the image and pushes it to a repository and [fetch image](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.10/.github/actions/fetch_image/action.yaml) which tries to fetch an existing image from the Docker repository, and if the fetch fails builds a new image with the build image action.
 
 Since the project app now supports separate staging and production environments while the exercises app does not the build logic and image naming schemes slightly differ.
 
