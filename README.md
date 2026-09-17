@@ -57,6 +57,6 @@
 - 4.10. [Source code repository](https://github.com/hinichijou/DevOpswithKubernetes/tree/4.10) [Configurations repository](https://github.com/hinichijou/DevOpswithKubernetesManifests/tree/4.10)
 
 ### Chapter 6
-- 5.1. [Source code repository](https://github.com/hinichijou/DevOpswithKubernetes/tree/5.1/dummysite) [Configurations repository](https://github.com/hinichijou/DevOpswithKubernetesManifests/tree/5.1/dummysite)
+- 5.1. [Source code](https://github.com/hinichijou/DevOpswithKubernetes/tree/5.1/dummysite) [Configurations](https://github.com/hinichijou/DevOpswithKubernetesManifests/tree/5.1/dummysite)
 
 This repository contains the source code for the course applications. Configuration files and instructions for running the applications in a Kubernetes cluster can be found from [a separate repository](https://github.com/hinichijou/DevOpswithKubernetesManifests).
