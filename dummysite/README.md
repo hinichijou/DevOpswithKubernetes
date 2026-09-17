@@ -1,4 +1,4 @@
-## Log output and ping-pong applications
+## Dummysite
 
 Contains source code for a dummysite application and a custom resource controller listening for dummysite resources. Configurations and instructions for running the application in a Kubernetes cluster can be found from [a separate repository](https://github.com/hinichijou/DevOpswithKubernetesManifests/tree/5.1/dummysite).
 
