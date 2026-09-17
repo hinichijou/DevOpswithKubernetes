@@ -69,19 +69,22 @@ informer.on('add', async (obj: k8s.KubernetesObject) => {
     }
 
     console.log(`Created route for: ${obj.metadata.name} to namespace ${namespace}. Available at path /${obj.metadata.name}`)
-});
+})
+
 informer.on('update', (obj: k8s.KubernetesObject) => {
     console.log(`Updated: ${obj.metadata!.name} in namespace ${obj.metadata!.namespace}`)
-});
+})
+
 informer.on('delete', (obj: k8s.KubernetesObject) => {
     console.log(`Deleted: ${obj.metadata!.name} from namespace ${obj.metadata!.namespace}`)
-});
+})
+
 informer.on('error', (err: k8s.KubernetesObject) => {
     console.error(err)
     // Restart informer after 5sec
     setTimeout(() => {
         informer.start()
-    }, 5000);
-});
+    }, 5000)
+})
 
-informer.start();
+informer.start()
