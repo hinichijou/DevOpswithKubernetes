@@ -7,7 +7,6 @@ WORKDIR /app
 
 COPY package*json tsconfig.json ./
 COPY src ./src
-COPY static ./static
 
 RUN npm ci && \
     npm run build && \
@@ -16,13 +15,13 @@ RUN npm ci && \
 FROM base AS runner
 WORKDIR /app
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 hono
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 hono
 
 COPY --from=builder --chown=hono:nodejs /app/node_modules /app/node_modules
 COPY --from=builder --chown=hono:nodejs /app/dist /app/dist
 COPY --from=builder --chown=hono:nodejs /app/package.json /app/package.json
-COPY --from=builder --chown=hono:nodejs /app/static /app/static
+
+RUN mkdir /static && chown hono:nodejs /static
 
 USER hono
 EXPOSE 3000
