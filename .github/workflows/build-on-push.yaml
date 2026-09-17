@@ -39,8 +39,12 @@ env:
   BROADCASTER_IMAGE_ALIAS: PROJECT/BROADCASTERIMAGE
   BROADCASTER_FOLDER: broadcaster
   DUMMYSITE_FOLDER: dummysite
-  DUMMYSITE_IMAGE_NAME: dummysite
-  DUMMYSITE_IMAGE_ALIAS: DUMMYSITEIMAGE
+  DUMMYSITE_APP_FOLDER: dummysite_app
+  DUMMYSITE_APP_IMAGE_NAME: dummysite
+  DUMMYSITE_APP_IMAGE_ALIAS: DUMMYSITE
+  DUMMYSITE_CONTROLLER_FOLDER: dummysite_controller
+  DUMMYSITE_CONTROLLER_IMAGE_NAME: dummysite_controller
+  DUMMYSITE_CONTROLLER_IMAGE_ALIAS: DUMMYSITECONTROLLER
   # The return value is the one that is evaluated last
   ENVIRONMENT: ${{ github.ref_type == 'branch' && 'staging' || 'production' }}
   IMAGE_TAG: ${{ github.ref_type == 'branch' && github.sha || github.ref_name }}
@@ -77,8 +81,10 @@ jobs:
               - '${{ env.TODO_APP_FOLDER }}/${{ env.DB_BACKUP_JOB_FOLDER }}/**'
             broadcaster:
               - '${{ env.TODO_APP_FOLDER }}/${{ env.BROADCASTER_FOLDER }}/**'
-            dummysite:
-              - '${{ env.DUMMYSITE_FOLDER }}/**'
+            dummysite_app:
+              - '${{ env.DUMMYSITE_FOLDER }}/${{ env.DUMMYSITE_APP_FOLDER }}/**'
+            dummysite_controller:
+              - '${{ env.DUMMYSITE_FOLDER }}/${{ env.DUMMYSITE_CONTROLLER_FOLDER }}/**'
 
       - name: 'Have lpa deploy relevant files changed'
         id: 'lpa_file_changes'
@@ -101,16 +107,29 @@ jobs:
               steps.changes.outputs.broadcaster == 'true'
             }}" >> $GITHUB_OUTPUT
 
+      - name: 'Have dummysite deploy relevant files changed'
+        id: 'dummysite_file_changes'
+        run: |
+          echo "deploy=${{
+              steps.changes.outputs.dummysite_app == 'true' ||
+              steps.changes.outputs.dummysite_controller == 'true'
+            }}" >> $GITHUB_OUTPUT
+
+      - name: 'Are we deploying something'
+        id: 'deploy'
+        run: |
+          echo "deploy=${{
+              steps.lpa_file_changes.outputs.deploy == 'true' ||
+              steps.todo_file_changes.outputs.deploy == 'true' ||
+              steps.dummysite_file_changes.outputs.deploy == 'true'
+            }}" >> $GITHUB_OUTPUT
+
       - name: Login to Docker Hub
-        if: steps.lpa_file_changes.outputs.deploy == 'true' || steps.todo_file_changes.outputs.deploy == 'true' || steps.changes.outputs.dummysite == 'true'
+        if: steps.deploy.outputs.deploy == 'true'
         uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Set up Kustomize
-        if: steps.lpa_file_changes.outputs.deploy == 'true'  || steps.todo_file_changes.outputs.deploy == 'true'
-        uses: imranismail/setup-kustomize@v3
 
       - name : 'Fetch existing ping-pong app image (builds the image if existing image not found or build required)'
         id: ping-pong_image
@@ -209,20 +228,32 @@ jobs:
           build_folder: "${{ env.BROADCASTER_FOLDER }}"
           force_build: ${{ steps.changes.outputs.broadcaster == 'true' || env.ENVIRONMENT == 'production' }}
 
-      - name : 'Build dummysite image on changes'
-        id: dummysite_image
-        if: steps.changes.outputs.dummysite == 'true'
+      - name : 'Fetch existing dummysite app image (builds the image if existing image not found or build required)'
+        id: dummysite_app_image
+        if: steps.dummysite_file_changes.outputs.deploy == 'true'
         uses: ./.github/actions/fetch_build_image
         with:
           namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
           app_folder: "${{ env.DUMMYSITE_FOLDER }}"
-          image_name: "${{ env.DUMMYSITE_IMAGE_NAME }}"
-          image_alias: "${{ env.DUMMYSITE_IMAGE_ALIAS }}"
-          build_folder: "."
-          force_build: true
+          image_name: "${{ env.DUMMYSITE_APP_IMAGE_NAME }}"
+          image_alias: "${{ env.DUMMYSITE_APP_IMAGE_ALIAS }}"
+          build_folder: "${{ env.DUMMYSITE_APP_FOLDER }}"
+          force_build: ${{ steps.changes.outputs.dummysite_app == 'true' }}
+
+      - name : 'Fetch existing dummysite controller image (builds the image if existing image not found or build required)'
+        id: dummysite_controller_image
+        if: steps.dummysite_file_changes.outputs.deploy == 'true'
+        uses: ./.github/actions/fetch_build_image
+        with:
+          namespace: "${{ secrets.DOCKERHUB_USERNAME }}"
+          app_folder: "${{ env.DUMMYSITE_FOLDER }}"
+          image_name: "${{ env.DUMMYSITE_CONTROLLER_IMAGE_NAME }}"
+          image_alias: "${{ env.DUMMYSITE_CONTROLLER_IMAGE_ALIAS }}"
+          build_folder: "${{ env.DUMMYSITE_CONTROLLER_FOLDER }}"
+          force_build: ${{ steps.changes.outputs.dummysite_controller == 'true' }}
 
       - name: Trigger manifests repo workflow
-        if: steps.lpa_file_changes.outputs.deploy == 'true' || steps.todo_file_changes.outputs.deploy == 'true'
+        if: steps.deploy.outputs.deploy == 'true'
         # https://cli.github.com/manual/gh_workflow_run. repo scope required for classic or "Actions" repository permissions (write) for fine-grained: https://docs.github.com/en/rest/actions/workflows?apiVersion=2026-03-10#create-a-workflow-dispatch-event
         env:
           GH_TOKEN: "${{ secrets.MANIFESTS_ACTIONS_FGPAT }}"
@@ -239,4 +270,6 @@ jobs:
             -f todo_backend_image="${{ steps.todo_backend_image.outputs.image }}" \
             -f wikipedia_job_image="${{ steps.wikipedia_job_image.outputs.image }}" \
             -f db_backup_job_image="${{ steps.db_backup_job_image.outputs.image }}" \
-            -f broadcaster_image="${{ steps.broadcaster_image.outputs.image }}"
+            -f broadcaster_image="${{ steps.broadcaster_image.outputs.image }}" \
+            -f dummysite_app_image="${{ steps.dummysite_app_image.outputs.image }}" \
+            -f dummysite_controller_image="${{ steps.dummysite_controller_image.outputs.image }}"
