@@ -1,6 +1,8 @@
 import * as k8s from '@kubernetes/client-node'
 
 import { createDeployment } from './deployment.js'
+import { createService } from './service.js'
+import { createRoute } from './route.js'
 import { assertIsDummySite } from './utils.js'
 
 const kc = new k8s.KubeConfig()
@@ -8,6 +10,7 @@ process.env.NODE_ENV === 'development' ? kc.loadFromDefault() : kc.loadFromClust
 
 const customApi = kc.makeApiClient(k8s.CustomObjectsApi)
 const appsApi = kc.makeApiClient(k8s.AppsV1Api)
+const coreApi = kc.makeApiClient(k8s.CoreV1Api)
 
 // Informer example: https://github.com/kubernetes-client/javascript/blob/bb12131e5ed8d0e3e2a99518abb7f99b86b1b09e/examples/typescript/informer/informer.ts
 // Couldn't find custom resource examples for Javascript but, while not directly copy-pasteable,
@@ -37,9 +40,35 @@ informer.on('add', async (obj: k8s.KubernetesObject) => {
       return
     }
 
-    await createDeployment(appsApi, obj)
+    try {
+      await createDeployment(appsApi, obj)
+    }
+    catch (e) {
+      console.log(`${e}`)
+      return
+    }
 
     console.log(`Created deployment for: ${obj.metadata.name} to namespace ${namespace}`)
+
+    try {
+      await createService(coreApi, obj)
+    }
+    catch (e) {
+      console.log(`${e}`)
+      return
+    }
+
+    console.log(`Created service for: ${obj.metadata.name} to namespace ${namespace}`)
+
+    try {
+      await createRoute(customApi, obj)
+    }
+    catch (e) {
+      console.log(`${e}`)
+      return
+    }
+
+    console.log(`Created route for: ${obj.metadata.name} to namespace ${namespace}. Available at path /${obj.metadata.name}`)
 });
 informer.on('update', (obj: k8s.KubernetesObject) => {
     console.log(`Updated: ${obj.metadata!.name} in namespace ${obj.metadata!.namespace}`)

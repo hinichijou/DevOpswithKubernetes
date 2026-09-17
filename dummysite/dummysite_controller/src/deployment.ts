@@ -1,4 +1,4 @@
-import { AppsV1Api, V1Deployment, type KubernetesObject } from '@kubernetes/client-node'
+import { AppsV1Api, V1Deployment } from '@kubernetes/client-node'
 import { type Dummysite } from './types.js'
 
 // While it would make sense to use external template files for the resource
@@ -9,7 +9,7 @@ import { type Dummysite } from './types.js'
 export const createDeployment = async (api: AppsV1Api, obj: Dummysite) => {
   const deployment = new V1Deployment()
   deployment.metadata = {
-    name: 'dummysite',
+    name: `dummysite-dep-${obj.metadata.name}`,
     namespace: obj.metadata.namespace,
     // Required for deletion on source resource deletion. https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.37/#ownerreference-v1-meta
     ownerReferences: [
@@ -28,19 +28,19 @@ export const createDeployment = async (api: AppsV1Api, obj: Dummysite) => {
     replicas: 1,
     selector: {
       matchLabels: {
-        app: 'dummysite'
+        app: `dummysite-${obj.metadata.name}`
       }
     },
     template: {
       metadata: {
         labels: {
-          app: 'dummysite'
+          app: `dummysite-${obj.metadata.name}`
         }
       },
       spec: {
         containers: [
           {
-            name: 'dummysite',
+            name: `dummysite-${obj.metadata.name}`,
             image: obj.spec.image,
             env: [
               {
