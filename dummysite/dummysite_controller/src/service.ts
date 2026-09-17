@@ -1,6 +1,9 @@
 import { CoreV1Api, V1Service } from '@kubernetes/client-node'
 import { type Dummysite } from './types.js'
 
+const APP_PORT = process.env.APP_PORT || 3000
+const SERVICE_PORT = process.env.SERVICE_PORT || 3000
+
 // While it would make sense to use external template files for the resource
 // definitions like in the example app, the Kubernetes client examples seem to always define
 // the resources in the source code. For example: https://github.com/kubernetes-client/javascript/blob/main/examples/ingress.js
@@ -31,9 +34,9 @@ export const createService = async (api: CoreV1Api, obj: Dummysite) => {
     },
     ports: [
       {
-        port: 3000,
+        port: APP_PORT,
         protocol: 'TCP',
-        targetPort: 3000
+        targetPort: SERVICE_PORT
       }
     ]
   }
