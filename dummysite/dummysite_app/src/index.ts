@@ -16,6 +16,15 @@ const imagePath = `${FILE_DIR}/${FILE_NAME}`
 
 const app = new Hono()
 
+const closeAndExit = (exitvalue: number) => {
+  server.close()
+  onExit(exitvalue)
+}
+
+const onExit = async (exitvalue: number) => {
+  process.exit(exitvalue)
+}
+
 app.use(async (c, next) => {
   if(c.req.path === '/health' || c.req.path === '/ready') {
     // Skip logging
@@ -114,15 +123,6 @@ const server = serve({
 }, (info) => {
   console.log(`Dummysite started in port ${info.port}`)
 })
-
-const closeAndExit = (exitvalue: number) => {
-  server.close()
-  onExit(exitvalue)
-}
-
-const onExit = async (exitvalue: number) => {
-  process.exit(exitvalue)
-}
 
 // graceful shutdown
 process.on('SIGINT', () => {
