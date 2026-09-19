@@ -7,6 +7,9 @@ declare global {
       PING_PONG_APP_URL: string;
       PING_PONG_APP_PINGS_PATH: string;
       PING_PONG_APP_READY_PATH: string;
+      GREETER_APP_URL: string;
+      GREETER_APP_MESSAGE_PATH: string;
+      GREETER_APP_READY_PATH: string;
     }
   }
 }

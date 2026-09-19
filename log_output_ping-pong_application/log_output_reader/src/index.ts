@@ -24,6 +24,9 @@ const logFilePath = join(filesDirectory, 'log.txt')
 const informationFilePath = join(rootDirectory, 'information.txt')
 
 const request = async (url: string, options: RequestInit = {}) => {
+  if (!url)
+    return undefined
+
   const req = new Request(url, options)
   let res = undefined
   try{
@@ -52,10 +55,17 @@ const getLastLine = (content: string) => {
 app.get('/', async (c) => {
   const info = await getFile(informationFilePath)
   const log = getLastLine(await getFile(logFilePath))
-  const res = await request(process.env.PING_PONG_APP_URL + process.env.PING_PONG_APP_PINGS_PATH)
-  const pingpongs = res.ok ? await res.text() : 'Unable to get response'
+  const pp_res = await request(process.env.PING_PONG_APP_URL + process.env.PING_PONG_APP_PINGS_PATH)
+  const pingpongs = pp_res?.ok ? await pp_res.text() : 'Unable to get response'
+  const g_res = await request(process.env.GREETER_APP_URL + process.env.GREETER_APP_MESSAGE_PATH)
+  const greeting = g_res?.ok ? await g_res.text() : 'Unable to get response'
 
-  const resp = `file content: ${info}\nenv variable: MESSAGE=${process.env.MESSAGE}\n${log}.\nPing / Pongs: ${pingpongs}`
+  const resp = `\
+    file content: ${info}\n\
+    env variable: MESSAGE=${process.env.MESSAGE}\n\
+    ${log}.\n\
+    Ping / Pongs: ${pingpongs}\n\
+    greetings:  ${greeting}`
 
   return c.text(resp)
 })
@@ -67,12 +77,13 @@ app.get('/health', (c) => {
 
 // Readiness check path
 app.get('/ready', async (c) => {
-  const res = await request(process.env.PING_PONG_APP_URL + process.env.PING_PONG_APP_READY_PATH)
+  const pp_res = await request(process.env.PING_PONG_APP_URL + process.env.PING_PONG_APP_READY_PATH)
+  const g_res = await request(process.env.GREETER_APP_URL + process.env.GREETER_APP_READY_PATH)
 
-  if (res.ok) {
+  if (pp_res?.ok && g_res?.ok) {
     return c.text('Log output reader ready.')
   } else {
-    return c.text('Ping-pong application not ready.', 503)
+    return c.text('Ping-pong application, greeter application, or both of these not ready.', 503)
   }
 })
 
