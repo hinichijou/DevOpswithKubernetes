@@ -61,5 +61,6 @@
 - [5.2.](https://github.com/hinichijou/DevOpswithKubernetesManifests/tree/5.2/services/istio/samples)
 - 5.3. [Source code](https://github.com/hinichijou/DevOpswithKubernetes/tree/5.3/log_output_ping-pong_application/greeter) [Configurations](https://github.com/hinichijou/DevOpswithKubernetesManifests/tree/5.3/log_output_ping-pong_application#task-53)
 - 5.4. [Source code](https://github.com/hinichijou/DevOpswithKubernetes/tree/5.4/wikipedia_page_fetcher) [Configurations](https://github.com/hinichijou/DevOpswithKubernetesManifests/tree/5.4/wikipedia_pages)
+- [5.6.](https://github.com/hinichijou/DevOpswithKubernetesManifests/tree/5.6/services/knative)
 
 This repository contains the source code for the course applications. Configuration files and instructions for running the applications in a Kubernetes cluster can be found from [a separate repository](https://github.com/hinichijou/DevOpswithKubernetesManifests).
